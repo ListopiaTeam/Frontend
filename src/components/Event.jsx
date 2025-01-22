@@ -23,17 +23,17 @@ const Event = () => {
                         Submit your list to be the winner for the List Creating event and be on the leaderboard!
                     </p>
 
-                    <div className="mt-8 flex flex-wrap gap-4 text-center">
+                    <div className="mt-8 flex flex-wrap gap-4 text-center sm:justify-start justify-center">
                         <a
                             href="#"
-                            className="block w-full rounded bg-rose-600 px-12 py-3 text-sm font-medium text-white shadow hover:bg-rose-700 focus:outline-none focus:ring active:bg-rose-500 sm:w-auto"
+                            className="block rounded bg-rose-600 px-12 py-3 text-sm font-medium text-white shadow hover:bg-rose-700 focus:outline-none focus:ring active:bg-rose-500 sm:w-auto"
                         >
                             Submit List
                         </a>
 
                         <a
                             href="#"
-                            className="block w-full rounded bg-white px-12 py-3 text-sm font-medium text-rose-600 shadow hover:text-rose-700 focus:outline-none focus:ring active:text-rose-500 sm:w-auto"
+                            className="block rounded bg-white px-12 py-3 text-sm font-medium text-rose-600 shadow hover:text-rose-700 focus:outline-none focus:ring active:text-rose-500 sm:w-auto"
                         >
                             Learn More
                         </a>
