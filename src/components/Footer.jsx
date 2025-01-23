@@ -7,7 +7,10 @@ const Footer = () => {
     <div className="absolute end-4 top-4 sm:end-6 sm:top-6 lg:end-8 lg:top-8">
       <a
         className="inline-block rounded-full bg-rose-600 p-2 cursor-pointer text-white shadow transition hover:bg-rose-500 sm:p-3 lg:p-4"
-        onClick={() => window.scrollTo(0,0)}
+        onClick={() => window.scrollTo({
+          top: 0,
+          behavior: 'smooth',
+        })}
       >
         <span className="sr-only">Back to top</span>
 
@@ -29,7 +32,7 @@ const Footer = () => {
     <div className="lg:flex lg:items-end lg:justify-between">
       <div>
         <div className="flex justify-center text-rose-600 lg:justify-start">
-          <img src="favicon.ico" alt="graphic design is my passion" />
+          <img src="Listopia_Icon_v2_big.png" alt="graphic design is my passion" />
         </div>
 
         <p className="mx-auto mt-6 max-w-md text-center leading-relaxed text-gray-500 lg:text-left font-mono">
