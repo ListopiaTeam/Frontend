@@ -15,7 +15,6 @@ const Header = () => {
                 <NavLink className='cursor-pointer'>Login</NavLink>
             </div>
         </ul>
-        
     </nav>
   )
 }
