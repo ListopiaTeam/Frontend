@@ -20,7 +20,7 @@ export const uploadFile = async (file) => {
   }
 };
 
-const url='http://localhost:3000/list/'
+const url=process.env.RENDER_URL
 
 
 export const deletePhoto=async(id)=>{
