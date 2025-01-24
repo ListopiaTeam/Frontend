@@ -16,13 +16,13 @@ const ListCard = () => {
           viewBox="0 0 24 24"
           fill={favorited ? "yellow" : "none"}
           stroke={favorited ? "yellow" : "currentColor"}
-          stroke-width="1.5"
+          strokeWidth="1.5"
           className="size-6"
         >
           <path
             d="M12 2L14.09 8.26H20.18L15.91 11.74L17.27 18L12 14.74L6.73 18L8.09 11.74L3.82 8.26H9.91L12 2Z"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
         </svg>
       </button>

@@ -1,10 +1,10 @@
 import React from 'react'
-
+import {NavLink} from 'react-router'
 const Register = () => {
   return (
-    <div className='mt-32'>
-        <form action="" className='max-w-lg m-auto gap-5 flex flex-col'>
-        <h2 className='text-center'>Register</h2>
+    <div className='mt-32 flex justify-center'>
+        <form action="" className='max-w-lg m-auto gap-5 flex flex-col mx-5'>
+        <h2 className='text-center text-3xl font-semibold'>Register</h2>
         <label
             htmlFor="username"
             className="relative block overflow-hidden rounded-md border border-gray-200 px-3 pt-3 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600 dark:border-gray-700 dark:bg-gray-800"
@@ -59,7 +59,7 @@ const Register = () => {
             </span>
             </label>
             <button className="block rounded bg-rose-600 px-12 py-3 text-sm font-medium text-white shadow hover:bg-rose-700 focus:outline-none focus:ring active:bg-rose-500 sm:w-auto" type='submit'>Register</button>
-            
+            <p className="text-center mb-5">You already have an account? <NavLink className="text-rose-600" to="/login">Login</NavLink></p>
         </form>
     </div>
   )
