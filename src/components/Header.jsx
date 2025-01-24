@@ -39,6 +39,7 @@ const Header = () => {
           <div className="flex gap-8">
             <NavLink to={"/"} className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>Home</NavLink>
             <NavLink to={"/events"}  className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>Events</NavLink>
+            <NavLink to={"/lists"} className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>Lists</NavLink>
             <NavLink to={"/create"} className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>Create list</NavLink>
           </div>
           <div className="flex gap-8 ml-auto">
@@ -60,6 +61,7 @@ const Header = () => {
               <div className="flex flex-col gap-5">
                 <NavLink to={"/"} onClick={() => setShow(!show)} className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>Home</NavLink>
                 <NavLink to={"/events"} onClick={() => setShow(!show)}  className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>Events</NavLink>
+                <NavLink to={"/lists"} className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>Lists</NavLink>
                 <NavLink to={"/create"} onClick={() => setShow(!show)}  className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>Create list</NavLink>
                 <NavLink to={"/register"} onClick={() => setShow(!show)}  className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>Register</NavLink>
                 <NavLink to={"/login"} onClick={() => setShow(!show)}  className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>Login</NavLink>
