@@ -1,21 +1,18 @@
-import { StrictMode, useEffect, useRef } from 'react';
-import { createRoot } from 'react-dom/client';
-import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
-import App from './App.jsx';
-import './index.css';
-
-// Pages
-import Events from './pages/Events.jsx';
-import Login from './pages/Login.jsx';
-import Register from './pages/Register.jsx';
-import CreateList from './pages/CreateList.jsx';
-import Error from './pages/Error.jsx';
-
-// Components
-import Header from './components/Header.jsx';
-import Footer from './components/Footer.jsx';
-import ScrollTop from './components/ScrollTop.jsx';
+import { StrictMode, useEffect, useRef } from "react";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
+import App from "./App.jsx";
+import "./index.css";
+import { UserProvider } from "./UserContext";
+import Events from "./pages/Events.jsx";
+import Login from "./pages/Login.jsx";
+import Register from "./pages/Register.jsx";
+import CreateList from "./pages/CreateList.jsx";
+import Error from "./pages/Error.jsx";
+import Header from "./components/Header.jsx";
+import Footer from "./components/Footer.jsx";
+import ScrollTop from "./components/ScrollTop.jsx";
 
 const AppWrapper = () => {
   const location = useLocation();
@@ -113,7 +110,7 @@ const AppWrapper = () => {
             )
           }
         />
-         <Route
+        <Route
           path="/*"
           element={
             location.pathname !== prevLocation.current ? (
@@ -135,15 +132,17 @@ const AppWrapper = () => {
   );
 };
 
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <BrowserRouter>
-      <div className="flex flex-col min-h-screen">
-        <Header />
-        <AppWrapper />
-        <ScrollTop />
-        <Footer />
-      </div>
-    </BrowserRouter>
+    <UserProvider>
+      <BrowserRouter>
+        <div className="flex flex-col min-h-screen">
+          <Header />
+          <AppWrapper />
+          <ScrollTop />
+          <Footer />
+        </div>
+      </BrowserRouter>
+    </UserProvider>
   </StrictMode>
 );
