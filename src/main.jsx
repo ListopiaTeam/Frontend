@@ -1,71 +1,139 @@
-import { StrictMode, useEffect } from 'react'
-import { createRoot } from 'react-dom/client'
-import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
-import { AnimatePresence, motion } from 'framer-motion'
-import App from './App.jsx'
-import './index.css'
+import { StrictMode, useEffect, useRef } from 'react';
+import { createRoot } from 'react-dom/client';
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
+import App from './App.jsx';
+import './index.css';
 
 // Pages
-import Events from './pages/Events.jsx'
-import Login from './pages/Login.jsx'
-import Register from './pages/Register.jsx'
-import CreateList from './pages/CreateList.jsx'
+import Events from './pages/Events.jsx';
+import Login from './pages/Login.jsx';
+import Register from './pages/Register.jsx';
+import CreateList from './pages/CreateList.jsx';
+import Error from './pages/Error.jsx';
 
 // Components
-import Header from './components/Header.jsx'
-import Footer from './components/Footer.jsx'
-import ScrollTop from './components/ScrollTop.jsx'
+import Header from './components/Header.jsx';
+import Footer from './components/Footer.jsx';
+import ScrollTop from './components/ScrollTop.jsx';
 
 const AppWrapper = () => {
-  const location = useLocation()
+  const location = useLocation();
+  const prevLocation = useRef(location.pathname);
+
+  useEffect(() => {
+    prevLocation.current = location.pathname;
+  }, [location]);
 
   return (
     <AnimatePresence mode="wait">
-      <Routes location={location} key={location.key}>
-        <Route 
-          path="/" 
+      <Routes location={location} key={location.pathname}>
+        <Route
+          path="/"
           element={
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.125 }}>
+            location.pathname !== prevLocation.current ? (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.125 }}
+              >
+                <App />
+              </motion.div>
+            ) : (
               <App />
-            </motion.div>
+            )
           }
         />
-        <Route 
-          path="/events" 
+        <Route
+          path="/events"
           element={
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }}>
+            location.pathname !== prevLocation.current ? (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.1 }}
+              >
+                <Events />
+              </motion.div>
+            ) : (
               <Events />
-            </motion.div>
+            )
           }
         />
-        <Route 
-          path="/register" 
+        <Route
+          path="/register"
           element={
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }}>
+            location.pathname !== prevLocation.current ? (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.1 }}
+              >
+                <Register />
+              </motion.div>
+            ) : (
               <Register />
-            </motion.div>
+            )
           }
         />
-        <Route 
-          path="/login" 
+        <Route
+          path="/login"
           element={
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }}>
+            location.pathname !== prevLocation.current ? (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.1 }}
+              >
+                <Login />
+              </motion.div>
+            ) : (
               <Login />
-            </motion.div>
+            )
           }
         />
-        <Route 
-          path="/create" 
+        <Route
+          path="/create"
           element={
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }}>
+            location.pathname !== prevLocation.current ? (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.1 }}
+              >
+                <CreateList />
+              </motion.div>
+            ) : (
               <CreateList />
-            </motion.div>
+            )
+          }
+        />
+         <Route
+          path="/*"
+          element={
+            location.pathname !== prevLocation.current ? (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.1 }}
+              >
+                <Error />
+              </motion.div>
+            ) : (
+              <Error />
+            )
           }
         />
       </Routes>
     </AnimatePresence>
-  )
-}
+  );
+};
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -78,4 +146,4 @@ createRoot(document.getElementById('root')).render(
       </div>
     </BrowserRouter>
   </StrictMode>
-)
+);

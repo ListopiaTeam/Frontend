@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react'
 
 const ScrollTop = () => {
-    const [verticalScrollBar, setVerticalScrollBar] = useState(false)
+    const [verticalScrollBar, setVerticalScrollBar] = useState(null)
     
     useEffect(() => {
-        setVerticalScrollBar(document.documentElement.scrollHeight > document.documentElement.clientHeight)
-    }, [document.documentElement.scrollHeight])
+        const checkScrollBar = () => {
+            setVerticalScrollBar(document.documentElement.scrollHeight > document.documentElement.clientHeight);
+        };
+
+        checkScrollBar();
+    }, [document.documentElement.scrollHeight]);
+
+    console.log(verticalScrollBar);
     
   return (
     verticalScrollBar && (
