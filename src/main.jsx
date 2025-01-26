@@ -12,7 +12,7 @@ import CreateList from "./pages/CreateList.jsx";
 import Error from "./pages/Error.jsx";
 import Header from "./components/Header.jsx";
 import Footer from "./components/Footer.jsx";
-import ScrollTop from "./components/ScrollTop.jsx";
+import ScrollTopButton from "./components/ScrollTopButton.jsx";
 
 const AppWrapper = () => {
   const location = useLocation();
@@ -139,7 +139,7 @@ createRoot(document.getElementById("root")).render(
         <div className="flex flex-col min-h-screen">
           <Header />
           <AppWrapper />
-          <ScrollTop />
+          <ScrollTopButton />
           <Footer />
         </div>
       </BrowserRouter>
