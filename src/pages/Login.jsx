@@ -1,16 +1,24 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { UserContext } from "../UserContext";
+import Alert from "../components/Alert";
 
 const Login = () => {
-  const { message, signInUser } = useContext(UserContext);
+  const { message, signInUser, user, setMessage } = useContext(UserContext);
   const [showPassword, setShowPassword] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false); 
-  const navigate = useNavigate(); 
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
+  const timeoutId = useRef(null); 
+  
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
+
+  useEffect(() => {
+    if (user) {
+      setTimeout(() => navigate('/'), 5000);
+    }
+  }, [user]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -22,14 +30,32 @@ const Login = () => {
 
     try {
       await signInUser(email, password);
+
       if (message?.signin) {
         navigate("/");
       }
-    } catch {
+    } catch (err) {
+      console.error(err);
     } finally {
       setIsSubmitting(false);
     }
+
+
+    if (timeoutId.current) {
+      clearTimeout(timeoutId.current);
+    }
+    timeoutId.current = setTimeout(() => {
+      setMessage("");
+    }, 5000);
   };
+
+  useEffect(() => {
+    return () => {
+      if (timeoutId.current) {
+        clearTimeout(timeoutId.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="mt-32 flex justify-center">
@@ -84,13 +110,6 @@ const Login = () => {
           </button>
         </label>
 
-        {message?.err && (
-          <p className="text-center text-red-600">{message.err}</p>
-        )}
-        {message?.signin && (
-          <p className="text-center text-green-600">{message.signin}</p>
-        )}
-
         <button
           className="block rounded bg-rose-600 px-12 py-3 text-sm font-medium text-white shadow hover:bg-rose-700 focus:outline-none focus:ring active:bg-rose-500 sm:w-auto"
           type="submit"
@@ -98,6 +117,12 @@ const Login = () => {
         >
           {isSubmitting ? "Logging in..." : "Login"}
         </button>
+
+        {message?.signin ? (
+          <Alert msg={message.signin} />
+        ) : (
+          message?.err && <Alert err={message.err} />
+        )}
 
         <p className="text-center mb-5">
           Don't have an account yet?{" "}

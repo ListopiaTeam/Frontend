@@ -1,12 +1,19 @@
-import React, { useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import React, { useContext, useState } from 'react'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from "motion/react"
+import { UserContext } from '../UserContext'
 
 const Header = () => {
   const [show, setShow] = useState(false)
-
+  const { user, logoutUser } = useContext(UserContext)  
+  const navigate = useNavigate()
   const toggleMenu = () => {
     setShow(!show)
+  }
+
+  const logOut = () => {
+    logoutUser()
+    navigate("/")
   }
 
   return (
@@ -42,10 +49,20 @@ const Header = () => {
             <NavLink to={"/lists"} className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>Lists</NavLink>
             <NavLink to={"/create"} className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>Create list</NavLink>
           </div>
-          <div className="flex gap-8 ml-auto">
-            <NavLink to={"/register"}  className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>Register</NavLink>
-            <NavLink to={"/login"}  className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>Login</NavLink>
-          </div>
+          {!user ? (
+            <div className="flex gap-8 ml-auto">
+              <NavLink to={"/register"}  className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>Register</NavLink>
+              <NavLink to={"/login"}  className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>Login</NavLink>
+            </div>
+          ) : 
+          (
+            <div className="flex gap-8 ml-auto">
+              {user?.displayName}
+              <button onClick={logOut} className="text-slate-100 cursor-pointer">Log out</button>
+            </div>
+          )
+          }
+         
         </div>
 
       {/* Menu open */}
@@ -63,8 +80,15 @@ const Header = () => {
                 <NavLink to={"/events"} onClick={() => setShow(!show)}  className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>Events</NavLink>
                 <NavLink to={"/lists"} className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>Lists</NavLink>
                 <NavLink to={"/create"} onClick={() => setShow(!show)}  className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>Create list</NavLink>
-                <NavLink to={"/register"} onClick={() => setShow(!show)}  className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>Register</NavLink>
-                <NavLink to={"/login"} onClick={() => setShow(!show)}  className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>Login</NavLink>
+                {!user ? (
+                  <>
+                    <NavLink to={"/register"} onClick={() => setShow(!show)}  className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>Register</NavLink>
+                    <NavLink to={"/login"} onClick={() => setShow(!show)}  className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>Login</NavLink>
+                  </>
+
+                ) : (
+                  <button onClick={logOut} className="text-slate-100 text-left cursor-pointer">Log out</button>
+                )}
               </div>
             </motion.div>
           )}

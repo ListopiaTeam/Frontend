@@ -30,7 +30,7 @@ export const UserProvider = ({ children }) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       setMessage({});
-      setMessage({ signin: "sikeres bejelentkezes" });
+      setMessage({ signin: "Successfully logged in!" });
     } catch (error) {
       console.log(error);
       setMessage({ err: error.message });
@@ -47,6 +47,7 @@ export const UserProvider = ({ children }) => {
       await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(auth.currentUser, { displayName });
       setMessage({});
+      setMessage({signup: "Successful registration!"});
     } catch (error) {
       console.log(error);
       setMessage({ err: error.message });

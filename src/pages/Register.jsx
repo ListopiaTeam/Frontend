@@ -1,11 +1,12 @@
 import React, { useContext, useState } from "react";
 import { NavLink } from "react-router";
 import { UserContext } from "../UserContext";
+import Alert from "../components/Alert";
 
 const Register = () => {
-  const { user, signUpUser } = useContext(UserContext);
+  const { signUpUser, message, setMessage } = useContext(UserContext);
   const [showPassword, setShowPassword] = useState(false);
-
+  
   const handleRegistration = (e) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
@@ -19,6 +20,9 @@ const Register = () => {
       data.get("password"),
       data.get("displayName")
     );
+    setTimeout(() => {
+      setMessage("")
+    }, 5000)
   };
 
   const togglePasswordVisibility = () => {
@@ -98,6 +102,12 @@ const Register = () => {
         >
           Register
         </button>
+
+        {message?.signup ? (
+          <Alert msg={message.signup}/>
+        ) : (
+          message?.err && (<Alert err={message.err}/>)
+        )}
 
         <p className="text-center mb-5">
           You already have an account?{" "}
