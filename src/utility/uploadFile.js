@@ -20,7 +20,7 @@ export const uploadFile = async (file) => {
   }
 };
 
-const url=process.env.RENDER_URL
+const url=import.meta.env.RENDER_URL
 
 
 export const deletePhoto=async(id)=>{
