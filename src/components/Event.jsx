@@ -1,4 +1,5 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 
 const Event = () => {
     return (
@@ -19,24 +20,24 @@ const Event = () => {
                         </strong>
                     </h1>
 
-                    <p className="mt-4 max-w-lg text-white sm:text-xl">
+                    <p className="mt-4 max-w-lg text-white sm:text-xl ">
                         Submit your list to be the winner for the List Creating event and be on the leaderboard!
                     </p>
 
                     <div className="mt-8 flex flex-wrap gap-4 text-center sm:justify-start justify-center">
-                        <a
-                            href="#"
+                        <NavLink
+                            to={'/events'}
                             className="block rounded bg-rose-600 px-12 py-3 text-sm font-medium text-white shadow hover:bg-rose-700 focus:outline-none focus:ring active:bg-rose-500 sm:w-auto"
                         >
                             Submit List
-                        </a>
+                        </NavLink>
 
-                        <a
-                            href="#"
+                        <NavLink
+                            to={'/events'}
                             className="block rounded bg-white px-12 py-3 text-sm font-medium text-rose-600 shadow hover:text-rose-700 focus:outline-none focus:ring active:text-rose-500 sm:w-auto"
                         >
                             Learn More
-                        </a>
+                        </NavLink>
                     </div>
                 </div>
             </div>

@@ -13,6 +13,7 @@ import Error from "./pages/Error.jsx";
 import Header from "./components/Header.jsx";
 import Footer from "./components/Footer.jsx";
 import ScrollTopButton from "./components/ScrollTopButton.jsx";
+import Lists from "./pages/Lists.jsx";
 
 const AppWrapper = () => {
   const location = useLocation();
@@ -107,6 +108,23 @@ const AppWrapper = () => {
               </motion.div>
             ) : (
               <CreateList />
+            )
+          }
+        />
+        <Route
+          path="/lists"
+          element={
+            location.pathname !== prevLocation.current ? (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.1 }}
+              >
+                <Lists />
+              </motion.div>
+            ) : (
+              <Lists />
             )
           }
         />
