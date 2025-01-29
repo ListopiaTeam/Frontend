@@ -60,7 +60,7 @@ const Header = () => {
           ) : 
           (
             <div className="flex gap-8 ml-auto">
-              {user?.displayName}
+              <NavLink to={"/profile"}  className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>{user?.displayName}</NavLink>
               <button onClick={logOut} className="text-slate-100 cursor-pointer">Log out</button>
             </div>
           )}

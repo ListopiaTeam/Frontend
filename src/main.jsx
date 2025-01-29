@@ -13,6 +13,7 @@ import Error from "./pages/Error.jsx";
 import Header from "./components/Header.jsx";
 import Footer from "./components/Footer.jsx";
 import ScrollTopButton from "./components/ScrollTopButton.jsx";
+import Profile from "./pages/Profile.jsx";
 import Lists from "./pages/Lists.jsx";
 
 const AppWrapper = () => {
@@ -142,6 +143,24 @@ const AppWrapper = () => {
               </motion.div>
             ) : (
               <Error />
+            )
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            location.pathname !== prevLocation.current ? (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.1 }}
+              >
+                <Profile />
+              </motion.div>
+            ) : (
+              <Profile />
             )
           }
         />

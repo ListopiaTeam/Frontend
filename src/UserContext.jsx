@@ -1,5 +1,5 @@
 import React from "react";
-import { auth } from "../utility/firebaseApp";
+import { auth } from "./utility/firebaseApp";
 import {
   createUserWithEmailAndPassword,
   deleteUser,
