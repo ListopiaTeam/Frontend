@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@keyframes shake {
+    0%, 10%, 20%  { transform: translateX(-2px); }
+    15%, 25%, 30% { transform: translateX(2px); }
+    35%, 100% { transform: translateX(0); } /* No movement in second half */
+  }
+  
+.shake:hover {
+    animation: shake 2s ease-in-out infinite;
+}
