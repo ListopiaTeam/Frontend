@@ -4,13 +4,15 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from "../UserContext";
 import { extractUrlAndId } from "../utility/utils";
 import { deletePhoto, uploadFile } from "../utility/uploadFile.js";
+import "../index.css";
 
 export default function Profile() {
   const { user, updateCredentials, deleteAccount, logoutUser } = useContext(UserContext);
   const [avatar, setAvatar] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate();
   const userImgId = user?.photoURL ? extractUrlAndId(user.photoURL).id : null;
-
+  
   useEffect(() => {
     user?.photoURL && setAvatar(extractUrlAndId(user.photoURL).url);
   }, [user]);
@@ -27,6 +29,7 @@ export default function Profile() {
 
   const onSubmit = async (data) => {
     try {
+      userImgId && await deletePhoto(userImgId);
       const file = data?.file ? data.file[0] : null;
       const { url, id } = file ? await uploadFile(file) : {};
       updateCredentials(data.displayName, file ? `${url}/${id}` : user.photoURL);
@@ -37,9 +40,12 @@ export default function Profile() {
 
   const handleDelete = async () => {
     try {
-      await deletePhoto(userImgId);
-      deleteAccount();
-      logoutUser();
+      if (userImgId) {
+        await deletePhoto(userImgId);
+      }
+      await deleteAccount();
+      await logoutUser();
+      navigate("/");
     } catch (error) {
       console.error("Deletion failed:", error);
     }
@@ -72,14 +78,14 @@ export default function Profile() {
         </label>
         {errors.displayName && <p className="text-red-400 mt-2">{errors.displayName.message}</p>}
 
-        <label className="relative block overflow-hidden rounded-md border border-gray-200 px-3 pt-3 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600">
+        <label className="relative block overflow-hidden rounded-md border border-gray-200 px-3 pt-4 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600">
           <input
             type="file"
             {...register("file")}
             onChange={(e) => setAvatar(URL.createObjectURL(e.target.files[0]))}
             className="peer h-8 w-full border-none bg-transparent p-0 placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
           />
-          <span className="absolute start-3 top-3 -translate-y-1/2 text-xs transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:text-xs text-slate-600 select-none">
+          <span className="absolute start-3 top-2 -translate-y-1/2 text-xs transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:text-xs text-slate-600 select-none">
             Profile Picture
           </span>
         </label>
@@ -89,10 +95,37 @@ export default function Profile() {
           Save Changes
         </button>
 
-        <button className="block rounded border border-rose-600 px-12 py-3 text-sm font-medium text-rose-600 shadow-sm hover:bg-slate-200 focus:outline-none focus:ring focus:ring-rose-300 active:bg-rose-700 sm:w-auto" type="button" onClick={handleDelete}>
+        <button 
+          className="block rounded border border-rose-600 px-12 py-3 text-sm font-medium text-rose-600 shadow-sm hover:bg-rose-600 hover:text-white focus:outline-none focus:ring focus:ring-rose-300 active:bg-rose-700 sm:w-auto shake"  
+          type="button" 
+          onClick={() => setShowPopup(true)}
+        >
           Delete Account
         </button>
       </form>
+
+      {showPopup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+            <h3 className="text-lg font-semibold">Are you sure you want to delete your account?</h3>
+            <p className="text-gray-600 mb-4">This action cannot be undone.</p>
+            <div className="flex justify-center gap-4">
+              <button 
+                className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700" 
+                onClick={() => { handleDelete(); setShowPopup(false); }}
+              >
+                Yes, Delete
+              </button>
+              <button 
+                className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400" 
+                onClick={() => setShowPopup(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

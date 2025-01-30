@@ -1,5 +1,5 @@
 import React from 'react'
-import EventCard from '../components/EventCard'
+import ListCard from '../components/ListCard'
 
 const Events = () => {
   return (
@@ -33,7 +33,7 @@ const Events = () => {
         <h2 className='text-center text-xl'>Submitted lists</h2>
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mx-8 mt-8 pb-6'>
           {Array(6).fill(null).map((_, index) => (
-            <EventCard key={index} />
+            <ListCard key={index} />
           ))}
       </div>
       </div>

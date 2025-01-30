@@ -15,10 +15,8 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (user) {
-      setTimeout(() => navigate('/'), 5000);
-    }
-  }, [user]);
+    user && setTimeout(() => navigate("/"), 1000) 
+  }, [user])
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -30,10 +28,8 @@ const Login = () => {
 
     try {
       await signInUser(email, password);
-
-      if (message?.signin) {
-        navigate("/");
-      }
+      message?.signin && navigate("/");
+      
     } catch (err) {
       console.error(err);
     } finally {

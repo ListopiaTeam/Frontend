@@ -20,11 +20,10 @@ export const uploadFile = async (file) => {
   }
 };
 
-const url=import.meta.env.RENDER_URL
+const url=import.meta.env.VITE_RENDER_URL
 
 
 export const deletePhoto=async(id)=>{
-    console.log(id);
 
     try {
         await axios.delete(url+id)
