@@ -10,7 +10,9 @@ export default function Profile() {
   const [avatar, setAvatar] = useState(null);
   const navigate = useNavigate();
   const userImgId = user?.photoURL ? extractUrlAndId(user.photoURL).id : null;
-
+  console.log(userImgId);
+  
+  
   useEffect(() => {
     user?.photoURL && setAvatar(extractUrlAndId(user.photoURL).url);
   }, [user]);
@@ -27,6 +29,7 @@ export default function Profile() {
 
   const onSubmit = async (data) => {
     try {
+      userImgId && await deletePhoto(userImgId);
       const file = data?.file ? data.file[0] : null;
       const { url, id } = file ? await uploadFile(file) : {};
       updateCredentials(data.displayName, file ? `${url}/${id}` : user.photoURL);
