@@ -1,5 +1,3 @@
-
-
 export const extractUrlAndId = (cloudinaryUrl) => {
     const lastSlashIndex = cloudinaryUrl.lastIndexOf('/')
     const url = cloudinaryUrl.substring(0, lastSlashIndex)

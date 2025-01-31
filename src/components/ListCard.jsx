@@ -16,7 +16,7 @@ const ListCard = () => {
         <span className="whitespace-nowrap bg-rose-400 px-3 py-1.5 text-xs font-medium">MMORPG</span>
       </div>
 
-      <h3 className="mt-4 text-lg font-medium text-gray-900">Best shooter games</h3>
+      <h3 className="mt-4 text-lg font-medium text-gray-900">wwwwwwwwwwwwwwwwwwwww</h3>
 
       <p className="mt-1.5 text-sm text-gray-700"><b>Votes:</b> 0</p>
 

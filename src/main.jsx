@@ -170,7 +170,7 @@ const AppWrapper = () => {
 };
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
+  // <StrictMode>
     <UserProvider>
       <BrowserRouter>
         <div className="flex flex-col min-h-screen">
@@ -181,5 +181,5 @@ createRoot(document.getElementById("root")).render(
         </div>
       </BrowserRouter>
     </UserProvider>
-  </StrictMode>
+  // </StrictMode>
 );
