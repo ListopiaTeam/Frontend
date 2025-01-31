@@ -6,7 +6,9 @@ const SearchBox = ({setGames, games, setSelectedGames}) => {
   console.log(games);
   
     const handleOnSearch = (string, results) => {
-        searchGamesByName(setGames, string)
+      console.log(string);
+      
+      searchGamesByName(setGames, string)
       }
       
       const handleOnHover = (result) => {
@@ -26,10 +28,13 @@ const SearchBox = ({setGames, games, setSelectedGames}) => {
       const formatResult = (item) => {
         return (
           <>
-        <div className='flex items-center gap-4 p-4 border rounded-lg hover:bg-gray-100 transition-colors'>
-            <img src={item.background_image} className='w-32 h-32 object-cover rounded-md' alt={item.name} />
-            <span className='text-lg font-semibold text-gray-800'>{item.name}</span>
-        </div>
+       <div className='flex flex-col sm:flex-row items-center gap-4 p-4 border rounded-lg hover:bg-gray-100 transition-colors'>
+        <img src={item.background_image} className='w-24 h-24 sm:w-32 sm:h-32 object-cover rounded-md' alt={item.name} />
+        <span className='text-base sm:text-lg font-semibold text-gray-800 text-center sm:text-left'>
+            {item.name}
+        </span>
+</div>
+
 
           </>
         )
