@@ -26,7 +26,7 @@ const url=import.meta.env.VITE_RENDER_URL
 export const deletePhoto=async(id)=>{
 
     try {
-        await axios.delete(url + "/list/" +id)
+        await axios.delete(url + "list/" +id)
     } catch (error) {
         console.log(error);
         

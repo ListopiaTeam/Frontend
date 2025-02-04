@@ -1,103 +1,298 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
-import { motion, AnimatePresence } from "motion/react"
+import { motion, AnimatePresence } from "framer-motion"
 import { UserContext } from '../UserContext'
+import { extractUrlAndId } from '../utility/utils'
 
 const Header = () => {
   const [show, setShow] = useState(false)
+   const [avatar, setAvatar] = useState(null);
   const { user, logoutUser } = useContext(UserContext)  
   const navigate = useNavigate()
-  const toggleMenu = () => {
-    setShow(!show)
-  }
 
   const logOut = () => {
     logoutUser()
     navigate("/")
   }
 
+  useEffect(() => {
+    if (user?.photoURL) {
+      setAvatar(extractUrlAndId(user.photoURL).url);
+      !user && setAvatar(null)
+    }
+  }, [user, user?.photoURL]); 
+
+  const menuVariants = {
+    open: { opacity: 1, y: 0 },
+    closed: { opacity: 0, y: "-100%" },
+  }
+
   return (
-    <nav>
-      <ul className='font-mono flex items-center justify-between p-5 z-50 bg-stone-800/85 px-4 shadow-xl text-slate-100 text-xl fixed top-0 left-0 w-full'>
-        
-        {/* Icon */}
-        <AnimatePresence>
-        {!show && (
-          <div className="md:hidden flex items-center cursor-pointer" onClick={toggleMenu}>
-            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
-            </svg>
-          </div>
-        )}
-        {show && (
-          <div className="md:hidden flex items-center cursor-pointer" onClick={toggleMenu}>
-          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
-        </div>
-        )}
-        </AnimatePresence>
+    <nav className="fixed top-0 left-0 w-full z-50 bg-gray-900/95 backdrop-blur-sm border-b border-gray-700 font-mono">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <NavLink to="/" className="flex items-center space-x-2">
+            <img 
+              src="Listopia_Icon_v2_big.png" 
+              alt="Listopia" 
+              className="h-8 w-8 transition-transform hover:scale-105"
+            />
+            <span className="text-xl font-bold text-rose-500">LISTOPIA</span>
+          </NavLink>
 
-      <img className='h-8 md:mr-5 mr-0 select-none' src="Listopia_Icon_v2_big.png" alt="Listopia" />
-
-        {/* Large screen */}
-        <div className="hidden md:flex md:flex-row flex-col gap-8 w-full">
-          <div className="flex gap-8">
-            <NavLink to={"/"} className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>Home</NavLink>
-            {user && (
-              <>
-                <NavLink to={"/create"} className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>Create List</NavLink>
-                <NavLink to={"/events"} className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>Events</NavLink>
-              </>
-            )}
-            <NavLink to={"/lists"} className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>Lists</NavLink>
-          </div>
-          {!user ? (
-            <div className="flex gap-8 ml-auto">
-              <NavLink to={"/register"}  className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>Register</NavLink>
-              <NavLink to={"/login"}  className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>Login</NavLink>
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-8">
+            <div className="flex items-center space-x-6">
+              <NavLink 
+                to="/" 
+                className={({isActive}) => 
+                  `block px-3 py-2 rounded-md transition-colors relative ${
+                    isActive 
+                      ? "text-rose-500 pl-6 before:content-['>'] before:absolute before:left-3" 
+                      : "text-gray-300 hover:text-rose-500"
+                  }`
+                }
+              >
+                Home
+              </NavLink>
+              {user && (
+                <>
+                  <NavLink 
+                    to="/create" 
+                    className={({isActive}) => 
+                      `block px-3 py-2 rounded-md transition-colors relative ${
+                        isActive 
+                          ? "text-rose-500 pl-6 before:content-['>'] before:absolute before:left-3" 
+                          : "text-gray-300 hover:text-rose-500"
+                      }`
+                    }
+                  >
+                    Create List
+                  </NavLink>
+                  <NavLink 
+                    to="/events" 
+                    className={({isActive}) => 
+                      `block px-3 py-2 rounded-md transition-colors relative ${
+                        isActive 
+                          ? "text-rose-500 pl-6 before:content-['>'] before:absolute before:left-3" 
+                          : "text-gray-300 hover:text-rose-500"
+                      }`
+                    }
+                  >
+                    Events
+                  </NavLink>
+                </>
+              )}
+              <NavLink 
+                to="/lists" 
+                className={({isActive}) => 
+                  `block px-3 py-2 rounded-md transition-colors relative ${
+                    isActive 
+                      ? "text-rose-500 pl-6 before:content-['>'] before:absolute before:left-3" 
+                      : "text-gray-300 hover:text-rose-500"
+                  }`
+                }
+              >
+                Lists
+              </NavLink>
             </div>
-          ) : 
-          (
-            <div className="flex gap-8 ml-auto">
-              <NavLink to={"/profile"}  className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>{user?.displayName}</NavLink>
-              <button onClick={logOut} className="text-slate-100 cursor-pointer">Logout</button>
-            </div>
-          )}
-        </div>
 
-      {/* Menu open */}
-      <AnimatePresence>
-          {show && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}  
-              animate={{ opacity: 1, y: 0 }} 
-              exit={{ opacity: 0, y: -10 }}    
-              transition={{ duration: 0.1 }} 
-              className="md:hidden absolute top-[70px] left-0 w-full bg-stone-900/90 backdrop-blur-sm p-5 select-none"
+            {/* Auth Section */}
+            <div className="ml-6 flex items-center space-x-6 border-l border-gray-700 pl-6">
+              {!user ? (
+                <>
+                  <NavLink 
+                    to="/register" 
+                    className="text-gray-300 hover:text-rose-500 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  >
+                    Register
+                  </NavLink>
+                  <NavLink 
+                    to="/login" 
+                    className="bg-rose-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-rose-700 transition-colors"
+                  >
+                    Login
+                  </NavLink>
+                </>
+              ) : (
+                <div className="flex items-center space-x-4">
+                  <NavLink 
+                    to="/profile" 
+                    className="flex items-center space-x-2 text-gray-300 hover:text-rose-500 transition-colors"
+                  >
+                    <div className="h-8 w-8 rounded-full bg-gray-700 flex items-center justify-center">
+                      {avatar ? (
+                        <img className='h-8 w-8 rounded-full bg-gray-700 flex items-center justify-center' src={avatar} alt="Profile picture" />
+                      ) : (
+                      <span className="text-sm font-medium">
+                        {user?.displayName?.charAt(0).toUpperCase()}
+                      </span>
+                      )}
+                    </div>
+                    <span className="text-sm font-medium">{user?.displayName}</span>
+                  </NavLink>
+                  <button 
+                    onClick={logOut}
+                    className="text-gray-300 hover:text-rose-500 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button 
+            onClick={() => setShow(!show)}
+            className="md:hidden p-2 rounded-md text-gray-400 hover:text-rose-500 focus:outline-none"
+          >
+            <svg 
+              className="h-6 w-6" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
             >
-              <div className="flex flex-col gap-5">
-                <NavLink to={"/"} onClick={() => setShow(!show)} className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>Home</NavLink>
-                {user && (
-                  <>
-                    <NavLink to={"/create"} onClick={() => setShow(!show)}  className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>Create List</NavLink>
-                    <NavLink to={"/events"} onClick={() => setShow(!show)}  className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>Events</NavLink>
-                  </>
-                )}
-                <NavLink to={"/lists"} className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>Lists</NavLink>
+              {show ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              )}
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {show && (
+          <motion.div
+            initial="closed"
+            animate="open"
+            exit="closed"
+            variants={menuVariants}
+            transition={{ duration: 0.2 }}
+            className="md:hidden absolute w-full bg-gray-800/95 backdrop-blur-sm"
+          >
+            <div className="px-4 pt-2 pb-4 space-y-2">
+              <NavLink 
+                to="/" 
+                onClick={() => setShow(false)}
+                className={({isActive}) => 
+                  `block px-3 py-2 rounded-md transition-colors relative ${
+                    isActive 
+                      ? "text-rose-500 pl-6 before:content-['>'] before:absolute before:left-3" 
+                      : "text-gray-300 hover:text-rose-500"
+                  }`
+                }
+              >
+                Home
+              </NavLink>
+              {user && (
+                <>
+                  <NavLink 
+                    to="/create" 
+                    onClick={() => setShow(false)}
+                    className={({isActive}) => 
+                      `block px-3 py-2 rounded-md transition-colors relative ${
+                        isActive 
+                          ? "text-rose-500 pl-6 before:content-['>'] before:absolute before:left-3" 
+                          : "text-gray-300 hover:text-rose-500"
+                      }`
+                    }
+                  >
+                    Create List
+                  </NavLink>
+                  <NavLink 
+                    to="/events" 
+                    onClick={() => setShow(false)}
+                    className={({isActive}) => 
+                      `block px-3 py-2 rounded-md transition-colors relative ${
+                        isActive 
+                          ? "text-rose-500 pl-6 before:content-['>'] before:absolute before:left-3" 
+                          : "text-gray-300 hover:text-rose-500"
+                      }`
+                    }
+                  >
+                    Events
+                  </NavLink>
+                </>
+              )}
+              <NavLink 
+                to="/lists" 
+                onClick={() => setShow(false)}
+                className={({isActive}) => 
+                  `block px-3 py-2 rounded-md transition-colors relative ${
+                    isActive 
+                      ? "text-rose-500 pl-6 before:content-['>'] before:absolute before:left-3" 
+                      : "text-gray-300 hover:text-rose-500"
+                  }`
+                }
+              >
+                Lists
+              </NavLink>
+              <div className="border-t border-gray-700 pt-2 mt-2">
                 {!user ? (
                   <>
-                    <NavLink to={"/register"} onClick={() => setShow(!show)}  className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>Register</NavLink>
-                    <NavLink to={"/login"} onClick={() => setShow(!show)}  className={({isActive}) => isActive ? "text-rose-500 cursor-pointer before:content-['>']" : "text-slate-100 cursor-pointer"}>Login</NavLink>
+                    <NavLink 
+                      to="/register" 
+                      onClick={() => setShow(false)}
+                      className={({isActive}) => 
+                        `block px-3 py-2 rounded-md transition-colors relative ${
+                          isActive 
+                            ? "text-rose-500 pl-6 before:content-['>'] before:absolute before:left-3" 
+                            : "text-gray-300 hover:text-rose-500"
+                        }`
+                      }
+                    >
+                      Register
+                    </NavLink>
+                    <NavLink 
+                      to="/login" 
+                      onClick={() => setShow(false)}
+                      className={({isActive}) => 
+                        `block px-3 py-2 rounded-md transition-colors relative ${
+                          isActive 
+                            ? "text-rose-500 pl-6 before:content-['>'] before:absolute before:left-3" 
+                            : "text-rose-500 hover:text-rose-600"
+                        }`
+                      }
+                    >
+                      Login
+                    </NavLink>
                   </>
                 ) : (
-                  <button onClick={logOut} className="text-slate-100 text-left cursor-pointer">Logout</button>
+                  <>
+                    <div className="flex items-center space-x-3 px-3 py-2">
+                      {/* ... existing user info */}
+                    </div>
+                    <NavLink 
+                      to="/profile" 
+                      onClick={() => setShow(false)}
+                      className={({isActive}) => 
+                        `block px-3 py-2 rounded-md transition-colors relative ${
+                          isActive 
+                            ? "text-rose-500 pl-6 before:content-['>'] before:absolute before:left-3" 
+                            : "text-gray-300 hover:text-rose-500"
+                        }`
+                      }
+                    >
+                      Profile
+                    </NavLink>
+                    <button 
+                      onClick={logOut}
+                      className="w-full text-left px-3 py-2 text-gray-300 hover:text-rose-500 rounded-md transition-colors"
+                    >
+                      Logout
+                    </button>
+                  </>
                 )}
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </ul>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   )
 }

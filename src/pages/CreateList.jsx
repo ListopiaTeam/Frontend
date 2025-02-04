@@ -1,8 +1,7 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState} from 'react'
 import TemplateList from '../components/TemplateList'
 import 'react-responsive-modal/styles.css';
 import { Modal } from 'react-responsive-modal';
-import SearchBox from '../components/SearchBox';
 import { searchGamesByName } from '../utility/rawgAPI'
 
 const CreateList = () => {
@@ -20,90 +19,130 @@ const CreateList = () => {
 
   const modalStyles = {
     modal: {
-      height: '700px',
-      maxHeight: '80vh', 
-      overflow: 'auto', 
+      maxWidth: '640px',
+      width: '90%',
+      padding: '0',
+      borderRadius: '12px'
     },
+    closeButton: {
+      top: '1.5rem',
+      right: '1.5rem'
+    }
   };
-
+  
   return (
     <form onSubmit={(e)=>e.preventDefault()} className='flex flex-col items-center justify-center mt-24 mb-6'>
-      <TemplateList/>
-      <div className="flex flex-col gap-3 mt-5">
-        <button onClick={onOpenModal} className="block rounded bg-rose-600 px-12 py-3 text-sm font-medium text-white shadow hover:bg-rose-700 focus:outline-none focus:ring active:bg-rose-500 sm:w-auto">Add games</button>
-        <button className="block rounded bg-rose-600 px-12 py-3 text-sm font-medium text-white shadow hover:bg-rose-700 focus:outline-none focus:ring active:bg-rose-500 sm:w-auto">Submit List</button>
-      </div>
-        <Modal open={open} onClose={onCloseModal} styles={modalStyles}>
-        <h2 className='font-bold text-xl'>Search Games</h2>
-        <div className='mt-8 sm:w-96 w-52'>
-        <div className="flex items-center gap-2 bg-white border rounded-md p-2 shadow-sm">
-        <input
-          type="text"
-          className="border-none outline-none flex-1 p-2 text-gray-700"
-          placeholder="Search Games"
-          value={searchedGame}
-          onChange={(e) => setSearchedGame(e.target.value)}
-        />
-        <button
-          onClick={searchGame}
-          className="px-4 py-2 bg-rose-600 text-white rounded-md hover:bg-rose-700 transition"
-        >
-          Search
-        </button>
-      </div>
-      {/* Display Selected Games */}
-      {selectedGames.length > 0 && (
-          <div className="mt-6 p-4 border rounded-md bg-gray-50">
-            <h3 className="font-bold text-lg mb-2">Selected Games:</h3>
-            <ul className="list-disc pl-5 text-gray-700">
-              {selectedGames.map((game) => (
-                <li key={game.id}>{game.name}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-          {/* <SearchBox setGames={setGames} games={games} setSelectedGames={setSelectedGames}/> */}
+ 
+  <TemplateList src={selectedGames && selectedGames[0]?.background_image}/>
+  <div className="flex flex-col sm:flex-row gap-3 mt-8 justify-center">
+          <button 
+            onClick={onOpenModal} 
+            className="flex items-center justify-center gap-2 w-full sm:w-auto rounded-lg bg-rose-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-rose-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-600 transition-colors"
+          >
+            <span className="text-lg">+</span>
+            Add Games
+          </button>
+          <button 
+            type="submit"
+            className="w-full sm:w-auto rounded-lg bg-gray-900 px-6 py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 transition-colors"
+          >
+            Publish List
+          </button>
         </div>
+      <Modal 
+        open={open} 
+        onClose={onCloseModal} 
+        styles={modalStyles}
+        classNames={{ modal: '!rounded-xl' }}
+      >
+        <div className="p-6 pb-8">
+          <div className="border-b border-gray-200 pb-4">
+            <h2 className='text-2xl font-bold text-gray-900'>Add Games to List</h2>
+          </div>
 
-        {/* Display games */}
-        <div className="flex flex-col gap-5 mt-8">
-        {games.length > 0 ? (
-          games.map((item) => (
-            <div
-              key={item.id}
-              className="flex flex-col sm:flex-row items-center gap-4 p-4 border rounded-md"
-            >
-              <img
-                src={item.background_image}
-                className="w-24 h-24 sm:w-32 sm:h-32 object-cover rounded-md"
-                alt={item.name}
+          <div className='mt-6'>
+            <div className="flex items-center gap-2 bg-white border border-gray-300 rounded-lg p-2 shadow-sm focus-within:border-rose-600 focus-within:ring-1 focus-within:ring-rose-600">
+              <span className="text-gray-400 ml-2">🔍</span>
+              <input
+                type="text"
+                className="w-full border-none outline-none p-2 text-gray-900 placeholder-gray-400"
+                placeholder="Search games..."
+                value={searchedGame}
+                onChange={(e) => setSearchedGame(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && searchGame()}
               />
-              <span className="text-base sm:text-lg font-semibold text-gray-800 text-center sm:text-left">
-                {item.name}
-              </span>
               <button
-                onClick={() => {
-                  setSelectedGames((prevSelected) =>
-                    prevSelected.some((game) => game.id === item.id)
-                      ? prevSelected.filter((game) => game.id !== item.id) 
-                      : [...prevSelected, item] 
-                  );
-                }}
-                className={`sm:ml-auto px-3 py-2 rounded-md transition 
-                  ${selectedGames.some((game) => game.id === item.id) 
-                    ? "bg-black text-white" 
-                    : "bg-rose-600 hover:bg-rose-700 text-white"}
-                `}
+                onClick={searchGame}
+                className="flex items-center gap-2 px-4 py-2.5 bg-rose-600 text-white rounded-md hover:bg-rose-700 transition-colors"
               >
-                {selectedGames.some((game) => game.id === item.id) ? "Remove game" : "Add Game"}
+                Search
               </button>
             </div>
-          ))
-        ) : (
-          <p className="text-gray-500 text-center mt-4">No games found.</p>
-        )}
-      </div> 
-        
+
+            {selectedGames.length > 0 && (
+              <div className="mt-6 p-4 border border-rose-200 rounded-lg bg-rose-50">
+                <h3 className="font-semibold text-gray-900 mb-3">Selected Games ({selectedGames.length})</h3>
+                <div className="flex flex-wrap gap-2">
+                  {selectedGames.map((game) => (
+                    <span 
+                      key={game.id}
+                      className="flex items-center gap-2 px-3 py-1.5 bg-white border border-rose-200 rounded-full text-sm text-rose-700"
+                    >
+                      {game.name}
+                      <button 
+                        onClick={() => setSelectedGames(prev => prev.filter(g => g.id !== game.id))}
+                        className="text-rose-400 hover:text-rose-600"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="mt-6 space-y-4 max-h-[500px] overflow-y-auto pr-2">
+            {games.length > 0 ? (
+              games.map((item) => (
+                <div
+                  key={item.id}
+                  className="group flex items-center gap-4 p-3 border border-gray-200 rounded-lg hover:border-rose-200 hover:bg-rose-50 transition-colors"
+                >
+                  <img
+                    src={item.background_image}
+                    className="w-16 h-16 flex-shrink-0 rounded-lg object-cover"
+                    alt={item.name}
+                  />
+                  <span className="text-base font-medium text-gray-900 flex-1">
+                    {item.name}
+                  </span>
+                  <button
+                    onClick={() => {
+                      setSelectedGames((prev) =>
+                        prev.some((g) => g.id === item.id)
+                          ? prev.filter((g) => g.id !== item.id)
+                          : [...prev, item]
+                      )
+                    }}
+                    className={`px-4 py-2 rounded-md font-medium text-sm transition-colors ${
+                      selectedGames.some((g) => g.id === item.id)
+                        ? 'bg-gray-900 text-white hover:bg-gray-800'
+                        : 'bg-rose-600 text-white hover:bg-rose-700'
+                    }`}
+                  >
+                    {selectedGames.some((g) => g.id === item.id) ? 'Remove' : 'Add'}
+                  </button>
+                </div>
+              ))
+            ) : (
+              <div className="p-8 text-center">
+                <div className="text-gray-400 mb-2">No games found</div>
+                <p className="text-sm text-gray-500">Try searching for your favorite games</p>
+              </div>
+            )}
+          </div>
+        </div>
       </Modal>
     </form>
   )

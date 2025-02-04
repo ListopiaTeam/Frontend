@@ -3,41 +3,65 @@ import { NavLink } from "react-router-dom";
 
 const Event = () => {
     return (
-        <section className="relative bg-[url('banner.jpg')] bg-cover bg-center bg-no-repeat">
+        <section className="relative min-h-[80vh] bg-[url('banner.jpg')] bg-cover bg-center bg-no-repeat bg-fixed">
+            <div className="absolute inset-0 bg-gradient-to-t sm:bg-gradient-to-tr from-gray-900/95 via-gray-900/70 to-transparent"></div>
 
-            <div
-                className="absolute inset-0 bg-gray-900/30 sm:bg-gradient-to-r sm:from-gray-900/90 sm:to-gray-900/15 bg-gradient-to-b from-gray-900/90 to-gray-900/15"
-            ></div>
+            <div className="relative mx-auto max-w-screen-xl px-4 py-24 sm:px-6 lg:flex lg:h-[80vh] lg:items-center lg:px-8">
+                <div className="max-w-2xl text-center sm:text-left space-y-8">
+                    <div className="space-y-4">
+                        <h1 className="text-4xl sm:text-6xl font-bold text-white leading-tight">
+                            <span className="bg-gradient-to-r from-rose-400 to-rose-600 bg-clip-text text-transparent">
+                                Listopia
+                            </span>
+                            <strong className="block mt-3 text-3xl sm:text-5xl font-extrabold text-white">
+                                Be The Best
+                            </strong>
+                        </h1>
 
-            <div
-                className="relative mx-auto max-w-screen-xl px-4 py-32 sm:px-6 lg:flex lg:h-screen lg:items-center lg:px-8"
-            >
-                <div className="max-w-xl text-center sm:text-left">
-                    <h1 className="text-3xl font-extrabold text-white sm:text-5xl">
-                        Listopia
-                        <strong className="block font-extrabold text-rose-600">
-                            Be the best
-                        </strong>
-                    </h1>
+                        <p className="text-lg sm:text-xl text-gray-200 max-w-2xl leading-relaxed">
+                        Submit your list to be the winner of the List Creating event and be on the leaderboard!
+                        </p>
+                    </div>
 
-                    <p className="mt-4 max-w-lg text-white sm:text-xl ">
-                        Submit your list to be the winner for the List Creating event and be on the leaderboard!
-                    </p>
-
-                    <div className="mt-8 flex flex-wrap gap-4 text-center sm:justify-start justify-center">
+                    <div className="flex flex-col sm:flex-row gap-6 items-center sm:items-start">
                         <NavLink
-                            to={'/events'}
-                            className="block rounded bg-rose-600 px-12 py-3 text-sm font-medium text-white shadow hover:bg-rose-700 focus:outline-none focus:ring active:bg-rose-500 sm:w-auto"
+                            to="/events"
+                            className="group relative flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 text-sm font-semibold text-white bg-rose-600 rounded-lg shadow-lg hover:bg-rose-700 transition-all transform hover:scale-105"
                         >
-                            Submit List
+                            <span>Join the Event</span>
+                            <svg 
+                                className="w-4 h-4 group-hover:translate-x-1 transition-transform"
+                                fill="none" 
+                                stroke="currentColor" 
+                                viewBox="0 0 24 24"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                            </svg>
                         </NavLink>
 
                         <NavLink
-                            to={'/events'}
-                            className="block rounded bg-white px-12 py-3 text-sm font-medium text-rose-600 shadow hover:text-rose-700 focus:outline-none focus:ring active:text-rose-500 sm:w-auto"
+                            to="/events"
+                            className="flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 text-sm font-semibold text-gray-200 bg-white/10 rounded-lg backdrop-blur-sm hover:bg-white/20 transition-all border border-white/20 hover:border-white/30"
                         >
-                            Learn More
+                            <svg 
+                                className="w-4 h-4" 
+                                fill="none" 
+                                stroke="currentColor" 
+                                viewBox="0 0 24 24"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>Event Details</span>
                         </NavLink>
+                    </div>
+
+                    <div className="mt-12 flex items-center justify-center sm:justify-start gap-4 text-gray-300 text-sm">
+                        <div className="flex items-center gap-2">
+                            <svg className="w-5 h-5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>3 Days Remaining</span>
+                        </div>
                     </div>
                 </div>
             </div>
