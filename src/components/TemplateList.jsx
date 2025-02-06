@@ -1,6 +1,4 @@
-import React from 'react'
-
-const TemplateList = ({src}) => {
+const TemplateList = ({ src, selectedTags, onTagRemove, onTagModalOpen }) => {
   return (
     <div className="group relative block overflow-hidden shadow-xl border border-black max-w-lg mx-auto w-full">
       <div className="relative w-full h-48 bg-gray-300 flex items-center justify-center select-none">
@@ -17,10 +15,23 @@ const TemplateList = ({src}) => {
         )}
       </div>
       <div className="relative border border-gray-100 bg-white p-6">
-        <div className="flex gap-4">
-          <span className="whitespace-nowrap bg-rose-400 px-3 py-1.5 text-xs font-mono font-medium cursor-pointer select-none hover:bg-rose-500">
+        <div className="flex flex-wrap gap-2">
+          <span 
+            onClick={onTagModalOpen}
+            className="whitespace-nowrap bg-rose-400 px-3 py-1.5 text-xs font-mono font-medium cursor-pointer select-none hover:bg-rose-500"
+          >
             SELECT TAGS
           </span>
+          {selectedTags.map(tag => (
+            <span
+              key={tag}
+              className="flex items-center gap-1 bg-rose-100 px-3 py-1.5 text-xs font-mono font-medium cursor-pointer select-none hover:bg-rose-200 rounded"
+              onClick={() => onTagRemove(tag)}
+            >
+              {tag}
+              <span className="text-rose-500">×</span>
+            </span>
+          ))}
         </div>
         <div className="flex flex-col">
           <input 
