@@ -1,66 +1,111 @@
-import React, {useState} from 'react'
-import TemplateList from '../components/TemplateList'
-import 'react-responsive-modal/styles.css';
-import { Modal } from 'react-responsive-modal';
-import { searchGamesByName } from '../utility/rawgAPI'
+import React, { useState } from "react";
+import TemplateList from "../components/TemplateList";
+import "react-responsive-modal/styles.css";
+import { Modal } from "react-responsive-modal";
+import { searchGamesByName } from "../utility/rawgAPI";
+import { addList } from "../utility/crudUtility";
+import { getAuth } from "firebase/auth";
 
 const CreateList = () => {
   const [open, setOpen] = useState(false);
   const [games, setGames] = useState([]);
-  const [selectedGames, setSelectedGames] = useState([])
+  const [selectedGames, setSelectedGames] = useState([]);
   const [searchedGame, setSearchedGame] = useState("");
-  
+
   const searchGame = () => {
-    searchGamesByName(setGames, searchedGame)
-  }
-  
+    searchGamesByName(setGames, searchedGame);
+  };
+
   const onOpenModal = () => setOpen(true);
   const onCloseModal = () => setOpen(false);
 
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const auth = getAuth();
+    const user = auth.currentUser;
+    //console.log(e.target[1].value);
+    
+    
+    if (!user) {
+      alert("You must be logged in to create a list!");
+      return;
+    }
+
+
+    
+   if(!(e.target[0].value && e.target[1].value && selectedGames.length>0)){
+    alert("give all details")
+    return
+   }
+
+    const formData = {
+      title: e.target[0].value,
+      desc: e.target[1].value,
+      categories: ["Shooter", "Openworld"],
+      games: selectedGames.map((game) => game),
+      likes: 0,
+      userID: user.uid,
+    };
+
+    try {
+      await addList(formData);
+      alert("List successfully created!");
+      setSelectedGames([]);
+    } catch (error) {
+      console.error("Error creating list:", error);
+      alert("Failed to create the list. Please try again.");
+    }
+  }
+
   const modalStyles = {
     modal: {
-      maxWidth: '640px',
-      width: '90%',
-      padding: '0',
-      borderRadius: '12px'
+      maxWidth: "640px",
+      width: "90%",
+      padding: "0",
+      borderRadius: "12px",
     },
     closeButton: {
-      top: '1.5rem',
-      right: '1.5rem'
-    }
+      top: "1.5rem",
+      right: "1.5rem",
+    },
   };
-  
+
   return (
-    <form onSubmit={(e)=>e.preventDefault()} className='flex flex-col items-center justify-center mt-24 mb-6'>
- 
-  <TemplateList src={selectedGames && selectedGames[0]?.background_image}/>
-  <div className="flex flex-col sm:flex-row gap-3 mt-8 justify-center">
-          <button 
-            onClick={onOpenModal} 
-            className="flex items-center justify-center gap-2 w-full sm:w-auto rounded-lg bg-rose-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-rose-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-600 transition-colors"
-          >
-            <span className="text-lg">+</span>
-            Add Games
-          </button>
-          <button 
-            type="submit"
-            className="w-full sm:w-auto rounded-lg bg-gray-900 px-6 py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 transition-colors"
-          >
-            Publish List
-          </button>
-        </div>
-      <Modal 
-        open={open} 
-        onClose={onCloseModal} 
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col items-center justify-center mt-24 mb-6 mx-4"
+    >
+      <TemplateList src={selectedGames && selectedGames[0]?.background_image} />
+      <div className="flex flex-col sm:flex-row gap-3 mt-8 justify-center">
+        <button
+            type="button"
+          onClick={onOpenModal}
+          className="flex items-center justify-center gap-2 w-full sm:w-auto rounded-lg bg-rose-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-rose-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-600 transition-colors"
+        >
+          <span className="text-lg">+</span>
+          Add Games
+        </button>
+        <button
+          type="submit"
+          className="w-full sm:w-auto rounded-lg bg-gray-900 px-6 py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 transition-colors"
+        >
+          Publish List
+        </button>
+      </div>
+      <Modal
+        open={open}
+        onClose={onCloseModal}
         styles={modalStyles}
-        classNames={{ modal: '!rounded-xl' }}
+        classNames={{ modal: "!rounded-xl" }}
       >
         <div className="p-6 pb-8">
           <div className="border-b border-gray-200 pb-4">
-            <h2 className='text-2xl font-bold text-gray-900'>Add Games to List</h2>
+            <h2 className="text-2xl font-bold text-gray-900">
+              Add Games to List
+            </h2>
           </div>
 
-          <div className='mt-6'>
+          <div className="mt-6">
             <div className="flex items-center gap-2 bg-white border border-gray-300 rounded-lg p-2 shadow-sm focus-within:border-rose-600 focus-within:ring-1 focus-within:ring-rose-600">
               <span className="text-gray-400 ml-2">🔍</span>
               <input
@@ -69,7 +114,7 @@ const CreateList = () => {
                 placeholder="Search games..."
                 value={searchedGame}
                 onChange={(e) => setSearchedGame(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && searchGame()}
+                onKeyPress={(e) => e.key === "Enter" && searchGame()}
               />
               <button
                 onClick={searchGame}
@@ -81,16 +126,22 @@ const CreateList = () => {
 
             {selectedGames.length > 0 && (
               <div className="mt-6 p-4 border border-rose-200 rounded-lg bg-rose-50">
-                <h3 className="font-semibold text-gray-900 mb-3">Selected Games ({selectedGames.length})</h3>
+                <h3 className="font-semibold text-gray-900 mb-3">
+                  Selected Games ({selectedGames.length})
+                </h3>
                 <div className="flex flex-wrap gap-2">
                   {selectedGames.map((game) => (
-                    <span 
+                    <span
                       key={game.id}
                       className="flex items-center gap-2 px-3 py-1.5 bg-white border border-rose-200 rounded-full text-sm text-rose-700"
                     >
                       {game.name}
-                      <button 
-                        onClick={() => setSelectedGames(prev => prev.filter(g => g.id !== game.id))}
+                      <button
+                        onClick={() =>
+                          setSelectedGames((prev) =>
+                            prev.filter((g) => g.id !== game.id)
+                          )
+                        }
                         className="text-rose-400 hover:text-rose-600"
                       >
                         ×
@@ -123,29 +174,33 @@ const CreateList = () => {
                         prev.some((g) => g.id === item.id)
                           ? prev.filter((g) => g.id !== item.id)
                           : [...prev, item]
-                      )
+                      );
                     }}
                     className={`px-4 py-2 rounded-md font-medium text-sm transition-colors ${
                       selectedGames.some((g) => g.id === item.id)
-                        ? 'bg-gray-900 text-white hover:bg-gray-800'
-                        : 'bg-rose-600 text-white hover:bg-rose-700'
+                        ? "bg-gray-900 text-white hover:bg-gray-800"
+                        : "bg-rose-600 text-white hover:bg-rose-700"
                     }`}
                   >
-                    {selectedGames.some((g) => g.id === item.id) ? 'Remove' : 'Add'}
+                    {selectedGames.some((g) => g.id === item.id)
+                      ? "Remove"
+                      : "Add"}
                   </button>
                 </div>
               ))
             ) : (
               <div className="p-8 text-center">
                 <div className="text-gray-400 mb-2">No games found</div>
-                <p className="text-sm text-gray-500">Try searching for your favorite games</p>
+                <p className="text-sm text-gray-500">
+                  Try searching for your favorite games
+                </p>
               </div>
             )}
           </div>
         </div>
       </Modal>
     </form>
-  )
-}
+  );
+};
 
-export default CreateList
+export default CreateList;
