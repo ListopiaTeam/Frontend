@@ -19,3 +19,12 @@ export const searchGamesByName = async (setGames, query, page) => {
         console.log(error)
     }
 }
+
+export const getTags = async (setTags) => {
+    try {
+        const response = await axios.get(URL + "getGenres/")
+        setTags(response.json())
+    } catch (error) {
+        console.log(error);
+    }
+}
