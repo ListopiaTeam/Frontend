@@ -144,8 +144,6 @@ const CreateList = () => {
       </div>
 
       {/* Tag selection modal */}
-
-   
         <Modal
           open={isTagModalOpen}
           onClose={() => setIsTagModalOpen(false)}
@@ -158,8 +156,6 @@ const CreateList = () => {
             </div>
 
             <div className="mt-6">
-            
-
               {tags.length > 0 && (
                 <div className="mt-4 p-4 border border-gray-200 rounded-lg bg-gray-50">
                   <h3 className="text-sm font-semibold text-gray-900 mb-3">Available Tags</h3>
@@ -173,10 +169,13 @@ const CreateList = () => {
                           key={tag}
                           type="button"
                           onClick={() => {
-                            if (!selectedTags.includes(tag)) {
-                              setSelectedTags([...selectedTags, tag]);
+                            if (selectedTags.includes(tag)) {
+                              setSelectedTags(selectedTags.filter((t) => t !== tag)); 
+                            } else {
+                              setSelectedTags([...selectedTags, tag]); 
                             }
                           }}
+                          
                           className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
                             selectedTags.includes(tag)
                               ? 'bg-rose-600 text-white hover:bg-rose-700'
