@@ -1,43 +1,49 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import TemplateList from "../components/TemplateList";
-import "react-responsive-modal/styles.css";
+import Alert from "../components/Alert";
+import { UserContext } from "../UserContext";
 import { Modal } from "react-responsive-modal";
 import { searchGamesByName } from "../utility/rawgAPI";
 import { addList } from "../utility/crudUtility";
-import { getAuth } from "firebase/auth";
+import "react-responsive-modal/styles.css";
 
 const CreateList = () => {
   const [open, setOpen] = useState(false);
+  const {user} = useContext(UserContext)
   const [games, setGames] = useState([]);
   const [selectedGames, setSelectedGames] = useState([]);
   const [searchedGame, setSearchedGame] = useState("");
+  const [msg, setMsg] = useState("")
+  const [err, setErr] = useState("")
+  const [page, setPage] = useState(1)
 
   const searchGame = () => {
-    searchGamesByName(setGames, searchedGame);
+    searchGamesByName(setGames, searchedGame, page);
   };
 
   const onOpenModal = () => setOpen(true);
   const onCloseModal = () => setOpen(false);
-
+  
+  console.log(games);
+  
   async function handleSubmit(e) {
     e.preventDefault();
-    const auth = getAuth();
-    const user = auth.currentUser;
-    //console.log(e.target[1].value);
-    
-    
     if (!user) {
-      alert("You must be logged in to create a list!");
+      setErr("You must be logged in to create a list!")
+      setTimeout(() => {
+        setErr("")
+      }, 4000)
       return;
     }
 
-
+    if(!(e.target[0].value && e.target[1].value && selectedGames.length>0)){
+      setErr("Give all details to create a list!")
+      setTimeout(() => {
+        setErr("")
+      }, 4000)
+      return;
+     }
     
-   if(!(e.target[0].value && e.target[1].value && selectedGames.length>0)){
-    alert("give all details")
-    return
-   }
-
     const formData = {
       title: e.target[0].value,
       desc: e.target[1].value,
@@ -48,12 +54,20 @@ const CreateList = () => {
     };
 
     try {
-      await addList(formData);
-      alert("List successfully created!");
-      setSelectedGames([]);
+       {
+        await addList(formData);
+        setMsg("List successfully created!");
+        setTimeout(() => {
+          setMsg("")
+        }, 4000)
+        setSelectedGames([]);
+       }
     } catch (error) {
       console.error("Error creating list:", error);
-      alert("Failed to create the list. Please try again.");
+      setErr("Failed to create the list. Please try again.");
+      setTimeout(() => {
+        setErr("")
+      }, 4000)
     }
   }
 
@@ -78,7 +92,7 @@ const CreateList = () => {
       <TemplateList src={selectedGames && selectedGames[0]?.background_image} />
       <div className="flex flex-col sm:flex-row gap-3 mt-8 justify-center">
         <button
-            type="button"
+          type="button"
           onClick={onOpenModal}
           className="flex items-center justify-center gap-2 w-full sm:w-auto rounded-lg bg-rose-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-rose-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-600 transition-colors"
         >
@@ -105,24 +119,30 @@ const CreateList = () => {
             </h2>
           </div>
 
-          <div className="mt-6">
-            <div className="flex items-center gap-2 bg-white border border-gray-300 rounded-lg p-2 shadow-sm focus-within:border-rose-600 focus-within:ring-1 focus-within:ring-rose-600">
-              <span className="text-gray-400 ml-2">🔍</span>
-              <input
-                type="text"
-                className="w-full border-none outline-none p-2 text-gray-900 placeholder-gray-400"
-                placeholder="Search games..."
-                value={searchedGame}
-                onChange={(e) => setSearchedGame(e.target.value)}
-                onKeyPress={(e) => e.key === "Enter" && searchGame()}
-              />
-              <button
-                onClick={searchGame}
-                className="flex items-center gap-2 px-4 py-2.5 bg-rose-600 text-white rounded-md hover:bg-rose-700 transition-colors"
-              >
-                Search
-              </button>
-            </div>
+          <div>
+            <div className="mt-6 flex flex-col items-center">
+              <div className="flex items-center gap-2 bg-white border border-gray-300 rounded-lg p-2 shadow-sm focus-within:border-rose-600 focus-within:ring-1 focus-within:ring-rose-600">
+                <span className="text-gray-400 ml-2">🔍</span>
+                <input
+                  type="text"
+                  className="w-full border-none outline-none p-2 text-gray-900 placeholder-gray-400"
+                  placeholder="Search games..."
+                  value={searchedGame}
+                  onChange={(e) => setSearchedGame(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && searchGame()}
+                />
+                <button
+                  onClick={searchGame}
+                  className="flex items-center gap-2 px-4 py-2.5 bg-rose-600 text-white rounded-md hover:bg-rose-700 transition-colors"
+                >
+                  Search
+                </button>
+              </div>
+              <div className="flex gap-5 mt-2">
+                <button onClick={() => setPage(prev => prev - 1)}>Previous</button>
+                <button onClick={() => setPage(prev => prev + 1)}>Next</button>
+              </div>
+          </div>
 
             {selectedGames.length > 0 && (
               <div className="mt-6 p-4 border border-rose-200 rounded-lg bg-rose-50">
@@ -199,6 +219,11 @@ const CreateList = () => {
           </div>
         </div>
       </Modal>
+            {msg ? (
+            <Alert msg={msg} />
+            ) : (
+              err && <Alert err={err} />
+            )}
     </form>
   );
 };
