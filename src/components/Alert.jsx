@@ -11,7 +11,7 @@ const Alert = ({ msg, err }) => {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: 20 }}
           transition={{ type: "spring", stiffness: 300, damping: 20 }}
-          className={`fixed top-4 right-4 sm:top-6 sm:right-6 z-50 max-w-sm rounded-lg p-4 shadow-xl font-sans border-l-4 ${
+          className={`fixed top-4 right-4 sm:top-20 sm:right-6 z-50 max-w-sm rounded-lg p-4 shadow-xl font-sans border-l-4 ${
             err 
               ? "bg-red-50 border-red-600" 
               : "bg-emerald-50 border-emerald-600"
