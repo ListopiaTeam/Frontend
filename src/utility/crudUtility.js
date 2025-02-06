@@ -14,6 +14,10 @@ import {
   } from "firebase/firestore";
   import { db } from "./firebaseApp";
 
-  //oh god
+  export const addList = async (formData) => {
+    const collectionRef = collection(db, "Lists");
+    const newItem = { ...formData, timestamp: serverTimestamp() };
+    await addDoc(collectionRef, newItem);
+  };
 
   

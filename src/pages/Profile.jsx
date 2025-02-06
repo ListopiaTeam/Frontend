@@ -15,6 +15,8 @@ export default function Profile() {
   const [alertErr, setAlertErr] = useState("");
   const navigate = useNavigate();
   const userImgId = user?.photoURL ? extractUrlAndId(user.photoURL).id : null;
+  console.log(user);
+  
   
   useEffect(() => {
     user?.photoURL && setAvatar(extractUrlAndId(user.photoURL).url);

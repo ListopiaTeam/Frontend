@@ -1,18 +1,19 @@
-import React, { useState } from 'react'
-import TemplateList from '../components/TemplateList'
-import 'react-responsive-modal/styles.css';
-import { Modal } from 'react-responsive-modal';
-import { searchGamesByName } from '../utility/rawgAPI'
+import React, {  useState, useContext, useEffect  } from "react";
+import TemplateList from "../components/TemplateList";
+import Alert from "../components/Alert";
+import { UserContext } from "../UserContext";
+import { Modal } from "react-responsive-modal";
+import { searchGamesByName } from "../utility/rawgAPI";
+import { addList } from "../utility/crudUtility";
+import "react-responsive-modal/styles.css";
 
 const CreateList = () => {
   const [open, setOpen] = useState(false);
+  const {user} = useContext(UserContext)
   const [games, setGames] = useState([]);
-  const [isTagModalOpen, setIsTagModalOpen] = useState(false);
   const [selectedGames, setSelectedGames] = useState([])
   const [searchedGame, setSearchedGame] = useState("");
-  const [selectedTags, setSelectedTags] = useState([]);
-  const [newTag, setNewTag] = useState("");
-
+  
   const searchGame = () => {
     searchGamesByName(setGames, searchedGame)
   }
@@ -31,18 +32,65 @@ const CreateList = () => {
 
   const onOpenModal = () => setOpen(true);
   const onCloseModal = () => setOpen(false);
+  
+  console.log(games);
+  
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if (!user) {
+      setErr("You must be logged in to create a list!")
+      setTimeout(() => {
+        setErr("")
+      }, 4000)
+      return;
+    }
+
+    if(!(e.target[0].value && e.target[1].value && selectedGames.length>0)){
+      setErr("Give all details to create a list!")
+      setTimeout(() => {
+        setErr("")
+      }, 4000)
+      return;
+     }
+    
+    const formData = {
+      title: e.target[0].value,
+      desc: e.target[1].value,
+      categories: ["Shooter", "Openworld"],
+      games: selectedGames.map((game) => game),
+      likes: 0,
+      userID: user.uid,
+    };
+
+    try {
+       {
+        await addList(formData);
+        setMsg("List successfully created!");
+        setTimeout(() => {
+          setMsg("")
+        }, 4000)
+        setSelectedGames([]);
+       }
+    } catch (error) {
+      console.error("Error creating list:", error);
+      setErr("Failed to create the list. Please try again.");
+      setTimeout(() => {
+        setErr("")
+      }, 4000)
+    }
+  }
 
   const modalStyles = {
     modal: {
-      maxWidth: '640px',
-      width: '90%',
-      padding: '0',
-      borderRadius: '12px'
+      maxWidth: "640px",
+      width: "90%",
+      padding: "0",
+      borderRadius: "12px",
     },
     closeButton: {
-      top: '1.5rem',
-      right: '1.5rem'
-    }
+      top: "1.5rem",
+      right: "1.5rem",
+    },
   };
 
   const tagModalStyles = {
@@ -146,35 +194,45 @@ const CreateList = () => {
         open={open}
         onClose={onCloseModal}
         styles={modalStyles}
-        classNames={{ modal: '!rounded-xl' }}
+        classNames={{ modal: "!rounded-xl" }}
       >
         <div className="p-6 pb-8">
           <div className="border-b border-gray-200 pb-4">
-            <h2 className='text-2xl font-bold text-gray-900'>Add Games to List</h2>
+            <h2 className="text-2xl font-bold text-gray-900">
+              Add Games to List
+            </h2>
           </div>
 
-          <div className='mt-6'>
-            <div className="flex items-center gap-2 bg-white border border-gray-300 rounded-lg p-2 shadow-sm focus-within:border-rose-600 focus-within:ring-1 focus-within:ring-rose-600">
-              <span className="text-gray-400 ml-2">🔍</span>
-              <input
-                type="text"
-                className="w-full border-none outline-none p-2 text-gray-900 placeholder-gray-400"
-                placeholder="Search games..."
-                value={searchedGame}
-                onChange={(e) => setSearchedGame(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && searchGame()}
-              />
-              <button
-                onClick={searchGame}
-                className="flex items-center gap-2 px-4 py-2.5 bg-rose-600 text-white rounded-md hover:bg-rose-700 transition-colors"
-              >
-                Search
-              </button>
-            </div>
+          <div>
+            <div className="mt-6 flex flex-col items-center">
+              <div className="flex items-center gap-2 bg-white border border-gray-300 rounded-lg p-2 shadow-sm focus-within:border-rose-600 focus-within:ring-1 focus-within:ring-rose-600">
+                <span className="text-gray-400 ml-2">🔍</span>
+                <input
+                  type="text"
+                  className="w-full border-none outline-none p-2 text-gray-900 placeholder-gray-400"
+                  placeholder="Search games..."
+                  value={searchedGame}
+                  onChange={(e) => setSearchedGame(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && searchGame()}
+                />
+                <button
+                  onClick={searchGame}
+                  className="flex items-center gap-2 px-4 py-2.5 bg-rose-600 text-white rounded-md hover:bg-rose-700 transition-colors"
+                >
+                  Search
+                </button>
+              </div>
+              <div className="flex gap-5 mt-2">
+                <button onClick={() => setPage(prev => prev - 1)}>Previous</button>
+                <button onClick={() => setPage(prev => prev + 1)}>Next</button>
+              </div>
+          </div>
 
             {selectedGames.length > 0 && (
               <div className="mt-6 p-4 border border-rose-200 rounded-lg bg-rose-50">
-                <h3 className="font-semibold text-gray-900 mb-3">Selected Games ({selectedGames.length})</h3>
+                <h3 className="font-semibold text-gray-900 mb-3">
+                  Selected Games ({selectedGames.length})
+                </h3>
                 <div className="flex flex-wrap gap-2">
                   {selectedGames.map((game) => (
                     <span
@@ -182,7 +240,7 @@ const CreateList = () => {
                       className="flex items-center gap-2 px-3 py-1.5 bg-white border border-rose-200 rounded-full text-sm text-rose-700"
                     >
                       {game.name}
-                      <button
+                      <button 
                         onClick={() => setSelectedGames(prev => prev.filter(g => g.id !== game.id))}
                         className="text-rose-400 hover:text-rose-600"
                       >
@@ -216,29 +274,33 @@ const CreateList = () => {
                         prev.some((g) => g.id === item.id)
                           ? prev.filter((g) => g.id !== item.id)
                           : [...prev, item]
-                      )
+                      );
                     }}
-                    className={`px-4 py-2 rounded-md font-medium text-sm transition-colors ${selectedGames.some((g) => g.id === item.id)
+                    className={`px-4 py-2 rounded-md font-medium text-sm transition-colors ${
+                      selectedGames.some((g) => g.id === item.id)
                         ? 'bg-gray-900 text-white hover:bg-gray-800'
                         : 'bg-rose-600 text-white hover:bg-rose-700'
-                      }`}
+                    }`}
                   >
-                    {selectedGames.some((g) => g.id === item.id) ? 'Remove' : 'Add'}
+                    {selectedGames.some((g) => g.id === item.id)
+                      ? "Remove"
+                      : "Add"}
                   </button>
                 </div>
               ))
             ) : (
               <div className="p-8 text-center">
                 <div className="text-gray-400 mb-2">No games found</div>
-                <p className="text-sm text-gray-500">Try searching for your favorite games</p>
+                <p className="text-sm text-gray-500">
+                  Try searching for your favorite games
+                </p>
               </div>
             )}
           </div>
         </div>
       </Modal>
-
     </form>
-  )
-}
+  );
+};
 
-export default CreateList
+export default CreateList;

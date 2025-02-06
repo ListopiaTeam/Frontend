@@ -44,18 +44,6 @@ const Header = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             <div className="flex items-center space-x-6">
-              <NavLink 
-                to="/" 
-                className={({isActive}) => 
-                  `block px-3 py-2 rounded-md transition-colors relative ${
-                    isActive 
-                      ? "text-rose-500 pl-6 before:content-['>'] before:absolute before:left-3" 
-                      : "text-gray-300 hover:text-rose-500"
-                  }`
-                }
-              >
-                Home
-              </NavLink>
               {user && (
                 <>
                   <NavLink 
