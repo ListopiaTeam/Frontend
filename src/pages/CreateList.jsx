@@ -26,10 +26,9 @@ const CreateList = () => {
     searchGamesByName(setGames, searchedGame)
   }
 
-  // useEffect(() => {
-  //   getTags(setTags)
-  // }, [])
-
+  useEffect(() => {
+    getTags(setTags)
+  }, [])
 
   const addNewTag = () => {
     const trimmedTag = newTag.trim();
@@ -64,7 +63,7 @@ const CreateList = () => {
     const formData = {
       title: e.target[0].value,
       desc: e.target[1].value,
-      categories: ["Shooter", "Openworld"],
+      categories:  selectedTags.map((tags) => tags),
       games: selectedGames.map((game) => game),
       likes: 0,
       userID: user.uid,
@@ -146,59 +145,75 @@ const CreateList = () => {
 
       {/* Tag selection modal */}
 
-      <Modal
-        open={isTagModalOpen}
-        onClose={() => setIsTagModalOpen(false)}
-        styles={tagModalStyles}
-        classNames={{ modal: '!rounded-xl' }}
-      >
-        <div className="p-6 pb-8">
-          <div className="border-b border-gray-200 pb-4">
-            <h2 className='text-2xl font-bold text-gray-900'>Manage Tags</h2>
-          </div>
-
-          <div className="mt-6">
-            <div className="flex items-center gap-2 bg-white border border-gray-300 rounded-lg p-2 shadow-sm focus-within:border-rose-600 focus-within:ring-1 focus-within:ring-rose-600">
-              <input
-                type="text"
-                className="w-full border-none outline-none p-2 text-gray-900 placeholder-gray-400"
-                placeholder="Create new tag..."
-                value={newTag}
-                onChange={(e) => setNewTag(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && addNewTag()}
-              />
-              <button
-                onClick={addNewTag}
-                className="flex items-center gap-2 px-4 py-2.5 bg-rose-600 text-white rounded-md hover:bg-rose-700 transition-colors"
-              >
-                Add
-              </button>
+   
+        <Modal
+          open={isTagModalOpen}
+          onClose={() => setIsTagModalOpen(false)}
+          styles={tagModalStyles}
+          classNames={{ modal: '!rounded-xl' }}
+        >
+          <div className="p-6 pb-8">
+            <div className="border-b border-gray-200 pb-4">
+              <h2 className='text-2xl font-bold text-gray-900'>Manage Tags</h2>
             </div>
 
-            {selectedTags.length > 0 && (
-              <div className="mt-6 p-4 border border-rose-200 rounded-lg bg-rose-50">
-                <h3 className="font-semibold text-gray-900 mb-3">Selected Tags ({selectedTags.length})</h3>
-                <div className="flex flex-wrap gap-2">
-                  {selectedTags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="flex items-center gap-2 px-3 py-1.5 bg-white border border-rose-200 rounded-full text-sm text-rose-700"
-                    >
-                      {tag}
-                      <button
-                        onClick={() => removeTag(tag)}
-                        className="text-rose-400 hover:text-rose-600"
-                      >
-                        ×
-                      </button>
-                    </span>
-                  ))}
+            <div className="mt-6">
+            
+
+              {tags.length > 0 && (
+                <div className="mt-4 p-4 border border-gray-200 rounded-lg bg-gray-50">
+                  <h3 className="text-sm font-semibold text-gray-900 mb-3">Available Tags</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {tags
+                      .filter(tag => 
+                        tag.toLowerCase().includes(newTag.trim().toLowerCase())
+                      )
+                      .map((tag) => (
+                        <button
+                          key={tag}
+                          type="button"
+                          onClick={() => {
+                            if (!selectedTags.includes(tag)) {
+                              setSelectedTags([...selectedTags, tag]);
+                            }
+                          }}
+                          className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
+                            selectedTags.includes(tag)
+                              ? 'bg-rose-600 text-white hover:bg-rose-700'
+                              : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-100'
+                          }`}
+                        >
+                          {tag}
+                        </button>
+                      ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+
+              {selectedTags.length > 0 && (
+                <div className="mt-6 p-4 border border-rose-200 rounded-lg bg-rose-50">
+                  <h3 className="font-semibold text-gray-900 mb-3">Selected Tags ({selectedTags.length})</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedTags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="flex items-center gap-2 px-3 py-1.5 bg-white border border-rose-200 rounded-full text-sm text-rose-700"
+                      >
+                        {tag}
+                        <button
+                          onClick={() => removeTag(tag)}
+                          className="text-rose-400 hover:text-rose-600"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      </Modal>
+        </Modal>
 
       {/* Game selection modal */}
 
@@ -222,7 +237,7 @@ const CreateList = () => {
                 placeholder="Search games..."
                 value={searchedGame}
                 onChange={(e) => setSearchedGame(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && searchGame()}
+                onKeyDown={(e) => e.key === 'Enter' && searchGame()}
               />
               <button
                 onClick={searchGame}

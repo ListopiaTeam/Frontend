@@ -23,7 +23,8 @@ export const searchGamesByName = async (setGames, query, page) => {
 export const getTags = async (setTags) => {
     try {
         const response = await axios.get(URL + "getGenres/")
-        setTags(response.json())
+        const tags = response.data.results.map(tag => tag.name)
+        setTags(tags)
     } catch (error) {
         console.log(error);
     }
