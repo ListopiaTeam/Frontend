@@ -110,6 +110,15 @@ const Login = () => {
             >
               {isSubmitting ? "Signing In..." : "Sign In"}
             </button>
+            <p className="mt-2 text-sm text-gray-600">
+              Forgot your password?{" "}
+              <NavLink
+                to="/passwordreset"
+                className="font-medium text-rose-600 hover:text-rose-500 transition-colors"
+              >
+                Reset it!
+              </NavLink>
+            </p>
           </form>
 
           {/* Alert Component */}

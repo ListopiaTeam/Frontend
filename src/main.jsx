@@ -15,6 +15,7 @@ import Footer from "./components/Footer.jsx";
 import ScrollTopButton from "./components/ScrollTopButton.jsx";
 import Profile from "./pages/Profile.jsx";
 import Lists from "./pages/Lists.jsx";
+import PasswordReset from "./pages/PasswordReset.jsx";
 
 const AppWrapper = () => {
   const location = useLocation();
@@ -164,7 +165,27 @@ const AppWrapper = () => {
             )
           }
         />
-      </Routes>
+      
+
+      <Route
+          path="/passwordreset"
+          element={
+            location.pathname !== prevLocation.current ? (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.1 }}
+              >
+                <PasswordReset />
+              </motion.div>
+            ) : (
+              <PasswordReset />
+            )
+          }
+        />
+      </Routes> 
+
     </AnimatePresence>
   );
 };

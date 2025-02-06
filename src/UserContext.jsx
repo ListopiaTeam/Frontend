@@ -4,6 +4,7 @@ import {
   createUserWithEmailAndPassword,
   deleteUser,
   onAuthStateChanged,
+  sendEmailVerification,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
@@ -44,7 +45,10 @@ export const UserProvider = ({ children }) => {
 
   const signUpUser = async (email, password, displayName) => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user=userCredential.user
+      await sendEmailVerification(user);
+      console.log("Verification email sent!");
       await updateProfile(auth.currentUser, { displayName });
       setMessage({});
       setMessage({signup: "Successful registration!"});
