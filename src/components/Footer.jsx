@@ -14,10 +14,12 @@ const Footer = () => {
             Listopia is a social platform for gamers to share lists of their favorite games.
           </p>
         </div>
-
-        <p className="mt-6 md:mt-0 text-xs text-center md:text-right font-mono border-t md:border-t-0 border-gray-700 pt-4 md:pt-0">
-          Copyright &copy; {new Date().getFullYear()}. All rights reserved. Made By ListopiaTeam and RAWG API.
-        </p>
+        <div className="mt-6 md:mt-0 text-xs text-center md:text-right font-mono border-t md:border-t-0 border-gray-700 pt-4 md:pt-0 md:mr-12 lg:mr-20">
+          <p className="text-nowrap">
+            &copy; ListopiaTeam {new Date().getFullYear()}. <span>All rights reserved.</span>
+          </p>
+          <p>Made By <a className='text-rose-500 hover:underline' href="https://github.com/ListopiaTeam/">ListopiaTeam</a> using <a className='text-rose-500 hover:underline' href="https://rawg.io/">RAWG</a>.</p>
+        </div>
       </div>
     </footer>
   );

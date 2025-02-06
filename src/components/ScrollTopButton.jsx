@@ -55,7 +55,7 @@ const ScrollTopButton = () => {
       <AnimatePresence>
         {showButton && (
           <motion.div
-            className="fixed bottom-4 z-50 right-4 sm:bottom-6 sm:right-6 lg:bottom-8 lg:right-8"
+            className="fixed bottom-6 z-50 right-4 sm:right-6 md:bottom-12 lg:right-8"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
