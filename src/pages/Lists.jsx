@@ -47,8 +47,8 @@ const Lists = () => {
               <div
                 key={category}
                 onClick={() => handleCategoryChange(category)}
-                className={`p-2 cursor-pointer hover:bg-gray-200 ${
-                  selCateg.includes(category) ? "bg-gray-300" : ""
+                className={`p-2 cursor-pointer hover:bg-rose-600 hover:text-slate-100 ${
+                  selCateg.includes(category) ? "bg-rose-600 text-slate-100" : ""
                 }`}
               >
                 {category}

@@ -4,7 +4,7 @@ import { UserContext } from "../UserContext";
 import Alert from "../components/Alert";
 
 const Login = () => {
-  const { message, signInUser, user, setMessage,signInWithGoogle } = useContext(UserContext);
+  const { message, signInUser, user, setMessage, signInWithGoogle } = useContext(UserContext);
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
@@ -110,22 +110,16 @@ const Login = () => {
             >
               {isSubmitting ? "Signing In..." : "Sign In"}
             </button>
-            <button
-              type="button"
-              onClick={signInWithGoogle}
-              disabled={isSubmitting}
-              className="w-full bg-rose-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-rose-700 transition-colors shadow-sm disabled:opacity-75 disabled:cursor-not-allowed"
-            >
-              {isSubmitting ? "Signing In via Google" : "Sign In via Google"}
-            </button>
-
+           
             <p className="mt-2 text-sm text-gray-600">
               Forgot your password?{" "}
               <NavLink
                 to="/passwordreset"
                 className="font-medium text-rose-600 hover:text-rose-500 transition-colors"
               >
-                Reset it!
+                <span className="cursor-pointer">
+                  Reset it!
+                </span>
               </NavLink>
             </p>
           </form>
