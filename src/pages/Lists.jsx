@@ -5,7 +5,7 @@ import ListCard from '../components/ListCard'
 const Lists = () => {
   const [lists, setLists] = useState([]);
   let TempSolution = 0;
-  const selCateg = ["Shooter", "Openworld"];
+  const selCateg = [];
 
   useEffect(() => {
     const unsubscribe = readList(setLists, selCateg);
