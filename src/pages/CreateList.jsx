@@ -111,7 +111,7 @@ const CreateList = () => {
     }
   };
 
-  const tagModalStyles = {x
+  const tagModalStyles = {
     modal: {
       maxWidth: '500px',
       width: '90%',

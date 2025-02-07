@@ -1,14 +1,18 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from "react";
+import { readList } from "../utility/crudUtility";
 
 const Lists = () => {
-  const [games, setGames] = useState([])
-  
+  const [lists, setLists] = useState([]);
+  let TempSolution = 0;
+  const selCateg = ["Shooter", "Openworld"];
 
-  return (
-    <div className='mt-32'>
-      Lists
-    </div>
-  )
-}
+  useEffect(() => {
+    const unsubscribe = readList(setLists, selCateg);
+    return () => unsubscribe();
+  }, [TempSolution]);
 
-export default Lists
+  console.log(lists);
+  return <div className="mt-32">Lists</div>;
+};
+
+export default Lists;
