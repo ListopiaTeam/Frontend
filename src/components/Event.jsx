@@ -25,7 +25,7 @@ const Event = () => {
 
                     <div className="flex flex-col sm:flex-row gap-6 items-center sm:items-start">
                         <NavLink
-                            to="/events"
+                            to="/create"
                             className="group relative flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 text-sm font-semibold text-white bg-rose-600 rounded-lg shadow-lg hover:bg-rose-700 transition-all transform hover:scale-105"
                         >
                             <span>Join the Event</span>
@@ -40,7 +40,7 @@ const Event = () => {
                         </NavLink>
 
                         <NavLink
-                            to="/events"
+                            to="/"
                             className="flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 text-sm font-semibold text-gray-200 bg-white/10 rounded-lg backdrop-blur-sm hover:bg-white/20 transition-all border border-white/20 hover:border-white/30"
                         >
                             <svg 

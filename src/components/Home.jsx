@@ -5,13 +5,12 @@ import { readList } from '../utility/crudUtility';
 
 const Home = () => {
     const [lists, setLists] = useState([]);
-    let TempSolution = 0;
-    const selCateg = ["Shooter", "Indie"];
+    const selCateg = [];
   
     useEffect(() => {
       const unsubscribe = readList(setLists, selCateg);
       return () => unsubscribe();
-    }, [TempSolution]);
+    }, []);
   
   return (
     <>

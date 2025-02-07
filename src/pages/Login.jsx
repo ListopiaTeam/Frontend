@@ -111,6 +111,7 @@ const Login = () => {
               {isSubmitting ? "Signing In..." : "Sign In"}
             </button>
            
+           
 
             <p className="mt-2 text-sm text-gray-600">
               Forgot your password?{" "}
@@ -118,7 +119,9 @@ const Login = () => {
                 to="/passwordreset"
                 className="font-medium text-rose-600 hover:text-rose-500 transition-colors"
               >
-                Reset it!
+                <span className="cursor-pointer">
+                  Reset it!
+                </span>
               </NavLink>
             </p>
           </form>
