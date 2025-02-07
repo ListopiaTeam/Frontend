@@ -1,25 +1,49 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { readLists } from '../utility/crudUtility';
+import { toggleLike } from '../utility/crudUtility'
+import { UserContext } from '../UserContext'
 
 
 const ListDetail = () => {
     const { id } = useParams();
+    const {user} = useContext(UserContext);
     const [list, setList] = useState(null);
-     const [isLiked, setIsLiked] = useState(false)
+    const [isLiked, setIsLiked] = useState(false);
+    const [currentLikes, setCurrentLikes] = useState([]);
 
     useEffect(() => {
         readLists(id, setList);
     }, [id]);
 
     useEffect(() => {
+        if (list?.likes) {
+            setCurrentLikes(list.likes);
+        }
+    }, [list]);
+
+    useEffect(() => {
         window.scrollTo(window.top)
     }, [])
 
-    const handleLike = () => {
-        setIsLiked(!isLiked)
-      }
+    useEffect(() => {
+        if (currentLikes.includes(user?.uid)) {
+          setIsLiked(true);
+        } else {
+          setIsLiked(false);
+        }
+      }, [currentLikes, user?.uid]);
     
+      const handleLike = () => {
+        toggleLike(id, user.uid);
+        if (isLiked) {
+          setCurrentLikes(currentLikes.filter(like => like !== user.uid));
+        } else {
+          setCurrentLikes([...currentLikes, user.uid]);
+        }
+        setIsLiked(!isLiked);
+      }
+      
     if (!list?.games) {
         return (
             <div className="min-h-screen mt-32 max-w-4xl mx-auto">
@@ -50,7 +74,7 @@ const ListDetail = () => {
                     />
                     </svg>
                     <span className={`text-sm font-medium ${isLiked ? 'text-rose-500' : 'text-gray-500'}`}>
-                    {list.likes}
+                    {list.likes.length}
                     </span>
                 </button>
                 <button className='absolute top-10 right-20 bg-rose-500 text-white font-bold py-2 px-4 rounded-lg shadow-lg hover:bg-rose-700 transition duration-300'>
