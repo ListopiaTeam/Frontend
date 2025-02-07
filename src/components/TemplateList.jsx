@@ -1,6 +1,6 @@
 const TemplateList = ({ src, selectedTags, onTagRemove, onTagModalOpen }) => {
   return (
-    <div className="group relative block overflow-hidden shadow-xl border border-black max-w-lg mx-auto w-full">
+    <div className="group relative block overflow-hidden shadow-xl border border-black max-w-md mx-auto w-full">
       <div className="relative w-full h-48 bg-gray-300 flex items-center justify-center select-none">
         {src ? (
           <img 

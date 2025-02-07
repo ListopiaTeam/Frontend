@@ -16,6 +16,7 @@ import ScrollTopButton from "./components/ScrollTopButton.jsx";
 import Profile from "./pages/Profile.jsx";
 import Lists from "./pages/Lists.jsx";
 import PasswordReset from "./pages/PasswordReset.jsx";
+import Details from "./pages/Details.jsx";
 
 const AppWrapper = () => {
   const location = useLocation();
@@ -162,6 +163,24 @@ const AppWrapper = () => {
               </motion.div>
             ) : (
               <Profile />
+            )
+          }
+        />
+
+        <Route
+          path="/details/:id"
+          element={
+            location.pathname !== prevLocation.current ? (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.1 }}
+              >
+                <Details />
+              </motion.div>
+            ) : (
+              <Details />
             )
           }
         />

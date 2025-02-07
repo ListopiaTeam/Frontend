@@ -74,7 +74,6 @@ const CreateList = () => {
 
     try {
       {
-
         await addList(formData);
         setMsg("List successfully created!");
         setTimeout(() => {
@@ -88,6 +87,11 @@ const CreateList = () => {
       setTimeout(() => {
         setErr("")
       }, 4000)
+    }finally{
+      e.target[0].value = ""
+      e.target[1].value = ""
+      setSelectedGames([])
+      setSelectedTags([])
     }
   }
 
@@ -107,7 +111,7 @@ const CreateList = () => {
     }
   };
 
-  const tagModalStyles = {
+  const tagModalStyles = {x
     modal: {
       maxWidth: '500px',
       width: '90%',
@@ -121,7 +125,7 @@ const CreateList = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className='flex flex-col items-center justify-center mt-24 mb-6'>
+    <form onSubmit={handleSubmit} className='flex flex-col items-center justify-center mt-24 mb-6 mx-6'>
       <TemplateList
         src={selectedGames && selectedGames[0]?.background_image}
         selectedTags={selectedTags}
@@ -147,6 +151,7 @@ const CreateList = () => {
       </div>
 
       {/* Tag selection modal */}
+
       <Modal
         open={isTagModalOpen}
         onClose={() => setIsTagModalOpen(false)}

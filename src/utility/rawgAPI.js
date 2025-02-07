@@ -29,3 +29,4 @@ export const getTags = async (setTags) => {
         console.log(error);
     }
 }
+

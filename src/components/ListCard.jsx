@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { NavLink } from 'react-router-dom'
 
 const ListCard = () => {
   const [isLiked, setIsLiked] = useState(false)
@@ -68,7 +69,7 @@ const ListCard = () => {
 
    
      
-          <button className="flex w-full items-center justify-center gap-2 rounded-lg bg-rose-600 px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-rose-700 hover:gap-3">
+          <NavLink to={'/details/' + "ZKQxUE5H15kwnxGZmG2q"} className="flex w-full items-center justify-center gap-2 rounded-lg bg-rose-600 px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-rose-700 hover:gap-3">
             View Details
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -80,7 +81,7 @@ const ListCard = () => {
             >
               <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
             </svg>
-          </button>
+          </NavLink>
       </div>
     </article>
   )
