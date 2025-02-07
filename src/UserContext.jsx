@@ -3,10 +3,12 @@ import { auth } from "./utility/firebaseApp";
 import {
   createUserWithEmailAndPassword,
   deleteUser,
+  GoogleAuthProvider,
   onAuthStateChanged,
   sendEmailVerification,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
+  signInWithPopup,
   signOut,
   updateProfile,
 } from "firebase/auth";
@@ -27,6 +29,8 @@ export const UserProvider = ({ children }) => {
     return () => unsubscribe();
   }, []);
 
+  const provider = new GoogleAuthProvider();
+
   const signInUser = async (email, password) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
@@ -37,6 +41,23 @@ export const UserProvider = ({ children }) => {
       setMessage({ err: error.message });
     }
   };
+
+  //google login
+  /*const signInWithGoogle = async () => {
+    if(auth.currentUser.emailVerified){
+
+      try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+        console.log("User Info:", user);
+      } catch (error) {
+        console.error("Login Failed:", error);
+      }
+    }else{
+      console.log("only verified users may use google login");
+      
+    }
+  };*/
 
   const logoutUser = async () => {
     await signOut(auth);
