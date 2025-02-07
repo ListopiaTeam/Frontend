@@ -42,22 +42,17 @@ export const UserProvider = ({ children }) => {
     }
   };
 
-  //google login
-  /*const signInWithGoogle = async () => {
-    if(auth.currentUser.emailVerified){
 
+  const signInWithGoogle = async () => { 
       try {
         const result = await signInWithPopup(auth, provider);
-        const user = result.user;
-        console.log("User Info:", user);
+        //const user = result.user;
+        setMessage({});
+        setMessage({ signin: "Successfully logged in!" });
       } catch (error) {
         console.error("Login Failed:", error);
       }
-    }else{
-      console.log("only verified users may use google login");
-      
-    }
-  };*/
+  };
 
   const logoutUser = async () => {
     await signOut(auth);
@@ -124,6 +119,7 @@ export const UserProvider = ({ children }) => {
         user,
         signInUser,
         logoutUser,
+        signInWithGoogle,
         signUpUser,
         resetPassword,
         message,
