@@ -8,35 +8,38 @@ import { addList } from "../utility/crudUtility";
 import Alert from "../components/Alert";
 
 const CreateList = () => {
-  const {user} = useContext(UserContext)
-  const [open, setOpen] = useState(false);
+  const { user } = useContext(UserContext)
 
+  // Modal states
+  const [open, setOpen] = useState(false);
+  const [isGamesOpen, setIsGamesOpen] = useState(true);
+
+  const [isTagModalOpen, setIsTagModalOpen] = useState(false);
+
+  // Data states
   const [games, setGames] = useState([]);
   const [tags, setTags] = useState([])
 
-  const [isTagModalOpen, setIsTagModalOpen] = useState(false);
   const [selectedGames, setSelectedGames] = useState([])
   const [searchedGame, setSearchedGame] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
-  const [newTag, setNewTag] = useState("");
   const [msg, setMsg] = useState("")
   const [err, setErr] = useState("")
+  const [nextPageUrl, setNextPageUrl] = useState(null);
+  const [prevPageUrl, setPrevPageUrl] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const searchGame = () => {
-    searchGamesByName(setGames, searchedGame)
-  }
+  const searchGame = async (url = null) => {
+    setLoading(true);
+    await searchGamesByName(setGames, searchedGame, url || null, setNextPageUrl, setPrevPageUrl);
+    setLoading(false);
+  };
+
 
   useEffect(() => {
     getTags(setTags)
   }, [])
 
-  const addNewTag = () => {
-    const trimmedTag = newTag.trim();
-    if (trimmedTag && !selectedTags.includes(trimmedTag)) {
-      setSelectedTags([...selectedTags, trimmedTag]);
-      setNewTag("");
-    }
-  };
 
   const removeTag = (tagToRemove) => {
     setSelectedTags(selectedTags.filter(tag => tag !== tagToRemove));
@@ -52,32 +55,33 @@ const CreateList = () => {
       return;
     }
 
-    if(!(e.target[0].value && e.target[1].value && selectedGames.length>0)){
+    if (!(e.target[0].value && e.target[1].value && selectedGames.length > 0)) {
       setErr("Give all details to create a list!")
       setTimeout(() => {
         setErr("")
       }, 4000)
       return;
-     }
-    
+    }
+
     const formData = {
       title: e.target[0].value,
       desc: e.target[1].value,
-      categories:  selectedTags.map((tags) => tags),
+      categories: selectedTags.map((tags) => tags),
       games: selectedGames.map((game) => game),
       likes: 0,
       userID: user.uid,
     };
 
     try {
-       {
+      {
+
         await addList(formData);
         setMsg("List successfully created!");
         setTimeout(() => {
           setMsg("")
         }, 4000)
         setSelectedGames([]);
-       }
+      }
     } catch (error) {
       console.error("Error creating list:", error);
       setErr("Failed to create the list. Please try again.");
@@ -118,7 +122,6 @@ const CreateList = () => {
 
   return (
     <form onSubmit={handleSubmit} className='flex flex-col items-center justify-center mt-24 mb-6'>
-
       <TemplateList
         src={selectedGames && selectedGames[0]?.background_image}
         selectedTags={selectedTags}
@@ -144,75 +147,71 @@ const CreateList = () => {
       </div>
 
       {/* Tag selection modal */}
-        <Modal
-          open={isTagModalOpen}
-          onClose={() => setIsTagModalOpen(false)}
-          styles={tagModalStyles}
-          classNames={{ modal: '!rounded-xl' }}
-        >
-          <div className="p-6 pb-8">
-            <div className="border-b border-gray-200 pb-4">
-              <h2 className='text-2xl font-bold text-gray-900'>Manage Tags</h2>
-            </div>
+      <Modal
+        open={isTagModalOpen}
+        onClose={() => setIsTagModalOpen(false)}
+        styles={tagModalStyles}
+        classNames={{ modal: '!rounded-xl' }}
+      >
+        <div className="p-6 pb-8">
+          <div className="border-b border-gray-200 pb-4">
+            <h2 className='text-2xl font-bold text-gray-900'>Manage Tags</h2>
+          </div>
 
-            <div className="mt-6">
-              {tags.length > 0 && (
-                <div className="mt-4 p-4 border border-gray-200 rounded-lg bg-gray-50">
-                  <h3 className="text-sm font-semibold text-gray-900 mb-3">Available Tags</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {tags
-                      .filter(tag => 
-                        tag.toLowerCase().includes(newTag.trim().toLowerCase())
-                      )
-                      .map((tag) => (
-                        <button
-                          key={tag}
-                          type="button"
-                          onClick={() => {
-                            if (selectedTags.includes(tag)) {
-                              setSelectedTags(selectedTags.filter((t) => t !== tag)); 
-                            } else {
-                              setSelectedTags([...selectedTags, tag]); 
-                            }
-                          }}
-                          
-                          className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
-                            selectedTags.includes(tag)
-                              ? 'bg-rose-600 text-white hover:bg-rose-700'
-                              : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-100'
-                          }`}
-                        >
-                          {tag}
-                        </button>
-                      ))}
-                  </div>
-                </div>
-              )}
-
-              {selectedTags.length > 0 && (
-                <div className="mt-6 p-4 border border-rose-200 rounded-lg bg-rose-50">
-                  <h3 className="font-semibold text-gray-900 mb-3">Selected Tags ({selectedTags.length})</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedTags.map((tag) => (
-                      <span
+          <div className="mt-6">
+            {tags.length > 0 && (
+              <div className="mt-4 p-4 border border-gray-200 rounded-lg bg-gray-50">
+                <h3 className="text-sm font-semibold text-gray-900 mb-3">Available Tags ({5 - selectedTags.length})</h3>
+                <div className="flex flex-wrap gap-2">
+                  {tags
+                    .map((tag) => (
+                      <button
                         key={tag}
-                        className="flex items-center gap-2 px-3 py-1.5 bg-white border border-rose-200 rounded-full text-sm text-rose-700"
+                        type="button"
+                        onClick={() => {
+                          if (selectedTags.includes(tag)) {
+                            setSelectedTags(selectedTags.filter((t) => t !== tag));
+                          } else {
+                            selectedTags.length <= 4 && setSelectedTags([...selectedTags, tag]);
+                          }
+                        }}
+
+                        className={`px-3 py-1.5 rounded-full text-sm transition-colors ${selectedTags.includes(tag)
+                            ? 'bg-rose-600 text-white hover:bg-rose-700'
+                            : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-100'
+                          }`}
                       >
                         {tag}
-                        <button
-                          onClick={() => removeTag(tag)}
-                          className="text-rose-400 hover:text-rose-600"
-                        >
-                          ×
-                        </button>
-                      </span>
+                      </button>
                     ))}
-                  </div>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
+
+            {selectedTags.length > 0 && (
+              <div className="mt-6 p-4 border border-rose-200 rounded-lg bg-rose-50">
+                <h3 className="font-semibold text-gray-900 mb-3">Selected Tags ({selectedTags.length})</h3>
+                <div className="flex flex-wrap gap-2">
+                  {selectedTags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="flex items-center gap-2 px-3 py-1.5 bg-white border border-rose-200 rounded-full text-sm text-rose-700"
+                    >
+                      {tag}
+                      <button
+                        onClick={() => removeTag(tag)}
+                        className="text-rose-400 hover:text-rose-600"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-        </Modal>
+        </div>
+      </Modal>
 
       {/* Game selection modal */}
 
@@ -245,11 +244,48 @@ const CreateList = () => {
                 Search
               </button>
             </div>
+            <div className="flex justify-center gap-4 mt-4">
+              <button
+                disabled={!prevPageUrl}
+                onClick={() => searchGame(prevPageUrl)}
+                className={`px-4 py-2 rounded-lg text-sm font-medium ${
+                  prevPageUrl
+                    ? "bg-gray-900 text-white hover:bg-gray-800"
+                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                }`}
+              >
+                Previous
+              </button>
+
+              <button
+                disabled={!nextPageUrl}
+                onClick={() => searchGame(nextPageUrl)}
+                className={`px-4 py-2 rounded-lg text-sm font-medium ${
+                  nextPageUrl
+                    ? "bg-rose-600 text-white hover:bg-rose-700"
+                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                }`}
+              >
+                Next 
+              </button>
+            </div>
+
 
             {selectedGames.length > 0 && (
               <div className="mt-6 p-4 border border-rose-200 rounded-lg bg-rose-50">
-                <h3 className="font-semibold text-gray-900 mb-3">Selected Games ({selectedGames.length})</h3>
-                <div className="flex flex-wrap gap-2">
+              <div className="flex justify-between items-center">
+                <h3 className="font-semibold text-gray-900">
+                  Selected Games ({selectedGames.length}) - Games left ({15 - selectedGames.length})
+                </h3>
+                <button
+                  onClick={() => setIsGamesOpen(!isGamesOpen)}
+                  className="text-rose-500 hover:text-rose-700 text-sm"
+                >
+                  {isGamesOpen ? "Hide Games" : "Show Games"}
+                </button>
+              </div>
+              {isGamesOpen && (
+                <div className="flex flex-wrap gap-2 mt-3">
                   {selectedGames.map((game) => (
                     <span
                       key={game.id}
@@ -265,56 +301,58 @@ const CreateList = () => {
                     </span>
                   ))}
                 </div>
-              </div>
+              )}
+            </div>
             )}
           </div>
 
           <div className="mt-6 space-y-4 max-h-[500px] overflow-y-auto pr-2">
-            {games.length > 0 ? (
-              games.map((item) => (
-                <div
-                  key={item.id}
-                  className="group flex items-center gap-4 p-3 border border-gray-200 rounded-lg hover:border-rose-200 hover:bg-rose-50 transition-colors"
-                >
-                  <img
-                    src={item.background_image}
-                    className="w-16 h-16 flex-shrink-0 rounded-lg object-cover"
-                    alt={item.name}
-                  />
-                  <span className="text-base font-medium text-gray-900 flex-1">
-                    {item.name}
-                  </span>
-                  <button
-                    onClick={() => {
-                      setSelectedGames((prev) =>
-                        prev.some((g) => g.id === item.id)
-                          ? prev.filter((g) => g.id !== item.id)
-                          : [...prev, item]
-                      )
-                    }}
-                    className={`px-4 py-2 rounded-md font-medium text-sm transition-colors ${selectedGames.some((g) => g.id === item.id)
-                        ? 'bg-gray-900 text-white hover:bg-gray-800'
-                        : 'bg-rose-600 text-white hover:bg-rose-700'
-                      }`}
-                  >
-                    {selectedGames.some((g) => g.id === item.id) ? 'Remove' : 'Add'}
-                  </button>
-                </div>
-              ))
-            ) : (
-              <div className="p-8 text-center">
-                <div className="text-gray-400 mb-2">No games found</div>
-                <p className="text-sm text-gray-500">Try searching for your favorite games</p>
+            {loading ? (
+              <div className="flex justify-center">
+                <div className="w-6 h-6 border-4 border-rose-600 border-t-transparent rounded-full animate-spin"></div>
               </div>
+            ) : (
+              games.length > 0 ? (
+                games.map((item) => (
+                  <div key={item.id} className="group flex items-center gap-4 p-3 border border-gray-200 rounded-lg hover:border-rose-200 hover:bg-rose-50 transition-colors">
+                    <img src={item.background_image} className="w-16 h-16 flex-shrink-0 rounded-lg object-cover" alt={item.name} />
+                    <span className="text-base font-medium text-gray-900 flex-1">{item.name}</span>
+                    {selectedGames.length < 15 && (
+                      <button
+                        onClick={() => {
+                          setSelectedGames((prev) =>
+                            prev.some((g) => g.id === item.id)
+                              ? prev.filter((g) => g.id !== item.id)
+                              : [...prev, item]
+                          );
+                        }}
+                        className={`px-4 py-2 rounded-md font-medium text-sm transition-colors ${selectedGames.some((g) => g.id === item.id)
+                            ? 'bg-gray-900 text-white hover:bg-gray-800'
+                            : 'bg-rose-600 text-white hover:bg-rose-700'
+                          }`}
+                      >
+                        {selectedGames.some((g) => g.id === item.id) ? 'Remove' : 'Add'}
+                      </button>
+
+                    )}
+                  </div>
+                ))
+              ) : (
+                <div className="p-8 text-center">
+                  <div className="text-gray-400 mb-2">No games found</div>
+                  <p className="text-sm text-gray-500">Try searching for your favorite games</p>
+                </div>
+              )
             )}
+
           </div>
         </div>
       </Modal>
       {msg ? (
-            <Alert msg={msg} />
-            ) : (
-              err && <Alert err={err} />
-            )}
+        <Alert msg={msg} />
+      ) : (
+        err && <Alert err={err} />
+      )}
     </form>
   )
 }
