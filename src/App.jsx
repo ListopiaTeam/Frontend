@@ -1,7 +1,7 @@
 import Home from "./components/Home"
 function App() {
   return (
-    <div className="bg-stone-900 min-h-screen">
+    <div className="min-h-screen">
       <Home/>
     </div>
   )

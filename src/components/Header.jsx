@@ -58,18 +58,7 @@ const Header = () => {
                   >
                     Create List
                   </NavLink>
-                  <NavLink 
-                    to="/events" 
-                    className={({isActive}) => 
-                      `block px-3 py-2 rounded-md transition-colors relative ${
-                        isActive 
-                          ? "text-rose-500 pl-6 before:content-['>'] before:absolute before:left-3" 
-                          : "text-gray-300 hover:text-rose-500"
-                      }`
-                    }
-                  >
-                    Events
-                  </NavLink>
+               
                 </>
               )}
               <NavLink 
@@ -192,19 +181,7 @@ const Header = () => {
                   >
                     Create List
                   </NavLink>
-                  <NavLink 
-                    to="/events" 
-                    onClick={() => setShow(false)}
-                    className={({isActive}) => 
-                      `block px-3 py-2 rounded-md transition-colors relative ${
-                        isActive 
-                          ? "text-rose-500 pl-6 before:content-['>'] before:absolute before:left-3" 
-                          : "text-gray-300 hover:text-rose-500"
-                      }`
-                    }
-                  >
-                    Events
-                  </NavLink>
+               
                 </>
               )}
               <NavLink 

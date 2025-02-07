@@ -5,7 +5,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import App from "./App.jsx";
 import "./index.css";
 import { UserProvider } from "./UserContext";
-import Events from "./pages/Events.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import CreateList from "./pages/CreateList.jsx";
@@ -46,23 +45,7 @@ const AppWrapper = () => {
             )
           }
         />
-        <Route
-          path="/events"
-          element={
-            location.pathname !== prevLocation.current ? (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.1 }}
-              >
-                <Events />
-              </motion.div>
-            ) : (
-              <Events />
-            )
-          }
-        />
+       
         <Route
           path="/register"
           element={

@@ -1,13 +1,11 @@
 import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 
-const ListCard = () => {
+const ListCard = ({categories, title, description, likes, url, id}) => {
   const [isLiked, setIsLiked] = useState(false)
-  const [voteCount, setVoteCount] = useState(0)
 
   const handleLike = () => {
     setIsLiked(!isLiked)
-    setVoteCount(prev => isLiked ? prev - 1 : prev + 1)
   }
 
   return (
@@ -15,19 +13,20 @@ const ListCard = () => {
   
       <div className="relative aspect-[5/3] overflow-hidden">
         <img
-          src="https://images.unsplash.com/photo-1599481238640-4c1288750d7a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2664&q=80"
-          alt="Game cover"
+          src={url}
+          alt={description}
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
         
    
         <div className="absolute left-4 top-4 flex gap-2">
-          <span className="rounded-full bg-white/90 px-3 py-1.5 text-xs font-semibold text-gray-800 backdrop-blur-sm">
-            FPS
-          </span>
-          <span className="rounded-full bg-white/90 px-3 py-1.5 text-xs font-semibold text-gray-800 backdrop-blur-sm">
-            MMORPG
-          </span>
+          {categories.map((category) => (
+            <span key={category} className="rounded-full bg-white/90 px-3 py-1.5 text-xs font-semibold text-gray-800 backdrop-blur-sm">
+              {category}
+            </span>
+          ))}
+         
+
         </div>
       </div>
 
@@ -35,7 +34,7 @@ const ListCard = () => {
       <div className="p-5">
   
         <div className="flex items-start justify-between">
-          <h3 className="text-xl font-bold text-gray-900 truncate pr-2">Epic Fantasy Adventure Game</h3>
+          <h3 className="text-xl font-bold text-gray-900 truncate pr-2">{title}</h3>
           <button 
             onClick={handleLike}
             className="flex items-center gap-1.5 group transition-colors"
@@ -53,7 +52,7 @@ const ListCard = () => {
               />
             </svg>
             <span className={`text-sm font-medium ${isLiked ? 'text-rose-500' : 'text-gray-500'}`}>
-              {voteCount}
+              {likes}
             </span>
           </button>
         </div>
@@ -61,15 +60,13 @@ const ListCard = () => {
 
         <div className="mt-3 mb-4">
           <p className="text-gray-600 text-sm line-clamp-3 leading-relaxed">
-            Embark on an epic journey through magical realms filled with ancient creatures 
-            and forgotten lore. Team up with friends in this massive multiplayer RPG 
-            featuring stunning visuals and dynamic combat.
+            {description}
           </p>
         </div>
 
    
 
-          <NavLink to={'/details/' + "ZKQxUE5H15kwnxGZmG2q"} className="flex w-full items-center justify-center gap-2 rounded-lg bg-rose-600 px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-rose-700 hover:gap-3">
+          <NavLink to={'/details/' + id} className="flex w-full items-center justify-center gap-2 rounded-lg bg-rose-600 px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-rose-700 hover:gap-3">
             View Details
             <svg
               xmlns="http://www.w3.org/2000/svg"
