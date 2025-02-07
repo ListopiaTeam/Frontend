@@ -42,18 +42,6 @@ export const UserProvider = ({ children }) => {
     }
   };
 
-
-  const signInWithGoogle = async () => { 
-      try {
-        const result = await signInWithPopup(auth, provider);
-        //const user = result.user;
-        setMessage({});
-        setMessage({ signin: "Successfully logged in!" });
-      } catch (error) {
-        console.error("Login Failed:", error);
-      }
-  };
-
   const logoutUser = async () => {
     await signOut(auth);
     setMessage({});
@@ -119,7 +107,6 @@ export const UserProvider = ({ children }) => {
         user,
         signInUser,
         logoutUser,
-        signInWithGoogle,
         signUpUser,
         resetPassword,
         message,

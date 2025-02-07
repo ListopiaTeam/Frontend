@@ -68,7 +68,7 @@ const CreateList = () => {
       desc: e.target[1].value,
       categories: selectedTags.map((tags) => tags),
       games: selectedGames.map((game) => game),
-      likes: 0,
+      likes: [],
       userID: user.uid,
     };
     

@@ -46,3 +46,14 @@ export const readLists = async (id, setList) => {
   });
   return unsubscribe;
 };
+
+export const toggleLike = async (id, uid) => {
+  const docRef = doc(db, "Lists", id);
+  const docSnap = await getDoc(docRef);
+  const likesArr = docSnap.data().likes || [];
+  if (likesArr.includes(uid)) {
+    await updateDoc(docRef, { likes: likesArr.filter((p_id) => p_id != uid) });
+  } else {
+    await updateDoc(docRef, { likes: [...likesArr, uid] });
+  }
+};
