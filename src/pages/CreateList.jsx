@@ -71,7 +71,7 @@ const CreateList = () => {
       likes: 0,
       userID: user.uid,
     };
-
+    
     try {
       {
         await addList(formData);
@@ -111,7 +111,7 @@ const CreateList = () => {
     }
   };
 
-  const tagModalStyles = {x
+  const tagModalStyles = {
     modal: {
       maxWidth: '500px',
       width: '90%',
