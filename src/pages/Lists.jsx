@@ -59,6 +59,7 @@ const Lists = () => {
       </div>
 
       {/* Lists Grid */}
+      {!lists.length && <p className="text-rose-600 text-center text-xl font-semibold">No list available of the selected category!</p>}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
         {lists.map((list) => (
           <div key={list.id}>

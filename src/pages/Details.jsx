@@ -46,8 +46,8 @@ const ListDetail = () => {
       
     if (!list?.games) {
         return (
-            <div className="min-h-screen mt-32 max-w-4xl mx-auto">
-               List is not available
+            <div className="min-h-screen mt-32 max-w-4xl mx-auto text-rose-600 text-4xl font-semibold!">
+               List is not available!
             </div>
         );
     }
