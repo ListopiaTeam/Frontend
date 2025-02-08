@@ -5,7 +5,7 @@ const URL = import.meta.env.VITE_RENDER_URL
 
 export const searchGamesByName = async (setGames, query, url, setNextPageUrl, setPrevPageUrl) => {
     try {
-        const response = await axios.get(url || URL + "searchGame/" + query + "?ordering=added")
+        const response = await axios.get(url || URL + "searchGame/" + query + "?ordering=relevance")
         
         const filteredGames = response.data.results.filter(game => {
             const hasBadTitle = badWords.some(word => game.name.toLowerCase().includes(word.toLowerCase()));
