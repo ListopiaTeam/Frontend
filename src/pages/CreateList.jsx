@@ -29,7 +29,7 @@ const CreateList = () => {
   const [prevPageUrl, setPrevPageUrl] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const searchGame = async (url = null) => {
+  const searchGame = async (url = null) => {    
     setLoading(true);
     await searchGamesByName(setGames, searchedGame, url || null, setNextPageUrl, setPrevPageUrl);
     setLoading(false);
@@ -243,7 +243,7 @@ const CreateList = () => {
                 onKeyDown={(e) => e.key === 'Enter' && searchGame()}
               />
               <button
-                onClick={searchGame}
+                onClick={()=>searchGame()}
                 className="flex items-center gap-2 px-4 py-2.5 bg-rose-600 text-white rounded-md hover:bg-rose-700 transition-colors"
               >
                 Search
