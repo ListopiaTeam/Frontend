@@ -28,7 +28,7 @@ const ListCard = ({categories, title, description, likes, url, id}) => {
   }
 
   return (
-    <article className="group relative h-full overflow-hidden rounded-2xl bg-white shadow-lg shadow-gray-100/40 transition-all duration-300 hover:shadow-xl hover:shadow-gray-200/50">
+    <article className="group relative h-full overflow-hidden rounded-2xl bg-slate-100 shadow-lg shadow-gray-100/40 transition-all duration-300 hover:shadow-xl hover:shadow-gray-200/50">
   
       <div className="relative aspect-[5/3] overflow-hidden">
         <img

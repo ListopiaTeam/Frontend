@@ -11,13 +11,15 @@ const Home = () => {
       const unsubscribe = readList(setLists, selCateg);
       return () => unsubscribe();
     }, []);
+
+    const filteredList = lists.sort((a, b) => b.likes.length - a.likes.length)
   
   return (
     <>
       <Event />
       <h2 className='text-center text-slate-800 font-semibold text-xl font-mono mt-8'>Top rated lists</h2>
       <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mx-8 mt-8 pb-6'>
-      {lists.slice(0, 3).map((list) => (
+      {filteredList.slice(0, 3).map((list) => (
         <div key={list.id}>
           <ListCard 
             description={list.desc} 
