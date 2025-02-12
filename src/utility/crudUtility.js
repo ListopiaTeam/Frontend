@@ -1,5 +1,6 @@
 import {
   addDoc,
+  arrayUnion,
   collection,
   deleteDoc,
   doc,
@@ -56,4 +57,11 @@ export const toggleLike = async (id, uid) => {
   } else {
     await updateDoc(docRef, { likes: [...likesArr, uid] });
   }
+};
+
+export const addComment = async (id, currentComment) => {
+  const docRef = doc(db, "Lists", id);
+  await updateDoc(docRef, {
+    comments: arrayUnion(currentComment), 
+  });
 };

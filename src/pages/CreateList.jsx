@@ -19,7 +19,6 @@ const CreateList = () => {
   // Data states
   const [games, setGames] = useState([]);
   const [tags, setTags] = useState([])
-
   const [selectedGames, setSelectedGames] = useState([])
   const [searchedGame, setSearchedGame] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
@@ -70,6 +69,7 @@ const CreateList = () => {
       games: selectedGames.map((game) => game),
       likes: [],
       userID: user.uid,
+      comments:[]
     };
     
     try {
