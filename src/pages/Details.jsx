@@ -1,8 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { addComment, readLists } from "../utility/crudUtility";
+import {
+  addComment,
+  listenToComments,
+  readLists,
+} from "../utility/crudUtility";
 import { toggleLike } from "../utility/crudUtility";
 import { UserContext } from "../UserContext";
+import { doc, serverTimestamp, Timestamp } from "firebase/firestore";
+import CommentSection from "../components/CommentSection";
 
 const ListDetail = () => {
   const { id } = useParams();
@@ -11,11 +17,15 @@ const ListDetail = () => {
   const [isLiked, setIsLiked] = useState(false);
   const [currentLikes, setCurrentLikes] = useState([]);
   const [currentComment, setCurrentComment] = useState([]);
- 
-  
 
   useEffect(() => {
     readLists(id, setList);
+  }, [id]);
+
+  useEffect(() => {
+    if (!id) return;
+    const unsubscribe = listenToComments(id, setCurrentComment);
+    return () => unsubscribe();
   }, [id]);
 
   useEffect(() => {
@@ -46,43 +56,26 @@ const ListDetail = () => {
     setIsLiked(!isLiked);
   };
 
-  function handleComment() {
+  const handleComment = () => {
     const commentText = document.querySelector("textarea").value.trim();
-
     if (!commentText) return;
+
     const newComment = {
       content: commentText,
       listId: id,
       parentId: null,
-      timestamp: new Date().toUTCString(),
+      timestamp: serverTimestamp(),
       userId: user?.uid,
-      username:user.displayName
+      username: user?.displayName,
     };
     setCurrentComment((prevComments) => [...prevComments, newComment]);
+
     document.querySelector("textarea").value = "";
+
     console.log("New comment added:", newComment);
 
     addComment(id, newComment);
-  }
-
-  function handleCommentResponse() {
-    const commentText = document.querySelector("textarea").value.trim();
-
-    if (!commentText) return;
-    const newComment = {
-      content: commentText,
-      listId: id,
-      parentId: null,
-      timestamp: new Date().toUTCString(),
-      userId: user?.uid,
-      username:user.displayName
-    };
-    setCurrentComment((prevComments) => [...prevComments, newComment]);
-    document.querySelector("textarea").value = "";
-    console.log("New comment added:", newComment);
-
-    addComment(id, newComment);
-  }
+  };
 
   if (!list?.games) {
     return (
@@ -222,26 +215,7 @@ const ListDetail = () => {
                 >
                   Post Comment
                 </button>
-                <div className="mt-6 space-y-4">
-                  {list.comments && list.comments.length > 0 ? (
-                    list.comments.map((comment, index) => (
-                      <div
-                        key={index}
-                        className="bg-white p-4 rounded-lg shadow"
-                      >
-                        <p className="font-semibold">{comment.username}</p>
-                        <p className="text-gray-700">{comment.content}</p>
-                        <p className="text-sm text-gray-500">
-                          {new Date(comment.timestamp).toLocaleString()}
-                        </p>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="text-gray-600">
-                      No comments yet. Be the first to comment!
-                    </p>
-                  )}
-                </div>
+                <CommentSection currentComment={currentComment} listId={id}/>
               </div>
             </div>
           </div>

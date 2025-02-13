@@ -10,6 +10,7 @@ import {
   orderBy,
   query,
   serverTimestamp,
+  setDoc,
   updateDoc,
   where,
 } from "firebase/firestore";
@@ -59,9 +60,25 @@ export const toggleLike = async (id, uid) => {
   }
 };
 
-export const addComment = async (id, currentComment) => {
-  const docRef = doc(db, "Lists", id);
-  await updateDoc(docRef, {
-    comments: arrayUnion(currentComment), 
+export const addComment = async (listId, newComment) => {
+  const commentRef = doc(collection(db, `Lists/${listId}/comments`));
+  try {
+    await setDoc(commentRef, newComment);
+    console.log("Comment added with ID:", commentRef.id);
+  } catch (error) {
+    console.error("Error adding comment:", error);
+  }
+};
+
+export const listenToComments = (listId, setComments) => {
+  const commentsRef = collection(db, `Lists/${listId}/comments`);
+  const q = query(commentsRef, orderBy("timestamp", "desc"));
+  return onSnapshot(q, (snapshot) => {
+    const comments = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    console.log(comments);
+    setComments(comments); 
   });
 };
