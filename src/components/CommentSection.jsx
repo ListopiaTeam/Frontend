@@ -1,9 +1,9 @@
 import { useContext, useState } from "react";
 import { UserContext } from "../UserContext";
 import { serverTimestamp } from "firebase/firestore";
-import { addComment } from "../utility/crudUtility";
+import { addComment, deleteComment } from "../utility/crudUtility";
 
-const CommentSection = ({ currentComment, listId }) => {
+const CommentSection = ({ currentComment, listId, userUid }) => {
   const [replyInputs, setReplyInputs] = useState({});
   const [showReplyInput, setShowReplyInput] = useState({});
   const [showReplies, setShowReplies] = useState({});
@@ -87,24 +87,32 @@ const CommentSection = ({ currentComment, listId }) => {
                         {comment.username}
                       </h3>
                       <span className="text-xs text-gray-500">
-                      {comment.timestamp?.seconds
-                      ? new Date(comment.timestamp.seconds * 1000).toLocaleString()
-                      : "Just now"}
+                        {comment.timestamp?.seconds
+                          ? new Date(
+                              comment.timestamp.seconds * 1000
+                            ).toLocaleString()
+                          : "Just now"}
                       </span>
                     </div>
                     <p className="mt-1 text-gray-700 text-sm break-words">
                       {comment.content}
                     </p>
 
-        
                     <div className="mt-2 flex items-center gap-4">
                       <button
                         onClick={() => toggleReplyInput(comment.id)}
                         className="flex items-center gap-1 text-xs font-medium text-rose-600 hover:text-rose-700"
                       >
-                      
                         Reply
                       </button>
+                      {userUid === comment.userId && (
+                        <button
+                          onClick={() => deleteComment(comment.listId,comment.id)}
+                          className="flex items-center gap-1 text-xs font-medium text-rose-600 hover:text-rose-700"
+                        >
+                          yeetus deletus
+                        </button>
+                      )}
 
                       {commentTree[comment.id] && (
                         <button
@@ -153,7 +161,6 @@ const CommentSection = ({ currentComment, listId }) => {
                 </div>
               </div>
 
-      
               {showReplies[comment.id] && commentTree[comment.id] && (
                 <div className="mt-4 ml-8 pl-4 border-l-2 border-gray-100 space-y-4">
                   {commentTree[comment.id].map((reply) => (
@@ -173,14 +180,24 @@ const CommentSection = ({ currentComment, listId }) => {
                               {reply.username}
                             </h3>
                             <span className="text-xs text-gray-500">
-                            {reply.timestamp?.seconds
-                              ? new Date(reply.timestamp.seconds * 1000).toLocaleString()
-                              : "Just now"}
+                              {reply.timestamp?.seconds
+                                ? new Date(
+                                    reply.timestamp.seconds * 1000
+                                  ).toLocaleString()
+                                : "Just now"}
                             </span>
                           </div>
                           <p className="mt-1 text-gray-700 text-sm break-words">
                             {reply.content}
                           </p>
+                          {reply.userId===userUid &&(
+                            <button
+                            onClick={() => deleteComment(reply.listId,reply.id)}
+                            className="flex items-center gap-1 text-xs font-medium text-rose-600 hover:text-rose-700"
+                          >
+                            yeetus deletus
+                          </button>
+                          )}
                         </div>
                       </div>
                     </div>

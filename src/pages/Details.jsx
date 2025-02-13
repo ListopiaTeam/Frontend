@@ -2,12 +2,13 @@ import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   addComment,
+  deleteList,
   listenToComments,
   readLists,
 } from "../utility/crudUtility";
 import { toggleLike } from "../utility/crudUtility";
 import { UserContext } from "../UserContext";
-import { doc, serverTimestamp, Timestamp } from "firebase/firestore";
+import { serverTimestamp } from "firebase/firestore";
 import CommentSection from "../components/CommentSection";
 
 const ListDetail = () => {
@@ -123,13 +124,13 @@ const ListDetail = () => {
             </button>
 
             <div className="mb-8 mt-24 md:mt-0">
-                <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4 break-words max-w-md">
-                    {list.title}
-                </h1>
-                <p className="text-base sm:text-lg text-gray-600 leading-relaxed break-words max-w-prose">
-                    {list.desc}
-                </p>
-                </div>
+              <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4 break-words max-w-md">
+                {list.title}
+              </h1>
+              <p className="text-base sm:text-lg text-gray-600 leading-relaxed break-words max-w-prose">
+                {list.desc}
+              </p>
+            </div>
 
             {list?.categories.length > 0 && (
               <div className="mb-10">
@@ -199,6 +200,13 @@ const ListDetail = () => {
                 ))}
               </div>
             </div>
+            {list.userID === user.uid && (
+              <div className="text-right">
+                <button onClick={()=>{deleteList(id)}} className="mt-3 px-6 py-2 bg-rose-500 text-white font-semibold rounded-lg shadow-md hover:bg-rose-600 transition-all">
+                  Delete list
+                </button>
+              </div>
+            )}
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-6">
                 Comments
@@ -215,7 +223,7 @@ const ListDetail = () => {
                 >
                   Post Comment
                 </button>
-                <CommentSection currentComment={currentComment} listId={id}/>
+                <CommentSection currentComment={currentComment} listId={id} userUid={user.uid} />
               </div>
             </div>
           </div>

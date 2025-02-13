@@ -79,6 +79,16 @@ export const listenToComments = (listId, setComments) => {
       ...doc.data(),
     }));
     console.log(comments);
-    setComments(comments); 
+    setComments(comments);
   });
+};
+
+export const deleteList = async (id) => {
+  const docRef = doc(db, "Lists", id);
+  await deleteDoc(docRef);
+};
+
+export const deleteComment = async (listId, id) => {
+  const commentRef = doc(db, `Lists/${listId}/comments`, id);
+  await deleteDoc(commentRef);
 };
