@@ -37,7 +37,7 @@ const ListCard = ({categories, title, description, likes, url, id}) => {
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
         
-        <div className="absolute left-4 top-4 flex gap-2">
+        <div className="absolute left-4 top-4 flex gap-2 flex-wrap">
           {categories.map((category) => (
             <span key={category} className="rounded-full bg-white/90 px-3 py-1.5 text-xs font-semibold text-gray-800 backdrop-blur-sm">
               {category}

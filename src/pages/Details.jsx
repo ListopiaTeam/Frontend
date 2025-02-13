@@ -92,7 +92,7 @@ const ListDetail = () => {
           <div className="bg-white rounded-2xl shadow-lg p-8 sm:p-12">
             <button
               onClick={handleLike}
-              className="flex items-center gap-1.5 group transition-colors absolute sm:right-52 sm:top-12 right-20 top-24"
+              className="flex items-center gap-1.5 group transition-colors absolute right-52 top-12 "
               aria-label={isLiked ? "Remove like" : "Like this game"}
             >
               <svg
@@ -122,14 +122,14 @@ const ListDetail = () => {
               Report list
             </button>
 
-            <div className="mb-8">
-              <h1 className="text-4xl font-extrabold text-gray-900 mb-4">
-                {list.title}
-              </h1>
-              <p className="text-lg text-gray-600 leading-relaxed">
-                {list.desc}
-              </p>
-            </div>
+            <div className="mb-8 mt-24 md:mt-0">
+                <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4 break-words max-w-md">
+                    {list.title}
+                </h1>
+                <p className="text-base sm:text-lg text-gray-600 leading-relaxed break-words max-w-prose">
+                    {list.desc}
+                </p>
+                </div>
 
             {list?.categories.length > 0 && (
               <div className="mb-10">
