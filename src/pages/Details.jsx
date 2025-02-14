@@ -124,12 +124,23 @@ const ListDetail = () => {
             </button>
             <button
               onClick={async () => {
-                const hasReported = await addReport(id, user.uid);
-                if (hasReported) {
-                  setAlert({ msg: "You've already reported", err: hasReported });
-                } else {
-                  setAlert({ msg: "Successful report!", err: hasReported });
-                }
+                const newReport = {
+                  content: ["flag1", "flag2", "flag3"],
+                  listId: id,
+                  timestamp: serverTimestamp(),
+                  userId: user?.uid,
+                  username: user?.displayName,
+                };
+
+                const hasReported = await addReport(id, newReport);
+
+                setAlert({
+                  msg: hasReported
+                    ? "You've already reported"
+                    : "Successful report!",
+                  err: hasReported,
+                });
+
                 setTimeout(() => setAlert({ msg: "", err: false }), 3000);
               }}
               className="absolute top-10 right-20 bg-rose-500 text-white font-bold py-2 px-4 rounded-lg shadow-lg hover:bg-rose-700 transition duration-300"

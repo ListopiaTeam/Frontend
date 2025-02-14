@@ -6,6 +6,7 @@ import {
   doc,
   DocumentSnapshot,
   getDoc,
+  getDocs,
   onSnapshot,
   orderBy,
   query,
@@ -60,16 +61,16 @@ export const toggleLike = async (id, uid) => {
   }
 };
 
-export const addReport = async (id, uid) => {
-  const docRef = doc(db, "Lists", id);
-  const docSnap = await getDoc(docRef);
-  const reportsArr = docSnap.data().reports || [];
-  if (reportsArr.includes(uid)) {
-    return true
-  } else {
-    await updateDoc(docRef, { reports: [...reportsArr, uid] });
-    return false
+export const addReport = async (listId, currentReport) => {
+  const reportsRef = collection(db, `Lists/${listId}/reports`);
+  const q = query(reportsRef, where("userId", "==", currentReport.userId));
+  const querySnapshot = await getDocs(q);
+
+  if (!querySnapshot.empty) {
+    return true;
   }
+  await addDoc(reportsRef, currentReport);
+  return false;
 };
 
 export const addComment = async (listId, newComment) => {
