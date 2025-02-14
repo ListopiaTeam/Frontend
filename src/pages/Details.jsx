@@ -1,7 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import Alert from "../components/Alert";
 import {
   addComment,
+  addReport,
   deleteList,
   listenToComments,
   readLists,
@@ -18,6 +20,7 @@ const ListDetail = () => {
   const [isLiked, setIsLiked] = useState(false);
   const [currentLikes, setCurrentLikes] = useState([]);
   const [currentComment, setCurrentComment] = useState([]);
+  const [alert, setAlert] = useState({ msg: "", err: false });
 
   useEffect(() => {
     readLists(id, setList);
@@ -119,9 +122,21 @@ const ListDetail = () => {
                 {list.likes.length}
               </span>
             </button>
-            <button className="absolute top-10 right-20 bg-rose-500 text-white font-bold py-2 px-4 rounded-lg shadow-lg hover:bg-rose-700 transition duration-300">
+            <button
+              onClick={async () => {
+                const hasReported = await addReport(id, user.uid);
+                if (hasReported) {
+                  setAlert({ msg: "You've already reported", err: hasReported });
+                } else {
+                  setAlert({ msg: "Successful report!", err: hasReported });
+                }
+                setTimeout(() => setAlert({ msg: "", err: false }), 3000);
+              }}
+              className="absolute top-10 right-20 bg-rose-500 text-white font-bold py-2 px-4 rounded-lg shadow-lg hover:bg-rose-700 transition duration-300"
+            >
               Report list
             </button>
+            {alert.msg && <Alert msg={alert.msg} err={alert.err} />}
 
             <div className="mb-8 mt-24 md:mt-0">
               <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4 break-words max-w-md">
@@ -202,7 +217,12 @@ const ListDetail = () => {
             </div>
             {list.userID === user.uid && (
               <div className="text-right">
-                <button onClick={()=>{deleteList(id)}} className="mt-3 px-6 py-2 bg-rose-500 text-white font-semibold rounded-lg shadow-md hover:bg-rose-600 transition-all">
+                <button
+                  onClick={() => {
+                    deleteList(id);
+                  }}
+                  className="mt-3 px-6 py-2 bg-rose-500 text-white font-semibold rounded-lg shadow-md hover:bg-rose-600 transition-all"
+                >
                   Delete list
                 </button>
               </div>
@@ -223,7 +243,11 @@ const ListDetail = () => {
                 >
                   Post Comment
                 </button>
-                <CommentSection currentComment={currentComment} listId={id} userUid={user.uid} />
+                <CommentSection
+                  currentComment={currentComment}
+                  listId={id}
+                  userUid={user.uid}
+                />
               </div>
             </div>
           </div>

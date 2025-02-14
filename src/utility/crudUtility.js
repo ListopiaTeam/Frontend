@@ -60,6 +60,18 @@ export const toggleLike = async (id, uid) => {
   }
 };
 
+export const addReport = async (id, uid) => {
+  const docRef = doc(db, "Lists", id);
+  const docSnap = await getDoc(docRef);
+  const reportsArr = docSnap.data().reports || [];
+  if (reportsArr.includes(uid)) {
+    return true
+  } else {
+    await updateDoc(docRef, { reports: [...reportsArr, uid] });
+    return false
+  }
+};
+
 export const addComment = async (listId, newComment) => {
   const commentRef = doc(collection(db, `Lists/${listId}/comments`));
   try {

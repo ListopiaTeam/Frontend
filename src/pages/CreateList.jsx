@@ -69,7 +69,7 @@ const CreateList = () => {
       games: selectedGames.map((game) => game),
       likes: [],
       userID: user.uid,
-      comments:[]
+      reports:[]
     };
     
     try {
