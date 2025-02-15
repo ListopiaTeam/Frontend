@@ -6,7 +6,7 @@ import { extractUrlAndId } from '../utility/utils'
 
 const Header = () => {
   const [show, setShow] = useState(false)
-   const [avatar, setAvatar] = useState(null);
+  const [avatar, setAvatar] = useState(null);
   const { user, logoutUser } = useContext(UserContext)  
   const navigate = useNavigate()
 

@@ -70,6 +70,7 @@ const Lists = () => {
               categories={list.categories}
               url={list.games[0].background_image}
               id={list.id}
+              username={list?.username}
             />
           </div>
         ))}

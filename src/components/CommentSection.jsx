@@ -1,13 +1,25 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../UserContext";
 import { serverTimestamp } from "firebase/firestore";
 import { addComment, deleteComment } from "../utility/crudUtility";
+import { extractUrlAndId } from "../utility/utils";
 
 const CommentSection = ({ currentComment, listId, userUid }) => {
   const [replyInputs, setReplyInputs] = useState({});
   const [showReplyInput, setShowReplyInput] = useState({});
   const [showReplies, setShowReplies] = useState({});
+  const [avatar, setAvatar] = useState(null);
   const { user } = useContext(UserContext);
+
+    useEffect(() => {
+      if (user?.photoURL) {
+        setAvatar(extractUrlAndId(user.photoURL).url);
+        !user && setAvatar(null)
+      }
+    }, [user, user?.photoURL]); 
+  
+    console.log(user);
+    
 
   const commentTree = currentComment.reduce((acc, comment) => {
     if (comment.parentId) {
@@ -76,9 +88,13 @@ const CommentSection = ({ currentComment, listId, userUid }) => {
               <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:border-rose-100 transition-colors">
                 <div className="flex items-start gap-3">
                   <div className="flex-shrink-0 w-8 h-8 rounded-full bg-rose-100 flex items-center justify-center">
-                    <span className="text-sm font-medium text-rose-600">
-                      {comment.username?.[0]?.toUpperCase() || "U"}
-                    </span>
+                  {avatar ? (
+                        <img className='h-8 w-8 rounded-full bg-gray-700 flex items-center justify-center' src={avatar} alt="Profile picture" />
+                      ) : (
+                      <span className="text-sm font-medium">
+                        {user?.displayName?.charAt(0).toUpperCase()}
+                      </span>
+                      )}
                   </div>
 
                   <div className="flex-1 min-w-0">
@@ -170,9 +186,13 @@ const CommentSection = ({ currentComment, listId, userUid }) => {
                     >
                       <div className="flex items-start gap-3">
                         <div className="flex-shrink-0 w-6 h-6 rounded-full bg-rose-100 flex items-center justify-center">
-                          <span className="text-xs font-medium text-rose-600">
-                            {reply.username?.[0]?.toUpperCase() || "U"}
+                        {avatar ? (
+                        <img className='h-8 w-8 rounded-full bg-gray-700 flex items-center justify-center' src={avatar} alt="Profile picture" />
+                          ) : (
+                          <span className="text-sm font-medium">
+                            {user?.displayName?.charAt(0).toUpperCase()}
                           </span>
+                          )}
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-baseline gap-2">
