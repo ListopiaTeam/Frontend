@@ -16,6 +16,7 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "./firebaseApp";
+import { getAuth } from "firebase/auth";
 
 export const addList = async (formData) => {
   const collectionRef = collection(db, "Lists");
@@ -104,4 +105,22 @@ export const deleteList = async (id) => {
 export const deleteComment = async (listId, id) => {
   const commentRef = doc(db, `Lists/${listId}/comments`, id);
   await deleteDoc(commentRef);
+};
+
+export const getUser = async (userId) => {
+  try {
+    const userRef = doc(db, "Users", userId); 
+    const userSnap = await getDoc(userRef);
+
+    if (userSnap.exists()) {
+      console.log("User Data:", userSnap.data());
+      return userSnap.data();
+    } else {
+      console.log("No such user found!");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    return null;
+  }
 };

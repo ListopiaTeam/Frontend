@@ -1,5 +1,5 @@
 import React from "react";
-import { auth } from "./utility/firebaseApp";
+import { auth, db } from "./utility/firebaseApp";
 import {
   createUserWithEmailAndPassword,
   deleteUser,
@@ -15,6 +15,7 @@ import {
 import { createContext } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
+import { deleteDoc, doc, setDoc, updateDoc } from "firebase/firestore";
 
 export const UserContext = createContext();
 
@@ -28,8 +29,6 @@ export const UserProvider = ({ children }) => {
     });
     return () => unsubscribe();
   }, []);
-
-  const provider = new GoogleAuthProvider();
 
   const signInUser = async (email, password) => {
     try {
@@ -47,20 +46,29 @@ export const UserProvider = ({ children }) => {
     setMessage({});
   };
 
-  const signUpUser = async (email, password, displayName) => {
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user=userCredential.user
-      await sendEmailVerification(user);
-      console.log("Verification email sent!");
-      await updateProfile(auth.currentUser, { displayName });
-      setMessage({});
-      setMessage({signup: "Successful registration!"});
-    } catch (error) {
-      console.log(error);
-      setMessage({ err: error.message });
-    }
-  };
+const signUpUser = async (email, password, displayName) => {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    await sendEmailVerification(user);
+    console.log("Verification email sent!");
+    await updateProfile(user, { displayName });
+    await setDoc(doc(db, "Users", user.uid), {
+      uid: user.uid,
+      displayName: displayName,
+      email: email,
+      photoURL:"",
+      createdAt: new Date(),
+    });
+
+    setMessage({ signup: "Successful registration!" });
+  } catch (error) {
+    console.error(error);
+    setMessage({ err: error.message });
+  }
+};
+
 
   const resetPassword = async (email) => {
     try {
@@ -72,32 +80,36 @@ export const UserProvider = ({ children }) => {
     }
   };
 
-  const updateCredentials = async (displayName, photoURL) => {
-    try {
-      if (displayName && photoURL){
-        await updateProfile(auth.currentUser, { displayName, photoURL });
-        console.log(photoURL);
-      }
-      else if (displayName)
-        await updateProfile(auth.currentUser, { displayName });
-      else if (photoURL)
-        await updateProfile(auth.currentUser, { photoURL });
-      setMessage({});
-      setMessage({ update: "sikeres modositas!" });
-    } catch (error) {
-      console.log(error);
-      setMessage({ err: error.message });
+
+const updateCredentials = async (displayName, photoURL) => {
+  try {
+    const updateData = {};
+    if (displayName) updateData.displayName = displayName;
+    if (photoURL) updateData.photoURL = photoURL;
+
+    if (Object.keys(updateData).length > 0) {
+      await updateProfile(auth.currentUser, updateData);
     }
-  };
+
+    const userDocRef = doc(db, "Users", auth.currentUser.uid);
+    await updateDoc(userDocRef, updateData);
+
+    setMessage({ update: "Successful update!" });
+  } catch (error) {
+    console.error(error);
+    setMessage({ err: error.message });
+  }
+};
+
 
   const deleteAccount=async()=>{
+    const userDocRef = doc(db, "Users", auth.currentUser.uid);
     try {
+      await deleteDoc(userDocRef)
       await deleteUser(auth.currentUser)
       console.log('sikeres torles!');
-      
     } catch (error) {
       console.log(error);
-      
     }
   }
 
