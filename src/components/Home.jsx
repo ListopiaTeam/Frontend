@@ -13,7 +13,7 @@ const Home = () => {
     }, []);
 
     const filteredList = lists.sort((a, b) => b.likes.length - a.likes.length)
-  
+    
   return (
     <>
       <Event />
