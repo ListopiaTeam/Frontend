@@ -13,6 +13,7 @@ import { toggleLike } from "../utility/crudUtility";
 import { UserContext } from "../UserContext";
 import { serverTimestamp } from "firebase/firestore";
 import CommentSection from "../components/CommentSection";
+import ReportModal from "../components/ReportModal";
 
 const ListDetail = () => {
   const { id } = useParams();
@@ -125,32 +126,9 @@ const ListDetail = () => {
                 {list.likes.length}
               </span>
             </button>
-            <button
-              onClick={async () => {
-                const newReport = {
-                  content: ["flag1", "flag2", "flag3"],
-                  listId: id,
-                  timestamp: serverTimestamp(),
-                  userId: user?.uid,
-                  username: user?.displayName,
-                };
-
-                const hasReported = await addReport(id, newReport);
-
-                setAlert({
-                  msg: hasReported
-                    ? "You've already reported"
-                    : "Successful report!",
-                  err: hasReported,
-                });
-
-                setTimeout(() => setAlert({ msg: "", err: false }), 3000);
-              }}
-              className="absolute top-10 right-20 bg-rose-500 text-white font-bold py-2 px-4 rounded-lg shadow-lg hover:bg-rose-700 transition duration-300"
-            >
-              Report list
-            </button>
-            {alert.msg && <Alert msg={alert.msg} err={alert.err} />}
+            
+            
+            <ReportModal id={id} user={user}/>
 
             <div className="mb-8 mt-24 md:mt-0">
               <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4 break-words max-w-md">
