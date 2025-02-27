@@ -33,8 +33,6 @@
           !user && setAvatar(null)
         }
       }, [user, user?.photoURL]); 
-    
-      console.log(user);
       
 
     const commentTree = currentComment.reduce((acc, comment) => {
@@ -93,7 +91,6 @@
         [commentId]: false,
       }));
     };
-    console.log(userData);
     
 
     return (
@@ -102,7 +99,7 @@
           currentComment
             .filter((comment) => !comment.parentId)
             .map((comment) => (
-              <div key={comment.id} className="group relative">
+              <div key={comment.id || "temp"} className="group relative">
                 <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:border-rose-100 transition-colors">
                   <div className="flex items-start gap-3">
                     <div className="flex-shrink-0 w-8 h-8 rounded-full bg-rose-100 flex items-center justify-center">
@@ -137,7 +134,7 @@
                       <div className="mt-2 flex items-center gap-4">
                         <button
                           onClick={() => toggleReplyInput(comment.id)}
-                          className="flex items-center gap-1 text-xs font-medium text-rose-600 hover:text-rose-700"
+                          className={`${!user && "hidden"} text-xs font-medium text-gray-500 hover:text-gray-700`}
                         >
                           Reply
                         </button>
@@ -146,14 +143,14 @@
                             onClick={() => deleteComment(comment.listId,comment.id)}
                             className="flex items-center gap-1 text-xs font-medium text-rose-600 hover:text-rose-700"
                           >
-                            yeetus deletus
+                            Delete comment
                           </button>
                         )}
 
                         {commentTree[comment.id] && (
                           <button
                             onClick={() => toggleReplies(comment.id)}
-                            className="text-xs font-medium text-gray-500 hover:text-gray-700"
+                            className={`${!user && "hidden"} text-xs font-medium text-gray-500 hover:text-gray-700`}
                           >
                             {showReplies[comment.id]
                               ? "Hide replies"
@@ -235,7 +232,7 @@
                               onClick={() => deleteComment(reply.listId,reply.id)}
                               className="flex items-center gap-1 text-xs font-medium text-rose-600 hover:text-rose-700"
                             >
-                              yeetus deletus
+                              Delete comment
                             </button>
                             )}
                           </div>

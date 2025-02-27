@@ -18,6 +18,7 @@ import ReportModal from "../components/ReportModal";
 const ListDetail = () => {
   const { id } = useParams();
   const { user } = useContext(UserContext);
+  const [currentPostUser, setCurrentPostUser] = useState(null); 
   const [list, setList] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
   const [currentLikes, setCurrentLikes] = useState([]);
@@ -53,16 +54,14 @@ const ListDetail = () => {
   }, [currentLikes, user?.uid]);
 
   const handleLike = () => {
-    toggleLike(id, user.uid);
+    toggleLike(id, user?.uid);
     if (isLiked) {
-      setCurrentLikes(currentLikes.filter((like) => like !== user.uid));
+      setCurrentLikes(currentLikes.filter((like) => like !== user?.uid));
     } else {
-      setCurrentLikes([...currentLikes, user.uid]);
+      setCurrentLikes([...currentLikes, user?.uid]);
     }
     setIsLiked(!isLiked);
   };
-
-   
     
   const handleComment = () => {
     const commentText = document.querySelector("textarea").value.trim();
@@ -85,6 +84,26 @@ const ListDetail = () => {
     addComment(id, newComment);
   };
 
+  const getPostUser = async () => {
+    try {
+      const user = await getUser(list?.userID);
+      
+      setCurrentPostUser(user); 
+    } catch (error) {
+      console.error('Error fetching user:', error); 
+    }
+
+  }
+
+  useEffect(() => {
+    getPostUser()
+  }, [list?.userID])
+
+  
+
+  
+
+
   if (!list?.games) {
     return (
       <div className="min-h-screen mt-32 max-w-4xl mx-auto text-rose-600 text-4xl font-semibold!">
@@ -92,6 +111,7 @@ const ListDetail = () => {
       </div>
     );
   }
+  
 
   return (
     <div className="min-h-screen py-16 mt-16">
@@ -99,8 +119,9 @@ const ListDetail = () => {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="bg-white rounded-2xl shadow-lg p-8 sm:p-12">
             <button
-              onClick={handleLike}
-              className="flex items-center gap-1.5 group transition-colors absolute right-52 top-12 "
+              onClick={user && handleLike}
+              disabled={!user}
+              className={` flex items-center gap-1.5 group transition-colors absolute right-52 top-12`}
               aria-label={isLiked ? "Remove like" : "Like this game"}
             >
               <svg
@@ -131,6 +152,9 @@ const ListDetail = () => {
             <ReportModal id={id} user={user}/>
 
             <div className="mb-8 mt-24 md:mt-0">
+              <p className="font-bold mb-10 text-lg">
+                Created by: <span className="text-rose-600">{currentPostUser?.displayName || "Deleted User"}</span> 
+              </p>
               <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4 break-words max-w-md">
                 {list.title}
               </h1>
@@ -207,7 +231,7 @@ const ListDetail = () => {
                 ))}
               </div>
             </div>
-            {list.userID === user.uid && (
+            {list.userID === user?.uid && (
               <div className="text-right">
                 <button
                   onClick={() => {
@@ -225,20 +249,20 @@ const ListDetail = () => {
               </h2>
               <div className="bg-gray-100 p-6 rounded-xl">
                 <textarea
-                  className="w-full p-3 rounded-lg border border-gray-300 focus:ring-rose-500 focus:border-rose-500"
+                  className={`${!user && "hidden"} w-full p-3 rounded-lg border border-gray-300 focus:ring-rose-500 focus:border-rose-500`}
                   rows="4"
                   placeholder="Add a comment..."
                 />
                 <button
                   onClick={handleComment}
-                  className="mt-3 px-6 py-2 bg-rose-500 text-white font-semibold rounded-lg shadow-md hover:bg-rose-600 transition-all"
+                  className={`${!user && "hidden"} mt-3 px-6 py-2 bg-rose-500 text-white font-semibold rounded-lg shadow-md hover:bg-rose-600 transition-all`}
                 >
                   Post Comment
                 </button>
                 <CommentSection
                   currentComment={currentComment}
                   listId={id}
-                  userUid={user.uid}
+                  userUid={user?.uid}
                 />
               </div>
             </div>

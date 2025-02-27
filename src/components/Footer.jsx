@@ -7,7 +7,7 @@ const Footer = () => {
         <div className="flex items-center gap-4">
           <img
             className="w-20 h-20 rounded-lg shadow-lg"
-            src="Listopia_Icon_v2_big.png"
+            src="/Listopia_Icon_v2_big.png"
             alt="Listopia Logo"
           />
           <p className="max-w-md text-sm leading-relaxed font-mono">

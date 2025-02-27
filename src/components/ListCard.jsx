@@ -18,11 +18,11 @@ const ListCard = ({categories, title, description, likes, url, id}) => {
   }, [currentLikes, user?.uid]);
 
   const handleLike = () => {
-    toggleLike(id, user.uid);
+    toggleLike(id, user?.uid);
     if (isLiked) {
-      setCurrentLikes(currentLikes.filter(like => like !== user.uid));
+      setCurrentLikes(currentLikes.filter(like => like !== user?.uid));
     } else {
-      setCurrentLikes([...currentLikes, user.uid]);
+      setCurrentLikes([...currentLikes, user?.uid]);
     }
     setIsLiked(!isLiked);
   }
@@ -31,11 +31,17 @@ const ListCard = ({categories, title, description, likes, url, id}) => {
     <article className="group relative h-full overflow-hidden rounded-2xl bg-slate-100 shadow-lg shadow-gray-100/40 transition-all duration-300 hover:shadow-xl hover:shadow-gray-200/50">
   
       <div className="relative aspect-[5/3] overflow-hidden">
-        <img
-          src={url}
-          alt={description}
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
+        {url ? (
+          <img
+            src={url}
+            alt={description}
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        ): (
+          <div className="flex justify-center items-center h-full text-xl font-bold rotate-45 mt-10">
+              No image available
+          </div>
+        )}
         
         <div className="absolute left-4 top-4 flex gap-2 flex-wrap">
           {categories.map((category) => (
@@ -50,8 +56,9 @@ const ListCard = ({categories, title, description, likes, url, id}) => {
         <div className="flex items-start justify-between">
           <h3 className="text-xl font-bold text-gray-900 truncate pr-2">{title}</h3>
           <button 
-            onClick={handleLike}
-            className="flex items-center gap-1.5 group transition-colors"
+            onClick={user && handleLike}
+            disabled={!user}
+            className={`flex items-center gap-1.5 group transition-colors`}
             aria-label={isLiked ? "Remove like" : "Like this game"}
           >
             <svg
@@ -66,7 +73,7 @@ const ListCard = ({categories, title, description, likes, url, id}) => {
               />
             </svg>
             <span className={`text-sm font-medium ${isLiked ? 'text-rose-500' : 'text-gray-500'}`}>
-              {currentLikes.length}
+              {currentLikes?.length}
             </span>
           </button>
         </div>

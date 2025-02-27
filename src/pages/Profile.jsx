@@ -66,7 +66,7 @@ export default function Profile() {
   }, [user]);
 
   return (
-    <div className="mt-32 flex justify-center">
+    <div className="mt-32 mb-32 flex justify-center">
       <form onSubmit={handleSubmit(onSubmit)} className="max-w-lg m-auto gap-5 flex flex-col mx-5">
         <h2 className="text-center text-3xl font-semibold">Profile</h2>
         

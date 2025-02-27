@@ -34,7 +34,7 @@ const Header = () => {
           {/* Logo */}
           <NavLink to="/" className="flex items-center space-x-2">
             <img 
-              src="Listopia_Icon_v2_big.png" 
+              src="/Listopia_Icon_v2_big.png" 
               alt="Listopia" 
               className="h-8 w-8 transition-transform hover:scale-105"
             />

@@ -44,30 +44,35 @@ const ReportModal = ({ id, user }) => {
     };
 
     const hasReported = await addReport(id, newReport);
-
+    
     setAlert({
       msg: hasReported ? "You've already reported this." : "Report submitted successfully!",
       err: hasReported,
     });
 
+    
+    
     setTimeout(() => setAlert({ msg: "", err: false }), 3000);
-
+    
     document.getElementById('report_modal').close();
     setSelectedReasons([]);
   };
-
+  
   const handleClose = () => {
     setSelectedReasons([]);
   };
 
   return (
     <>
-      <button className="btn" onClick={() => document.getElementById('report_modal').showModal()}>
-        Open Modal
+      <button  className={`${!user && "hidden"} mt-3 px-6 py-2 bg-rose-500 text-white font-semibold rounded-lg shadow-md hover:bg-rose-600 transition-all mb-10`} onClick={() => document.getElementById('report_modal').showModal()}>
+        Report
       </button>
-      <dialog id="report_modal" className="modal" onClose={handleClose}>
-        <div className="modal-box p-6 rounded-xl">
-          <h3 className="font-bold text-lg">Why would you like to report?</h3>
+      <dialog id="report_modal" className="modal rounded-md" onClose={handleClose}>
+        <div className="modal-box p-6 rounded-xl" >
+          <form method="dialog" className="absolute right-5 top-5">
+              <button className="btn text-xl font-bold py-2 px-4 transition duration-300 text-rose-600" onClick={handleClose}>X</button>
+            </form>
+          <h3 className="font-bold sm:text-lg text-sm">Why would you like to report?</h3>  
           <div className="py-4">
             {reportReasons.map((reason, index) => (
               <div key={index} className="flex items-center gap-2">
@@ -85,20 +90,18 @@ const ReportModal = ({ id, user }) => {
               </div>
             ))}
           </div>
-          {alert.msg && <Alert msg={alert.msg} err={alert.err} />}
-          <div className="modal-action">
+          <div className="modal-action flex gap-5 flex-col">
             <button
               onClick={handleSubmitReport}
               className="bg-rose-500 text-white font-bold py-2 px-4 rounded-lg shadow-lg hover:bg-rose-700 transition duration-300"
             >
               Submit Report
             </button>
-            <form method="dialog">
-              <button className="btn" onClick={handleClose}>Close</button>
-            </form>
+           
           </div>
         </div>
       </dialog>
+        {alert.msg && <Alert msg={alert.msg} err={alert.err} />}
     </>
   );
 };

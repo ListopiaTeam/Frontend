@@ -14,6 +14,7 @@ import {
   setDoc,
   updateDoc,
   where,
+  limit,
 } from "firebase/firestore";
 import { db } from "./firebaseApp";
 import { getAuth } from "firebase/auth";
@@ -92,7 +93,6 @@ export const listenToComments = (listId, setComments) => {
       id: doc.id,
       ...doc.data(),
     }));
-    console.log(comments);
     setComments(comments);
   });
 };
@@ -113,14 +113,58 @@ export const getUser = async (userId) => {
     const userSnap = await getDoc(userRef);
 
     if (userSnap.exists()) {
-      console.log("User Data:", userSnap.data());
       return userSnap.data();
     } else {
       console.log("No such user found!");
       return null;
     }
   } catch (error) {
-    console.error("Error fetching user:", error);
+    // console.error("Error fetching user:", error);
     return null;
   }
 };
+
+//lazy loading firebase function?! ***send help***
+
+let lastDoc = null;
+
+export async function fetchLists(listCount, selCateg, setLists) { 
+  let listsQuery;
+
+  // if (selCateg.length === 0) {
+  //   q = query(collectionRef, orderBy("timestamp", "desc"));
+  // } else {
+  //   q = query(
+  //     collectionRef,
+  //     where("categories", "array-contains-any", selCateg),
+  //     orderBy("timestamp", "desc")
+  //   );
+  // }
+
+  if (lastDoc) {
+    listsQuery = query(
+      collection(db, "Lists"),
+      orderBy("createdAt", "desc"),
+      startAfter(lastDoc),
+      limit(listCount),
+    );
+  } else {
+    listsQuery = query(
+      collection(db, "Lists"),
+      orderBy("createdAt", "desc"),
+      limit(listCount)
+    );
+  }
+
+  const querySnapshot = await getDocs(listsQuery);
+
+  const lists = querySnapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+
+  // Store last document for pagination
+  lastDoc = querySnapshot.docs.length > 0 ? querySnapshot.docs[querySnapshot.docs.length - 1] : null;
+  
+  setLists(lists)
+}

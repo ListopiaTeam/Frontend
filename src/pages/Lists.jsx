@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { readList } from "../utility/crudUtility";
+import { fetchLists, readList } from "../utility/crudUtility";
 import ListCard from "../components/ListCard";
 import { getTags } from "../utility/rawgAPI";
+import LazyLoad from 'react-lazyload';
 
 const Lists = () => {
   const [lists, setLists] = useState([]);
   const [tags, setTags] = useState([]);
   const [selCateg, setSelCateg] = useState([]);
-  const [isOpen, setIsOpen] = useState(false); 
-
+  const [categoriesSelectionIsOpen, setCategoriesSelectionIsOpen] = useState(false); 
+  
   useEffect(() => {
     getTags(setTags);
   }, []);
@@ -16,7 +17,8 @@ const Lists = () => {
   useEffect(() => {
     const unsubscribe = readList(setLists, selCateg);
     return () => unsubscribe();
-  }, [selCateg]);
+    readList(setLists, selCateg)
+  }, []);
 
   const handleCategoryChange = (category) => {
     setSelCateg((prev) =>
@@ -33,7 +35,7 @@ const Lists = () => {
           Select Categories:
         </label>
         <button
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={() => setCategoriesSelectionIsOpen(!categoriesSelectionIsOpen)}
           className="w-full p-2 border rounded-md bg-white flex justify-between items-center"
         >
           {selCateg.length > 0 ? selCateg.join(", ") : "Select categories"}
@@ -41,7 +43,7 @@ const Lists = () => {
         </button>
 
        
-        {isOpen && (
+        {categoriesSelectionIsOpen && (
           <div className="absolute w-full mt-1 bg-white border rounded-md shadow-lg max-h-48 overflow-y-auto z-10">
             {tags.map((category) => (
               <div
@@ -63,15 +65,17 @@ const Lists = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
         {lists.map((list) => (
           <div key={list.id}>
-            <ListCard
-              description={list.desc}
-              title={list.title}
-              likes={list.likes}
-              categories={list.categories}
-              url={list.games[0].background_image}
-              id={list.id}
-              username={list?.username}
-            />
+            <LazyLoad height={1000}>
+              <ListCard
+                description={list.desc}
+                title={list.title}
+                likes={list.likes}
+                categories={list.categories}
+                url={list.games[0].background_image}
+                id={list.id}
+                username={list?.username}
+              />
+            </LazyLoad>
           </div>
         ))}
       </div>

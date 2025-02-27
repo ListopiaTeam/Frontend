@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 
 const Event = () => {
     return (
-        <section className="relative min-h-[80vh] bg-[url('banner.jpg')] bg-cover bg-center bg-no-repeat bg-fixed">
+        <section className="relative min-h-[80vh] bg-[url('/banner.jpg')] bg-cover bg-center bg-no-repeat bg-fixed">
             <div className="absolute inset-0 bg-gradient-to-t sm:bg-gradient-to-tr from-gray-900/95 via-gray-900/70 to-transparent"></div>
 
             <div className="relative mx-auto max-w-screen-xl px-4 py-24 sm:px-6 lg:flex lg:h-[80vh] lg:items-center lg:px-8">
