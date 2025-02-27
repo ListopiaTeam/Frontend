@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Event from './Event';
 import ListCard from './ListCard';
-import { readList,fetchLists } from '../utility/crudUtility';
+import { readList } from '../utility/crudUtility';
 
 const Home = () => {
     const [lists, setLists] = useState([]);
     const selCateg = [];
-
-    console.log(fetchLists(10));
     
-  
     useEffect(() => {
       const unsubscribe = readList(setLists, selCateg);
       return () => unsubscribe();

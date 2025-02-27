@@ -15,9 +15,9 @@ import {
   updateDoc,
   where,
   limit,
+  startAfter,
 } from "firebase/firestore";
 import { db } from "./firebaseApp";
-import { getAuth } from "firebase/auth";
 
 export const addList = async (formData) => {
   const collectionRef = collection(db, "Lists");
@@ -128,43 +128,44 @@ export const getUser = async (userId) => {
 
 let lastDoc = null;
 
-export async function fetchLists(listCount, selCateg, setLists) { 
-  let listsQuery;
+export async function fetchLists(listCount, selCateg, setLists) {
+  try {
+    let listsQuery;
 
-  // if (selCateg.length === 0) {
-  //   q = query(collectionRef, orderBy("timestamp", "desc"));
-  // } else {
-  //   q = query(
-  //     collectionRef,
-  //     where("categories", "array-contains-any", selCateg),
-  //     orderBy("timestamp", "desc")
-  //   );
-  // }
+    if (selCateg.length === 0) {
+      listsQuery = query(
+        collection(db, "Lists"),
+        orderBy("timestamp", "desc"),
+        limit(listCount)
+      );
+    } else {
+      listsQuery = query(
+        collection(db, "Lists"),
+        where("categories", "array-contains-any", selCateg),
+        orderBy("timestamp", "desc"),
+        limit(listCount)
+      );
+    }
 
-  if (lastDoc) {
-    listsQuery = query(
-      collection(db, "Lists"),
-      orderBy("createdAt", "desc"),
-      startAfter(lastDoc),
-      limit(listCount),
-    );
-  } else {
-    listsQuery = query(
-      collection(db, "Lists"),
-      orderBy("createdAt", "desc"),
-      limit(listCount)
-    );
+    if (lastDoc) {
+      listsQuery = query(listsQuery, startAfter(lastDoc));
+    }
+
+    const querySnapshot = await getDocs(listsQuery);
+    const newLists = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    lastDoc = querySnapshot.docs.length > 0 ? querySnapshot.docs[querySnapshot.docs.length - 1] : null;
+
+    setLists(prev => {
+      const existingIds = new Set(prev.map(item => item.id)); //store existing IDs
+      const uniqueLists = newLists.filter(item => !existingIds.has(item.id)); //remove potential duplicates
+      return [...prev, ...uniqueLists]; //append only unique items
+    });
+
+  } catch (error) {
+    console.error("Error fetching lists:", error);
   }
-
-  const querySnapshot = await getDocs(listsQuery);
-
-  const lists = querySnapshot.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
-
-  // Store last document for pagination
-  lastDoc = querySnapshot.docs.length > 0 ? querySnapshot.docs[querySnapshot.docs.length - 1] : null;
-  
-  setLists(lists)
 }

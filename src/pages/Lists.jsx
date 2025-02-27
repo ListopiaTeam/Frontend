@@ -1,39 +1,54 @@
-import React, { useEffect, useState } from "react";
-import { fetchLists, readList } from "../utility/crudUtility";
+import React, { useEffect, useState, useCallback } from "react";
+import { fetchLists} from "../utility/crudUtility";
 import ListCard from "../components/ListCard";
 import { getTags } from "../utility/rawgAPI";
-import LazyLoad from 'react-lazyload';
+import LazyLoad from "react-lazyload";
 
 const Lists = () => {
   const [lists, setLists] = useState([]);
   const [tags, setTags] = useState([]);
   const [selCateg, setSelCateg] = useState([]);
-  const [categoriesSelectionIsOpen, setCategoriesSelectionIsOpen] = useState(false); 
-  
+  const [categoriesSelectionIsOpen, setCategoriesSelectionIsOpen] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
+
+  // Fetch category tags on mount
   useEffect(() => {
     getTags(setTags);
   }, []);
 
+  //fetch lists on category change(broken)
   useEffect(() => {
-    const unsubscribe = readList(setLists, selCateg);
-    return () => unsubscribe();
-    readList(setLists, selCateg)
-  }, []);
+    setLists([]);
+    fetchLists(5, selCateg, setLists);
+  }, [selCateg]);
+
+  //infinite scroll Handler
+  const handleScroll = useCallback(async () => {
+    if (isFetching) return; //prevent duplicate fetches
+
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
+      setIsFetching(true);
+      await fetchLists(5, selCateg, setLists);
+      setIsFetching(false);
+    }
+  }, [isFetching, selCateg]);
+
+  //Scroll Listener
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
 
   const handleCategoryChange = (category) => {
     setSelCateg((prev) =>
-      prev.includes(category)
-        ? prev.filter((c) => c !== category) 
-        : [...prev, category] 
+      prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category]
     );
   };
 
   return (
     <div className="mt-32 mx-8 pb-6">
       <div className="mb-4 relative">
-        <label className="block text-gray-700 text-sm font-bold mb-2">
-          Select Categories:
-        </label>
+        <label className="block text-gray-700 text-sm font-bold mb-2">Select Categories:</label>
         <button
           onClick={() => setCategoriesSelectionIsOpen(!categoriesSelectionIsOpen)}
           className="w-full p-2 border rounded-md bg-white flex justify-between items-center"
@@ -42,7 +57,6 @@ const Lists = () => {
           <span className="ml-2">&#9662;</span>
         </button>
 
-       
         {categoriesSelectionIsOpen && (
           <div className="absolute w-full mt-1 bg-white border rounded-md shadow-lg max-h-48 overflow-y-auto z-10">
             {tags.map((category) => (
@@ -60,8 +74,7 @@ const Lists = () => {
         )}
       </div>
 
-      {/* Lists Grid */}
-      {!lists.length && <p className="text-rose-600 text-center text-xl font-semibold">No list available of the selected category!</p>}
+      {!lists.length && <p className="text-rose-600 text-center text-xl font-semibold">No list available for the selected category!</p>}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
         {lists.map((list) => (
           <div key={list.id}>
@@ -71,7 +84,7 @@ const Lists = () => {
                 title={list.title}
                 likes={list.likes}
                 categories={list.categories}
-                url={list.games[0].background_image}
+                url={list.games[0]?.background_image}
                 id={list.id}
                 username={list?.username}
               />
@@ -79,6 +92,8 @@ const Lists = () => {
           </div>
         ))}
       </div>
+
+      {isFetching && <p className="text-center text-gray-600">Loading more...</p>}
     </div>
   );
 };
