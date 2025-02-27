@@ -107,7 +107,9 @@
                   <div className="flex items-start gap-3">
                     <div className="flex-shrink-0 w-8 h-8 rounded-full bg-rose-100 flex items-center justify-center">
                     {userData[comment.userId]?.photoURL  ? (
-                          <img className='h-8 w-8 rounded-full bg-gray-700 flex items-center justify-center' src={avatar} alt="Profile picture" />
+                          <img className='h-8 w-8 rounded-full bg-gray-700 flex items-center justify-center' 
+                          src={userData[comment.userId]?.photoURL.substring(0, userData[comment.userId]?.photoURL.lastIndexOf("/"))} 
+                          alt="Profile picture" />
                         ) : (
                         <span className="text-sm font-medium">
                           {comment.username?.charAt(0).toUpperCase()}
