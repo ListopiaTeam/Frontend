@@ -10,12 +10,15 @@ const Lists = () => {
   const [categoriesSelectionIsOpen, setCategoriesSelectionIsOpen] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
   const { lastDoc, setLastDoc, lists, setLists } = useContext(LastDocContext);
+  const [hasMoreLists, setHasMoreLists] = useState(true); // Track if more lists are available
 
   useEffect(() => {
-    setLists([]);
-    setLastDoc(null); 
-    fetchLists(5, selCateg, [], setLists, null, setLastDoc); 
+    setLists([]); // Clear existing lists
+    setLastDoc(null); // Reset pagination state
+    setHasMoreLists(true); // Allow lazy loading to fetch new data
+    fetchLists(5, selCateg, [], setLists, null, setLastDoc, setHasMoreLists); // Fetch lists based on selected categories
   }, [selCateg]);
+  
   
   useEffect(() => {
     getTags(setTags);
@@ -23,13 +26,16 @@ const Lists = () => {
   
 
   const handleScroll = useCallback(async () => {
-    if (isFetching) return;
+    if (isFetching || !hasMoreLists) return; // Prevent scrolling if no more lists
+  
     if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
       setIsFetching(true);
-      await fetchLists(5, selCateg, lists, setLists, lastDoc, setLastDoc);
+      await fetchLists(5, selCateg, lists, setLists, lastDoc, setLastDoc, setHasMoreLists);
       setIsFetching(false);
     }
-  }, [isFetching, selCateg, lastDoc, lists]);
+  }, [isFetching, selCateg, lastDoc, lists, hasMoreLists]);
+  
+  
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);

@@ -126,7 +126,7 @@ export const getUser = async (userId) => {
 
 //lazy loading firebase function?! ***send help***
 
-export async function fetchLists(listCount, selCateg, lists, setLists, lastDoc, setLastDoc) {
+export async function fetchLists(listCount, selCateg, lists, setLists, lastDoc, setLastDoc, setHasMoreLists) {
   try {
     let listsQuery;
 
@@ -146,7 +146,7 @@ export async function fetchLists(listCount, selCateg, lists, setLists, lastDoc, 
     }
 
     if (lastDoc) {
-      listsQuery = query(listsQuery, startAfter(lastDoc));
+      listsQuery = query(listsQuery, startAfter(lastDoc)); // Fetch after the last document
     }
 
     const querySnapshot = await getDocs(listsQuery);
@@ -155,16 +155,21 @@ export async function fetchLists(listCount, selCateg, lists, setLists, lastDoc, 
       ...doc.data(),
     }));
 
-    if (querySnapshot.docs.length > 0) {
-      setLastDoc(querySnapshot.docs[querySnapshot.docs.length - 1]);
+    if (querySnapshot.docs.length === 0) {
+      setHasMoreLists(false); // No more lists, stop lazy loading
+    } else {
+      setLastDoc(querySnapshot.docs[querySnapshot.docs.length - 1]); // Update the lastDoc for pagination
     }
 
     setLists((prev) => {
       const existingIds = new Set(prev.map((item) => item.id));
-      const uniqueLists = newLists.filter((item) => !existingIds.has(item.id));
+      const uniqueLists = newLists.filter((item) => !existingIds.has(item.id)); // Prevent duplicates
       return [...prev, ...uniqueLists];
     });
   } catch (error) {
     console.error("Error fetching lists:", error);
+    setHasMoreLists(false); // Stop lazy loading on error
   }
 }
+
+
