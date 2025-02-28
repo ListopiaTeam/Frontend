@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Alert from "../components/Alert";
 import {
   addComment,
@@ -14,6 +14,7 @@ import { UserContext } from "../UserContext";
 import { serverTimestamp } from "firebase/firestore";
 import CommentSection from "../components/CommentSection";
 import ReportModal from "../components/ReportModal";
+import GoBackButton from "../components/GoBackButton";
 
 const ListDetail = () => {
   const { id } = useParams();
@@ -24,7 +25,8 @@ const ListDetail = () => {
   const [currentLikes, setCurrentLikes] = useState([]);
   const [currentComment, setCurrentComment] = useState([]);
   const [alert, setAlert] = useState({ msg: "", err: false });
-
+  const navigate = useNavigate()
+  
   useEffect(() => {
     readLists(id, setList);
   }, [id]);
@@ -99,29 +101,24 @@ const ListDetail = () => {
     getPostUser()
   }, [list?.userID])
 
-  
-
-  
-
-
   if (!list?.games) {
     return (
       <div className="min-h-screen mt-32 max-w-4xl mx-auto text-rose-600 text-4xl font-semibold!">
         List is not available!
       </div>
     );
-  }
-  
+  }  
 
   return (
     <div className="min-h-screen py-16 mt-16">
+      <GoBackButton/>
       {list && (
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="bg-white rounded-2xl shadow-lg p-8 sm:p-12">
             <button
               onClick={user && handleLike}
               disabled={!user}
-              className={` flex items-center gap-1.5 group transition-colors absolute right-52 top-12`}
+              className={`flex items-center gap-1.5 group transition-colors w-fit absolute right-14 top-14`}
               aria-label={isLiked ? "Remove like" : "Like this game"}
             >
               <svg
@@ -147,7 +144,6 @@ const ListDetail = () => {
                 {list.likes.length}
               </span>
             </button>
-            
             
             <ReportModal id={id} user={user}/>
 
@@ -243,7 +239,7 @@ const ListDetail = () => {
                 </button>
               </div>
             )}
-            <div>
+            <div className="mt-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">
                 Comments
               </h2>

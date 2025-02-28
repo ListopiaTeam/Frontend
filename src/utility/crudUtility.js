@@ -126,9 +126,7 @@ export const getUser = async (userId) => {
 
 //lazy loading firebase function?! ***send help***
 
-let lastDoc = null;
-
-export async function fetchLists(listCount, selCateg, setLists) {
+export async function fetchLists(listCount, selCateg, lists, setLists, lastDoc, setLastDoc) {
   try {
     let listsQuery;
 
@@ -152,19 +150,20 @@ export async function fetchLists(listCount, selCateg, setLists) {
     }
 
     const querySnapshot = await getDocs(listsQuery);
-    const newLists = querySnapshot.docs.map(doc => ({
+    const newLists = querySnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
 
-    lastDoc = querySnapshot.docs.length > 0 ? querySnapshot.docs[querySnapshot.docs.length - 1] : null;
+    if (querySnapshot.docs.length > 0) {
+      setLastDoc(querySnapshot.docs[querySnapshot.docs.length - 1]);
+    }
 
-    setLists(prev => {
-      const existingIds = new Set(prev.map(item => item.id)); //store existing IDs
-      const uniqueLists = newLists.filter(item => !existingIds.has(item.id)); //remove potential duplicates
-      return [...prev, ...uniqueLists]; //append only unique items
+    setLists((prev) => {
+      const existingIds = new Set(prev.map((item) => item.id));
+      const uniqueLists = newLists.filter((item) => !existingIds.has(item.id));
+      return [...prev, ...uniqueLists];
     });
-
   } catch (error) {
     console.error("Error fetching lists:", error);
   }

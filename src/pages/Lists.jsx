@@ -1,39 +1,36 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { fetchLists} from "../utility/crudUtility";
+import React, { useEffect, useCallback, useContext, useState } from "react";
+import { fetchLists } from "../utility/crudUtility";
 import ListCard from "../components/ListCard";
 import { getTags } from "../utility/rawgAPI";
-import LazyLoad from "react-lazyload";
+import { LastDocContext } from "../context/LastDocContext";
 
 const Lists = () => {
-  const [lists, setLists] = useState([]);
   const [tags, setTags] = useState([]);
   const [selCateg, setSelCateg] = useState([]);
   const [categoriesSelectionIsOpen, setCategoriesSelectionIsOpen] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
+  const { lastDoc, setLastDoc, lists, setLists } = useContext(LastDocContext);
 
-  // Fetch category tags on mount
-  useEffect(() => {
-    getTags(setTags);
-  }, []);
-
-  //fetch lists on category change(broken)
   useEffect(() => {
     setLists([]);
-    fetchLists(5, selCateg, setLists);
+    setLastDoc(null); 
+    fetchLists(5, selCateg, [], setLists, null, setLastDoc); 
   }, [selCateg]);
+  
+  useEffect(() => {
+    getTags(setTags);
+  }, []); 
+  
 
-  //infinite scroll Handler
   const handleScroll = useCallback(async () => {
-    if (isFetching) return; //prevent duplicate fetches
-
+    if (isFetching) return;
     if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
       setIsFetching(true);
-      await fetchLists(5, selCateg, setLists);
+      await fetchLists(5, selCateg, lists, setLists, lastDoc, setLastDoc);
       setIsFetching(false);
     }
-  }, [isFetching, selCateg]);
+  }, [isFetching, selCateg, lastDoc, lists]);
 
-  //Scroll Listener
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -76,19 +73,17 @@ const Lists = () => {
 
       {!lists.length && <p className="text-rose-600 text-center text-xl font-semibold">No list available for the selected category!</p>}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-        {lists.map((list) => (
+        {lists?.map((list) => (
           <div key={list.id}>
-            <LazyLoad height={1000}>
-              <ListCard
-                description={list.desc}
-                title={list.title}
-                likes={list.likes}
-                categories={list.categories}
-                url={list.games[0]?.background_image}
-                id={list.id}
-                username={list?.username}
-              />
-            </LazyLoad>
+            <ListCard
+              description={list.desc}
+              title={list.title}
+              likes={list.likes}
+              categories={list.categories}
+              url={list.games[0]?.background_image}
+              id={list.id}
+              username={list?.username}
+            />
           </div>
         ))}
       </div>

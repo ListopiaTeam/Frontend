@@ -16,6 +16,7 @@ import Profile from "./pages/Profile.jsx";
 import Lists from "./pages/Lists.jsx";
 import PasswordReset from "./pages/PasswordReset.jsx";
 import Details from "./pages/Details.jsx";
+import { LastDocProvider } from "./context/LastDocContext.jsx";
 
 const AppWrapper = () => {
   const location = useLocation();
@@ -194,15 +195,17 @@ const AppWrapper = () => {
 
 createRoot(document.getElementById("root")).render(
   // <StrictMode>
-    <UserProvider>
-      <BrowserRouter>
-        <div className="flex flex-col min-h-screen">
-          <Header />
-          <AppWrapper />
-          <ScrollTopButton />
-          <Footer />
-        </div>
-      </BrowserRouter>
-    </UserProvider>
+    <LastDocProvider>
+      <UserProvider>
+        <BrowserRouter>
+          <div className="flex flex-col min-h-screen">
+            <Header />
+            <AppWrapper />
+            <ScrollTopButton />
+            <Footer />
+          </div>
+        </BrowserRouter>
+      </UserProvider>
+    </LastDocProvider>
   // </StrictMode>
 );

@@ -94,7 +94,7 @@
     
 
     return (
-      <div className="mt-8 space-y-6">
+      <div className="mt-12 space-y-6">
         {currentComment.length > 0 ? (
           currentComment
             .filter((comment) => !comment.parentId)
