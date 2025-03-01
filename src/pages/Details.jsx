@@ -1,9 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import Alert from "../components/Alert";
+import { useParams } from "react-router-dom";
 import {
   addComment,
-  addReport,
   deleteList,
   getUser,
   listenToComments,
@@ -15,21 +13,21 @@ import { serverTimestamp } from "firebase/firestore";
 import CommentSection from "../components/CommentSection";
 import ReportModal from "../components/ReportModal";
 import GoBackButton from "../components/GoBackButton";
+import { useQuery } from "@tanstack/react-query";
 
 const ListDetail = () => {
   const { id } = useParams();
   const { user } = useContext(UserContext);
   const [currentPostUser, setCurrentPostUser] = useState(null); 
-  const [list, setList] = useState(null);
+
   const [isLiked, setIsLiked] = useState(false);
   const [currentLikes, setCurrentLikes] = useState([]);
   const [currentComment, setCurrentComment] = useState([]);
-  const [alert, setAlert] = useState({ msg: "", err: false });
-  const navigate = useNavigate()
-  
-  useEffect(() => {
-    readLists(id, setList);
-  }, [id]);
+
+  const { data: list, isLoading, error } = useQuery({
+    queryKey: ["list", id],
+    queryFn: () => readLists(id),
+  });
 
   useEffect(() => {
     if (!id) return;

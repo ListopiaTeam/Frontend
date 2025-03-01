@@ -1,41 +1,52 @@
-import React, { useEffect, useCallback, useContext, useState } from "react";
-import { fetchLists } from "../utility/crudUtility";
+import React, { useState, useEffect, useCallback } from "react";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import ListCard from "../components/ListCard";
 import { getTags } from "../utility/rawgAPI";
-import { LastDocContext } from "../context/LastDocContext";
+import { fetchLists } from "../utility/crudUtility";
 
 const Lists = () => {
-  const [tags, setTags] = useState([]);
   const [selCateg, setSelCateg] = useState([]);
   const [categoriesSelectionIsOpen, setCategoriesSelectionIsOpen] = useState(false);
-  const [isFetching, setIsFetching] = useState(false);
-  const { lastDoc, setLastDoc, lists, setLists } = useContext(LastDocContext);
-  const [hasMoreLists, setHasMoreLists] = useState(true); // Track if more lists are available
 
-  useEffect(() => {
-    setLists([]); // Clear existing lists
-    setLastDoc(null); // Reset pagination state
-    setHasMoreLists(true); // Allow lazy loading to fetch new data
-    fetchLists(5, selCateg, [], setLists, null, setLastDoc, setHasMoreLists); // Fetch lists based on selected categories
-  }, [selCateg]);
+  const {data: tags, isLoading: loadingTags, isError: errorTags, error} = useQuery({
+    queryKey: ['tag'],
+    queryFn: () => getTags()
+  })
   
-  
-  useEffect(() => {
-    getTags(setTags);
-  }, []); 
-  
+  const {
+    data: lists,
+    isFetching,
+    hasNextPage,
+    fetchNextPage,
+    isLoading,
+    isError,
+  } = useInfiniteQuery({
+    queryKey: ["topLists", selCateg], 
+    queryFn: ({ pageParam = null }) => fetchLists(5, selCateg, pageParam), 
+    
+    getNextPageParam: (lastPage) => {
+      if (!lastPage?.lastDoc) return undefined;
+      return lastPage.lastDoc;
+    },
 
-  const handleScroll = useCallback(async () => {
-    if (isFetching || !hasMoreLists) return; // Prevent scrolling if no more lists
-  
+    initialData: {
+      pages: [],
+      pageParams: [],
+    },
+    
+    onError: (error) => {
+      console.error("Error fetching lists:", error);
+    },
+    
+  });
+
+  // Handle scroll event for lazy loading
+  const handleScroll = useCallback(() => {
+    if (isFetching || !hasNextPage) return;
     if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
-      setIsFetching(true);
-      await fetchLists(5, selCateg, lists, setLists, lastDoc, setLastDoc, setHasMoreLists);
-      setIsFetching(false);
+      fetchNextPage();
     }
-  }, [isFetching, selCateg, lastDoc, lists, hasMoreLists]);
-  
-  
+  }, [isFetching, hasNextPage, fetchNextPage]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
@@ -77,21 +88,26 @@ const Lists = () => {
         )}
       </div>
 
-      {!lists.length && <p className="text-rose-600 text-center text-xl font-semibold">No list available for the selected category!</p>}
+      {isLoading && <p className="text-center text-gray-600">Loading...</p>}
+      {isError && <p className="text-center text-rose-600">Error loading lists!</p>}
+      {!lists?.pages?.length && <p className="text-rose-600 text-center text-xl font-semibold">No list available for the selected category!</p>}
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-        {lists?.map((list) => (
-          <div key={list.id}>
-            <ListCard
-              description={list.desc}
-              title={list.title}
-              likes={list.likes}
-              categories={list.categories}
-              url={list.games[0]?.background_image}
-              id={list.id}
-              username={list?.username}
-            />
-          </div>
-        ))}
+        {lists?.pages?.map((page) =>
+          page?.docs?.map((list) => (
+            <div key={list.id}>
+              <ListCard
+                description={list.desc}
+                title={list.title}
+                likes={list.likes}
+                categories={list.categories}
+                url={list.games[0]?.background_image}
+                id={list.id}
+                username={list?.username}
+              />
+            </div>
+          ))
+        )}
       </div>
 
       {isFetching && <p className="text-center text-gray-600">Loading more...</p>}

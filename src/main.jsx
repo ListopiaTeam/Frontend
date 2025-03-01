@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import App from "./App.jsx";
 import "./index.css";
 import { UserProvider } from "./UserContext";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import CreateList from "./pages/CreateList.jsx";
@@ -17,6 +18,8 @@ import Lists from "./pages/Lists.jsx";
 import PasswordReset from "./pages/PasswordReset.jsx";
 import Details from "./pages/Details.jsx";
 import { LastDocProvider } from "./context/LastDocContext.jsx";
+
+const queryClient = new QueryClient();
 
 const AppWrapper = () => {
   const location = useLocation();
@@ -194,18 +197,18 @@ const AppWrapper = () => {
 };
 
 createRoot(document.getElementById("root")).render(
-  // <StrictMode>
-    <LastDocProvider>
-      <UserProvider>
-        <BrowserRouter>
-          <div className="flex flex-col min-h-screen">
-            <Header />
-            <AppWrapper />
-            <ScrollTopButton />
-            <Footer />
-          </div>
-        </BrowserRouter>
-      </UserProvider>
-    </LastDocProvider>
-  // </StrictMode>
+  <QueryClientProvider client={queryClient}> 
+  <LastDocProvider>
+    <UserProvider>
+      <BrowserRouter>
+        <div className="flex flex-col min-h-screen">
+          <Header />
+          <AppWrapper />
+          <ScrollTopButton />
+          <Footer />
+        </div>
+      </BrowserRouter>
+    </UserProvider>
+  </LastDocProvider>
+</QueryClientProvider> 
 );

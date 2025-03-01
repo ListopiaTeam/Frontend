@@ -44,12 +44,16 @@ export const readList = (setList, selCateg) => {
   return unsubscribe;
 };
 
-export const readLists = async (id, setList) => {
-  const docRef = doc(db, "Lists", id);
-  const unsubscribe = onSnapshot(docRef, (snapshot) => {
-    setList({ ...snapshot.data(), id: snapshot.id });
+
+export const readLists = async (id) => {
+  return new Promise((resolve) => {
+    const docRef = doc(db, "Lists", id);
+    const unsubscribe = onSnapshot(docRef, (snapshot) => {
+      resolve({ ...snapshot.data(), id: snapshot.id });
+    });
+    return unsubscribe
   });
-  return unsubscribe;
+
 };
 
 export const toggleLike = async (id, uid) => {
@@ -124,9 +128,8 @@ export const getUser = async (userId) => {
   }
 };
 
-//lazy loading firebase function?! ***send help***
 
-export async function fetchLists(listCount, selCateg, lists, setLists, lastDoc, setLastDoc, setHasMoreLists) {
+export const fetchLists = async (listCount, selCateg, lastDoc) => {
   try {
     let listsQuery;
 
@@ -150,26 +153,25 @@ export async function fetchLists(listCount, selCateg, lists, setLists, lastDoc, 
     }
 
     const querySnapshot = await getDocs(listsQuery);
+
+    if (querySnapshot.empty) {
+      return { docs: [], lastDoc: null };
+    }
+
     const newLists = querySnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
 
-    if (querySnapshot.docs.length === 0) {
-      setHasMoreLists(false); // No more lists, stop lazy loading
-    } else {
-      setLastDoc(querySnapshot.docs[querySnapshot.docs.length - 1]); // Update the lastDoc for pagination
-    }
+    const lastDocRef = querySnapshot.docs[querySnapshot.docs.length - 1];
 
-    setLists((prev) => {
-      const existingIds = new Set(prev.map((item) => item.id));
-      const uniqueLists = newLists.filter((item) => !existingIds.has(item.id)); // Prevent duplicates
-      return [...prev, ...uniqueLists];
-    });
+    return {
+      docs: newLists,
+      lastDoc: lastDocRef || null,
+    };
   } catch (error) {
     console.error("Error fetching lists:", error);
-    setHasMoreLists(false); // Stop lazy loading on error
+    return { docs: [], lastDoc: null };
   }
-}
-
+};
 

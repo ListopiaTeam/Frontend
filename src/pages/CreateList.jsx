@@ -6,6 +6,7 @@ import { Modal } from 'react-responsive-modal';
 import { getTags, searchGamesByName } from '../utility/rawgAPI'
 import { addList } from "../utility/crudUtility";
 import Alert from "../components/Alert";
+import { useQuery } from '@tanstack/react-query';
 
 const CreateList = () => {
   const { user } = useContext(UserContext)
@@ -18,7 +19,6 @@ const CreateList = () => {
 
   // Data states
   const [games, setGames] = useState([]);
-  const [tags, setTags] = useState([])
   const [selectedGames, setSelectedGames] = useState([])
   const [searchedGame, setSearchedGame] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
@@ -33,11 +33,24 @@ const CreateList = () => {
     await searchGamesByName(setGames, searchedGame, url || null, setNextPageUrl, setPrevPageUrl);
     setLoading(false);
   };
+  
+  const {data: tags, isLoading, isError, error} = useQuery({
+    queryKey: ['tags'],
+    queryFn: () => getTags()
+  })
 
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
 
-  useEffect(() => {
-    getTags(setTags)
-  }, [])
+  if (isError) {
+    return <p>Error: {error.message}</p>;
+  }
+
+  if (!tags || tags.length === 0) {
+    return <p>No tags found.</p>;
+  }
+
 
 
   const removeTag = (tagToRemove) => {
