@@ -18,6 +18,7 @@ import Lists from "./pages/Lists.jsx";
 import PasswordReset from "./pages/PasswordReset.jsx";
 import Details from "./pages/Details.jsx";
 import { LastDocProvider } from "./context/LastDocContext.jsx";
+import AdminPanel from "./pages/AdminPanel.jsx";
 
 const queryClient = new QueryClient();
 
@@ -190,7 +191,27 @@ const AppWrapper = () => {
             )
           }
         />
+
+<Route
+          path="/adminpanel"
+          element={
+            location.pathname !== prevLocation.current ? (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.1 }}
+              >
+                <AdminPanel />
+              </motion.div>
+            ) : (
+              <AdminPanel />
+            )
+          }
+        />
       </Routes> 
+
+      
 
     </AnimatePresence>
   );

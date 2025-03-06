@@ -3,11 +3,13 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from "framer-motion"
 import { UserContext } from '../UserContext'
 import { extractUrlAndId } from '../utility/utils'
+import { getUser } from '../utility/crudUtility' // Import the function to get user data
 
 const Header = () => {
   const [show, setShow] = useState(false)
-  const [avatar, setAvatar] = useState(null);
-  const { user, logoutUser } = useContext(UserContext)  
+  const [avatar, setAvatar] = useState(null)
+  const [isAdmin, setIsAdmin] = useState(false); // New state to hold admin status
+  const { user, logoutUser } = useContext(UserContext)
   const navigate = useNavigate()
 
   const logOut = () => {
@@ -17,10 +19,24 @@ const Header = () => {
 
   useEffect(() => {
     if (user?.photoURL) {
-      setAvatar(extractUrlAndId(user.photoURL).url);
+      setAvatar(extractUrlAndId(user.photoURL).url)
       !user && setAvatar(null)
     }
-  }, [user, user?.photoURL]); 
+
+    // Fetch admin status from the Users collection
+    const fetchAdminStatus = async () => {
+      if (user?.uid) {
+        const userData = await getUser(user.uid);
+        if (userData && userData.isAdmin) {
+          setIsAdmin(true); // Set to true if the user is an admin
+        } else {
+          setIsAdmin(false); // Set to false if the user is not an admin
+        }
+      }
+    }
+
+    fetchAdminStatus();
+  }, [user, user?.photoURL]);
 
   const menuVariants = {
     open: { opacity: 1, y: 0 },
@@ -52,13 +68,28 @@ const Header = () => {
                       `block px-3 py-2 rounded-md transition-colors relative ${
                         isActive 
                           ? "text-rose-500 pl-6 before:content-['>'] before:absolute before:left-3" 
-                          : "text-gray-300 hover:text-rose-500"
+                          : "text-white hover:text-rose-500"
                       }`
                     }
                   >
                     Create List
                   </NavLink>
-               
+
+                  {/* ✅ Admin Panel - Only for Admins */}
+                  {isAdmin && (
+                    <NavLink 
+                      to="/adminpanel" 
+                      className={({isActive}) => 
+                        `block px-3 py-2 rounded-md transition-colors relative ${
+                          isActive 
+                            ? "text-rose-500 pl-6 before:content-['>'] before:absolute before:left-3" 
+                            : "text-white hover:text-rose-500"
+                        }`
+                      }
+                    >
+                      Admin Panel
+                    </NavLink>
+                  )}
                 </>
               )}
               <NavLink 
@@ -67,7 +98,7 @@ const Header = () => {
                   `block px-3 py-2 rounded-md transition-colors relative ${
                     isActive 
                       ? "text-rose-500 pl-6 before:content-['>'] before:absolute before:left-3" 
-                      : "text-gray-300 hover:text-rose-500"
+                      : "text-white hover:text-rose-500"
                   }`
                 }
               >
@@ -81,7 +112,7 @@ const Header = () => {
                 <>
                   <NavLink 
                     to="/register" 
-                    className="text-gray-300 hover:text-rose-500 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                    className="text-white hover:text-rose-500 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                   >
                     Register
                   </NavLink>
@@ -96,22 +127,22 @@ const Header = () => {
                 <div className="flex items-center space-x-4">
                   <NavLink 
                     to="/profile" 
-                    className="flex items-center space-x-2 text-gray-300 hover:text-rose-500 transition-colors"
+                    className="flex items-center space-x-2 text-white hover:text-rose-500 transition-colors"
                   >
                     <div className="h-8 w-8 rounded-full bg-gray-700 flex items-center justify-center">
                       {avatar ? (
-                        <img className='h-8 w-8 rounded-full bg-gray-700 flex items-center justify-center' src={avatar} alt="Profile picture" />
+                        <img className='h-8 w-8 rounded-full' src={avatar} alt="Profile picture" />
                       ) : (
-                      <span className="text-sm font-medium">
-                        {user?.displayName?.charAt(0).toUpperCase()}
-                      </span>
+                        <span className="text-sm font-medium">
+                          {user?.displayName?.charAt(0).toUpperCase()}
+                        </span>
                       )}
                     </div>
                     <span className="text-sm font-medium">{user?.displayName}</span>
                   </NavLink>
                   <button 
                     onClick={logOut}
-                    className="text-gray-300 hover:text-rose-500 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                    className="text-white hover:text-rose-500 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                   >
                     Logout
                   </button>
@@ -160,12 +191,13 @@ const Header = () => {
                   `block px-3 py-2 rounded-md transition-colors relative ${
                     isActive 
                       ? "text-rose-500 pl-6 before:content-['>'] before:absolute before:left-3" 
-                      : "text-gray-300 hover:text-rose-500"
+                      : "text-white hover:text-rose-500"
                   }`
                 }
               >
                 Home
               </NavLink>
+
               {user && (
                 <>
                   <NavLink 
@@ -175,15 +207,32 @@ const Header = () => {
                       `block px-3 py-2 rounded-md transition-colors relative ${
                         isActive 
                           ? "text-rose-500 pl-6 before:content-['>'] before:absolute before:left-3" 
-                          : "text-gray-300 hover:text-rose-500"
+                          : "text-white hover:text-rose-500"
                       }`
                     }
                   >
                     Create List
                   </NavLink>
-               
+
+                  {/* ✅ Admin Panel - Only for Admins */}
+                  {isAdmin && (
+                    <NavLink 
+                      to="/adminpanel" 
+                      onClick={() => setShow(false)}
+                      className={({isActive}) => 
+                        `block px-3 py-2 rounded-md transition-colors relative ${
+                          isActive 
+                            ? "text-rose-500 pl-6 before:content-['>'] before:absolute before:left-3" 
+                            : "text-white hover:text-rose-500"
+                        }`
+                      }
+                    >
+                      Admin Panel
+                    </NavLink>
+                  )}
                 </>
               )}
+
               <NavLink 
                 to="/lists" 
                 onClick={() => setShow(false)}
@@ -191,12 +240,13 @@ const Header = () => {
                   `block px-3 py-2 rounded-md transition-colors relative ${
                     isActive 
                       ? "text-rose-500 pl-6 before:content-['>'] before:absolute before:left-3" 
-                      : "text-gray-300 hover:text-rose-500"
+                      : "text-white hover:text-rose-500"
                   }`
                 }
               >
                 Lists
               </NavLink>
+
               <div className="border-t border-gray-700 pt-2 mt-2">
                 {!user ? (
                   <>
@@ -207,7 +257,7 @@ const Header = () => {
                         `block px-3 py-2 rounded-md transition-colors relative ${
                           isActive 
                             ? "text-rose-500 pl-6 before:content-['>'] before:absolute before:left-3" 
-                            : "text-gray-300 hover:text-rose-500"
+                            : "text-white hover:text-rose-500"
                         }`
                       }
                     >
@@ -229,9 +279,6 @@ const Header = () => {
                   </>
                 ) : (
                   <>
-                    <div className="flex items-center space-x-3 px-3 py-2">
-                      {/* ... existing user info */}
-                    </div>
                     <NavLink 
                       to="/profile" 
                       onClick={() => setShow(false)}
@@ -239,7 +286,7 @@ const Header = () => {
                         `block px-3 py-2 rounded-md transition-colors relative ${
                           isActive 
                             ? "text-rose-500 pl-6 before:content-['>'] before:absolute before:left-3" 
-                            : "text-gray-300 hover:text-rose-500"
+                            : "text-white hover:text-rose-500"
                         }`
                       }
                     >
@@ -247,7 +294,7 @@ const Header = () => {
                     </NavLink>
                     <button 
                       onClick={logOut}
-                      className="w-full text-left px-3 py-2 text-gray-300 hover:text-rose-500 rounded-md transition-colors"
+                      className="w-full text-left px-3 py-2 text-white hover:text-rose-500 rounded-md transition-colors"
                     >
                       Logout
                     </button>
