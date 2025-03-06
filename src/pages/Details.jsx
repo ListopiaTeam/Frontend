@@ -14,6 +14,7 @@ import CommentSection from "../components/CommentSection";
 import ReportModal from "../components/ReportModal";
 import GoBackButton from "../components/GoBackButton";
 import { useQuery } from "@tanstack/react-query";
+import GameDetailModal from "../components/GameDetailModal";
 
 const ListDetail = () => {
   const { id } = useParams();
@@ -181,47 +182,8 @@ const ListDetail = () => {
               </h2>
               <div className="space-y-6">
                 {list.games.map((game) => (
-                  <div
-                    key={game.id}
-                    className="group bg-white hover:bg-gray-50 border rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-200"
-                  >
-                    <div className="flex flex-col sm:flex-row items-start gap-6">
-                      <img
-                        src={game.background_image}
-                        alt={game.name}
-                        className="w-full sm:w-32 h-32 object-cover rounded-lg"
-                      />
-                      <div className="flex-1">
-                        <h3 className="text-xl font-semibold text-gray-900 group-hover:text-rose-600 transition-colors">
-                          {game.name}
-                        </h3>
-                        <div className="mt-2 flex items-center flex-wrap gap-4 text-gray-600">
-                          <p className="flex items-center gap-1">
-                            ⭐
-                            <span className="font-medium">
-                              {game.rating}
-                              <span className="text-gray-400 ml-1">/5</span>
-                            </span>
-                          </p>
-                          {game.released && (
-                            <p className="flex items-center gap-1">
-                              <span className="text-gray-400">Released:</span>
-                              <span className="font-medium">
-                                {new Date(game.released).toLocaleDateString()}
-                              </span>
-                            </p>
-                          )}
-                        </div>
-                        <p>
-                          {" "}
-                          <span className="font-bold">Available at:</span>{" "}
-                          {game.stores
-                            ?.map((store) => store.store.name)
-                            .join(", ")}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                  
+                  <GameDetailModal key={game.id} user={user} game={game} />
                 ))}
               </div>
             </div>
