@@ -1,8 +1,34 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion"; // Import framer-motion for animations
+import {useInfiniteQuery } from "@tanstack/react-query";
 
 export default function AdminPanel() {
   const [activeTab, setActiveTab] = useState("users");
+  const [selCateg, setSelCateg] = useState([]);
+
+  
+  const {data: reportedLists, isLoading: loadingReportedLists, isError: errorReportedLists} = useInfiniteQuery({
+    queryKey: ["reportedLists", selCateg], 
+    queryFn: ({ pageParam = null }) => fetchLists(10, selCateg, pageParam), 
+    
+    getNextPageParam: (lastPage) => {
+      if (!lastPage?.lastDoc) return undefined;
+      return lastPage.lastDoc;
+    },
+
+    initialData: {
+      pages: [],
+      pageParams: [],
+    },
+    
+    onError: (error) => {
+      console.error("Error fetching lists:", error);
+    },
+    
+  });
+
+  console.log(reportedLists);
+  
 
   // Dummy data for users 
   const dummyUsers = [
@@ -111,8 +137,9 @@ export default function AdminPanel() {
                   <table className="min-w-full table-auto">
                     <thead>
                       <tr className="text-left border-b">
-                        <th className="px-6 py-3 text-sm font-medium text-gray-900">Post Title</th>
+                        <th className="px-6 py-3 text-sm font-medium text-gray-900">Reasons</th>
                         <th className="px-6 py-3 text-sm font-medium text-gray-900">Reported By</th>
+                        <th className="px-6 py-3 text-sm font-medium text-gray-900">Reported List</th>
                         <th className="px-6 py-3 text-sm font-medium text-gray-900">Actions</th>
                       </tr>
                     </thead>
@@ -120,7 +147,14 @@ export default function AdminPanel() {
                       {dummyReportedPosts.map((post) => (
                         <tr key={post.id} className="border-b">
                           <td className="px-6 py-4 text-sm text-gray-900">{post.title}</td>
-                          <td className="px-6 py-4 text-sm text-gray-900">{post.reportedBy}</td>
+                          <td className="px-6 py-4 text-sm text-gray-900">{post.reportedBy.length}</td>
+                          <td className="px-6 py-4 text-sm">
+                            <button
+                              className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition-all"
+                            >
+                              View
+                            </button>
+                          </td>
                           <td className="px-6 py-4 text-sm">
                             <button
                               onClick={() => handlePostAction(post.id, "delete")}

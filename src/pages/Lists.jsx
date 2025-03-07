@@ -47,6 +47,10 @@ const Lists = () => {
       fetchNextPage();
     }
   }, [isFetching, hasNextPage, fetchNextPage]);
+  
+  useEffect(() => {
+    window.scrollTo(window.top);
+  }, []);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);

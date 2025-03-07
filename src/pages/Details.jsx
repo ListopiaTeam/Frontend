@@ -140,7 +140,7 @@ const ListDetail = () => {
                   isLiked ? "text-rose-500" : "text-gray-500"
                 }`}
               >
-                {list.likes.length}
+                {currentLikes.length}
               </span>
             </button>
             
@@ -207,6 +207,7 @@ const ListDetail = () => {
                 <textarea
                   className={`${!user && "hidden"} w-full p-3 rounded-lg border border-gray-300 focus:ring-rose-500 focus:border-rose-500`}
                   rows="4"
+                  maxLength="120"
                   placeholder="Add a comment..."
                 />
                 <button

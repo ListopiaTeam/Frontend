@@ -21,7 +21,7 @@ const GoBackButton = () => {
             >
               <span className="sr-only">Back to top</span>
               <svg className='size-5' fill='currentColor' viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <text x="50%" y="50%" font-size="16" fontWeight="bold" text-anchor="middle" dominant-baseline="middle" font-family="Arial">
+                <text x="50%" y="50%" fontSize="16" fontWeight="bold" textAnchor="middle" dominantBaseline="middle" fontFamily="Arial">
                   &lt;
                 </text>
               </svg>
