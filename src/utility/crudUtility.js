@@ -106,10 +106,26 @@ export const deleteList = async (id) => {
   await deleteDoc(docRef);
 };
 
-export const deleteComment = async (listId, id) => {
-  const commentRef = doc(db, `Lists/${listId}/comments`, id);
-  await deleteDoc(commentRef);
+export const deleteComment = async (listId, commentId) => {
+  try {
+    const commentsRef = collection(db, `Lists/${listId}/comments`);
+    const repliesQuery = query(commentsRef, where("parentId", "==", commentId));
+    const repliesSnapshot = await getDocs(repliesQuery);
+
+    // Delete all replies
+    const deleteRepliesPromises = repliesSnapshot.docs.map((docSnap) => 
+      deleteDoc(doc(db, `Lists/${listId}/comments`, docSnap.id))
+    );
+    await Promise.all(deleteRepliesPromises);
+    // Delete the main comment
+    await deleteDoc(doc(db, `Lists/${listId}/comments`, commentId));
+
+    console.log(`Deleted comment ${commentId} and its replies`);
+  } catch (error) {
+    console.error("Error deleting comment and replies: ", error);
+  }
 };
+
 
 export const getUser = async (userId) => {
   try {

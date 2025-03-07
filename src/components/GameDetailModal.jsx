@@ -4,8 +4,6 @@ import { motion } from "framer-motion";
 const GameDetailModal = ({ id, user, game }) => {
     const modalId = `details_modal_${game.id}`;
     const [currentIndex, setCurrentIndex] = useState(0);
-    console.log(game);
-    
 
     // Remove the first screenshot
     const screenshots = game.short_screenshots?.slice(1) || [];
@@ -23,7 +21,7 @@ const GameDetailModal = ({ id, user, game }) => {
             {/* Card that opens the modal */}
             <div
                 key={game.id}
-                className={`${!user && "hidden"} group bg-white hover:bg-gray-50 border rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-200`}
+                className={`cursor-pointer group bg-white hover:bg-gray-50 border rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-200`}
                 onClick={() => document.getElementById(modalId).showModal()}
             >
                 <div className="flex flex-col sm:flex-row items-start gap-6">
@@ -73,13 +71,6 @@ const GameDetailModal = ({ id, user, game }) => {
                 }}
             >
                 <div className="modal-box p-6 rounded-xl relative">
-                    {/* Close Button */}
-                    <form method="dialog" className="absolute right-5 top-5">
-                        <button className="btn text-xl font-bold py-2 px-4 transition duration-300 text-rose-600">
-                            X
-                        </button>
-                    </form>
-
                     {/* Banner */}
                     <div
                         className="bg-cover bg-center w-full h-48 flex justify-center items-center text-center p-4"
@@ -92,10 +83,10 @@ const GameDetailModal = ({ id, user, game }) => {
 
                     {/* Metacritic Score & Rating */}
                     <div className="text-center mt-4 flex justify-center gap-4">
-                        <span className="bg-green-500 text-white font-bold py-1 px-3 rounded-full">
+                        <span className="bg-blue-500 text-white font-bold py-1 px-3 rounded-full">
                             Metacritic: {game.metacritic}
                         </span>
-                        <span className="bg-blue-500 text-white font-bold py-1 px-3 rounded-full">
+                        <span className="bg-rose-500 text-white font-bold py-1 px-3 rounded-full">
                             ⭐ {game.rating} / 5
                         </span>
                     </div>
@@ -133,16 +124,16 @@ const GameDetailModal = ({ id, user, game }) => {
                         {screenshots.length > 1 && (
                             <>
                                 <button
-                                    className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full hover:bg-gray-600 transition"
+                                    className="absolute left-2 top-1/2 transform -translate-y-1/2 font-bold bg-gray-800 text-white p-2 w-12 rounded-full hover:bg-gray-600 transition"
                                     onClick={prevSlide}
                                 >
-                                    ◀
+                                    {"<"}
                                 </button>
                                 <button
-                                    className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full hover:bg-gray-600 transition"
+                                    className="absolute right-2 top-1/2 transform -translate-y-1/2 font-bold bg-gray-800 text-white p-2 w-12 rounded-full hover:bg-gray-600 transition"
                                     onClick={nextSlide}
                                 >
-                                    ▶
+                                    {">"}
                                 </button>
                             </>
                         )}
