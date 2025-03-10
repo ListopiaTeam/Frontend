@@ -191,3 +191,37 @@ export const fetchLists = async (listCount, selCateg, lastDoc) => {
   }
 };
 
+export const fetchUsers = async (userCount, lastDoc) => {
+  try {
+    let usersQuery = query(
+      collection(db, "Users"),
+      orderBy("createdAt", "desc"),
+      limit(userCount)
+    );
+
+    if (lastDoc) {
+      usersQuery = query(usersQuery, startAfter(lastDoc));
+    }
+
+    const querySnapshot = await getDocs(usersQuery);
+
+    if (querySnapshot.empty) {
+      return { docs: [], lastDoc: null };
+    }
+
+    const newUsers = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    const lastDocRef = querySnapshot.docs[querySnapshot.docs.length - 1];
+
+    return {
+      docs: newUsers,
+      lastDoc: lastDocRef || null,
+    };
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    return { docs: [], lastDoc: null };
+  }
+};

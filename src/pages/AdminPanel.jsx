@@ -1,16 +1,28 @@
 import React, { useState } from "react";
-import { motion } from "framer-motion"; // Import framer-motion for animations
-import {useInfiniteQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { fetchUsers } from "../utility/crudUtility";
 
 export default function AdminPanel() {
   const [activeTab, setActiveTab] = useState("users");
   const [selCateg, setSelCateg] = useState([]);
 
-  
-  const {data: reportedLists, isLoading: loadingReportedLists, isError: errorReportedLists} = useInfiniteQuery({
-    queryKey: ["reportedLists", selCateg], 
-    queryFn: ({ pageParam = null }) => fetchLists(10, selCateg, pageParam), 
-    
+
+  const loadUsers = async () => {
+    const userCount = 1; // Number of users to fetch
+    const lastFetchedDoc = null; // Or use a previously fetched lastDoc
+
+    const { docs, lastDoc } = await fetchUsers(userCount, lastFetchedDoc);
+
+    console.log("Fetched Users:", docs);
+  };
+
+  loadUsers()
+
+  const { data: reportedLists, isLoading: loadingReportedLists, isError: errorReportedLists } = useInfiniteQuery({
+    queryKey: ["reportedLists", selCateg],
+    queryFn: ({ pageParam = null }) => fetchLists(10, selCateg, pageParam),
+
     getNextPageParam: (lastPage) => {
       if (!lastPage?.lastDoc) return undefined;
       return lastPage.lastDoc;
@@ -20,15 +32,15 @@ export default function AdminPanel() {
       pages: [],
       pageParams: [],
     },
-    
+
     onError: (error) => {
       console.error("Error fetching lists:", error);
     },
-    
+
   });
 
   console.log(reportedLists);
-  
+
 
   // Dummy data for users 
   const dummyUsers = [
@@ -89,7 +101,7 @@ export default function AdminPanel() {
           </div>
 
           <motion.div
-            key={activeTab} 
+            key={activeTab}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

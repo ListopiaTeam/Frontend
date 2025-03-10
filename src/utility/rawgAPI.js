@@ -30,3 +30,12 @@ export const getTags = async () => {
     }
 }
 
+export const deleteUser = async (uid) => {
+    try {
+        const resp= await axios.delete(URL + "deleteUser/"+uid)
+        return resp.data
+    } catch (error) {
+        console.log(error)
+        return("Deletion failed?!")
+    }
+}
