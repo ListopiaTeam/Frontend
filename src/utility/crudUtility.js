@@ -76,6 +76,7 @@ export const addReport = async (listId, currentReport) => {
     return true;
   }
   await addDoc(reportsRef, currentReport);
+
   return false;
 };
 
@@ -165,7 +166,7 @@ export const fetchLists = async (listCount, selCateg, lastDoc) => {
     }
 
     if (lastDoc) {
-      listsQuery = query(listsQuery, startAfter(lastDoc)); // Fetch after the last document
+      listsQuery = query(listsQuery, startAfter(lastDoc)); 
     }
 
     const querySnapshot = await getDocs(listsQuery);
@@ -174,10 +175,24 @@ export const fetchLists = async (listCount, selCateg, lastDoc) => {
       return { docs: [], lastDoc: null };
     }
 
-    const newLists = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+    // Fetch the lists and include their reports
+    const newLists = [];
+    for (const docSnap of querySnapshot.docs) {
+      const listData = docSnap.data();
+      const listId = docSnap.id;
+
+      // Fetch the reports subcollection for each list
+      const reportsRef = collection(db, `Lists/${listId}/reports`);
+      const reportsSnapshot = await getDocs(reportsRef);
+      const reports = reportsSnapshot.docs.map((reportDoc) => reportDoc.data());
+
+      // Push the list data along with the reports
+      newLists.push({
+        id: listId,
+        ...listData,
+        reports, // Include the reports subcollection data here
+      });
+    }
 
     const lastDocRef = querySnapshot.docs[querySnapshot.docs.length - 1];
 
@@ -190,6 +205,7 @@ export const fetchLists = async (listCount, selCateg, lastDoc) => {
     return { docs: [], lastDoc: null };
   }
 };
+
 
 
 export const fetchUsers = async () => {

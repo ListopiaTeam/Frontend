@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { fetchUsers } from "../utility/crudUtility";
+import { useInfiniteQuery, useQuery, useQueryClient } from "@tanstack/react-query";
+import { deleteList, fetchLists, fetchUsers } from "../utility/crudUtility";
 import { deleteUser } from "firebase/auth";
+import { NavLink } from "react-router-dom";
 
 export default function AdminPanel() {
   const [activeTab, setActiveTab] = useState("users");
   const [selCateg, setSelCateg] = useState([]);
-
+  const queryClient = useQueryClient()
 
   const {
     data: usersData,
@@ -27,7 +28,6 @@ export default function AdminPanel() {
   const { data: reportedLists, isLoading: loadingReportedLists, isError: errorReportedLists } = useInfiniteQuery({
     queryKey: ["reportedLists", selCateg],
     queryFn: ({ pageParam = null }) => fetchLists(10, selCateg, pageParam),
-
     getNextPageParam: (lastPage) => {
       if (!lastPage?.lastDoc) return undefined;
       return lastPage.lastDoc;
@@ -43,45 +43,23 @@ export default function AdminPanel() {
     },
 
   });
+  console.log(reportedLists);
+  
 
-  const handleDeleteUser = async (userId) => {
-    if (window.confirm("Are you sure you want to delete this user?")) {
+  const filteredLists = reportedLists?.pages
+  .flatMap((page) => page.docs) 
+  .filter((doc) => doc.reports?.length > 0); 
+
+
+  const handleDeleteList = async (listId) => {
+    if (window.confirm("Are you sure you want to delete this list?")) {
       try {
-        deleteUser(userId)
-        queryClient.invalidateQueries(['all-users']);
+        await deleteList(listId); // Assuming this deletes the list
+        queryClient.invalidateQueries(["reportedLists"]); // Refetch the reported lists query
       } catch (error) {
-        console.error("Error deleting user:", error);
+        console.error("Error deleting list:", error);
       }
     }
-  };
-
-
-  // Dummy data for users 
-  const dummyUsers = [
-    { id: 1, username: "JohnDoe", email: "johndoe@example.com" },
-    { id: 2, username: "JaneSmith", email: "janesmith@example.com" },
-    { id: 3, username: "BobJohnson", email: "bobjohnson@example.com" },
-  ];
-
-  // Dummy data for reported posts
-  const dummyReportedPosts = [
-    { id: 1, title: "Offensive Content in Post", reportedBy: "JohnDoe" },
-    { id: 2, title: "Spam in Comment Section", reportedBy: "JaneSmith" },
-    { id: 3, title: "Hate Speech in Post", reportedBy: "BobJohnson" },
-  ];
-
-  // Dummy data for event creation
-  const dummyEvents = [
-    { id: 1, eventName: "Summer Bash", eventDate: "2025-06-15" },
-    { id: 2, eventName: "Winter Gala", eventDate: "2025-12-20" },
-  ];
-
-  const handlePostAction = (postId, action) => {
-    console.log(`Post ID: ${postId}, Action: ${action}`);
-  };
-
-  const handleEventCreation = (eventName, eventDate) => {
-    console.log(`Event Created: ${eventName}, Date: ${eventDate}`);
   };
 
   return (
@@ -178,20 +156,21 @@ export default function AdminPanel() {
                       </tr>
                     </thead>
                     <tbody>
-                      {dummyReportedPosts.map((post) => (
+                      {filteredLists.map((post) => (
                         <tr key={post.id} className="border-b">
-                          <td className="px-6 py-4 text-sm text-gray-900">{post.title}</td>
-                          <td className="px-6 py-4 text-sm text-gray-900">{post.reportedBy.length}</td>
+                          <td className="px-6 py-4 text-sm text-gray-900"> {post.reports.map(report => report.content.join(', ')).join(', ')}
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-900">{post.reports.length} people</td>
                           <td className="px-6 py-4 text-sm">
-                            <button
+                            <NavLink to={"/details/" + post.id}
                               className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition-all"
                             >
                               View
-                            </button>
+                            </NavLink>
                           </td>
                           <td className="px-6 py-4 text-sm">
                             <button
-                              onClick={() => handlePostAction(post.id, "delete")}
+                              onClick={() => handleDeleteList(post.id)}
                               className="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 transition-all"
                             >
                               Delete
