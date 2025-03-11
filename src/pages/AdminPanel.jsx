@@ -1,23 +1,28 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { fetchUsers } from "../utility/crudUtility";
+import { deleteUser } from "firebase/auth";
 
 export default function AdminPanel() {
   const [activeTab, setActiveTab] = useState("users");
   const [selCateg, setSelCateg] = useState([]);
 
 
-  const loadUsers = async () => {
-    const userCount = 1; // Number of users to fetch
-    const lastFetchedDoc = null; // Or use a previously fetched lastDoc
+  const {
+    data: usersData,
+    isLoading: usersLoading,
+    isError: usersError
+  } = useQuery({
+    queryKey: ['all-users'],
+    queryFn: async () => {
+      const { docs } = await fetchUsers(); 
+      return docs;
+    },
+    onError: (error) => console.error("Error fetching users:", error)
+  });
 
-    const { docs, lastDoc } = await fetchUsers(userCount, lastFetchedDoc);
 
-    console.log("Fetched Users:", docs);
-  };
-
-  loadUsers()
 
   const { data: reportedLists, isLoading: loadingReportedLists, isError: errorReportedLists } = useInfiniteQuery({
     queryKey: ["reportedLists", selCateg],
@@ -39,7 +44,16 @@ export default function AdminPanel() {
 
   });
 
-  console.log(reportedLists);
+  const handleDeleteUser = async (userId) => {
+    if (window.confirm("Are you sure you want to delete this user?")) {
+      try {
+        deleteUser(userId)
+        queryClient.invalidateQueries(['all-users']);
+      } catch (error) {
+        console.error("Error deleting user:", error);
+      }
+    }
+  };
 
 
   // Dummy data for users 
@@ -111,33 +125,41 @@ export default function AdminPanel() {
             {activeTab === "users" && (
               <div>
                 <h2 className="text-2xl font-semibold text-gray-800 mb-6">All Users</h2>
-                <div className="overflow-x-auto bg-white shadow-md rounded-lg">
-                  <table className="min-w-full table-auto">
-                    <thead>
-                      <tr className="text-left border-b">
-                        <th className="px-6 py-3 text-sm font-medium text-gray-900">User Name</th>
-                        <th className="px-6 py-3 text-sm font-medium text-gray-900">Email</th>
-                        <th className="px-6 py-3 text-sm font-medium text-gray-900">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {dummyUsers.map((user) => (
-                        <tr key={user.id} className="border-b">
-                          <td className="px-6 py-4 text-sm text-gray-900">{user.username}</td>
-                          <td className="px-6 py-4 text-sm text-gray-900">{user.email}</td>
-                          <td className="px-6 py-4 text-sm">
-                            <button
-                              onClick={() => console.log(`Ban User: ${user.id}`)}
-                              className="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 transition-all"
-                            >
-                              Delete user
-                            </button>
-                          </td>
+                {usersLoading ? (
+                  <div className="text-center py-4">Loading users...</div>
+                ) : usersError ? (
+                  <div className="text-center py-4 text-red-500">Error loading users</div>
+                ) : (
+                  <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+                    <table className="min-w-full table-auto">
+                      <thead>
+                        <tr className="text-left border-b">
+                          <th className="px-6 py-3 text-sm font-medium text-gray-900">User Name</th>
+                          <th className="px-6 py-3 text-sm font-medium text-gray-900">Email</th>
+                          <th className="px-6 py-3 text-sm font-medium text-gray-900">Actions</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                      </thead>
+                      <tbody>
+                        {usersData?.map((user) => (
+                          <tr key={user.id} className="border-b">
+                            <td className="px-6 py-4 text-sm text-gray-900">
+                              {user.username || user.email.split('@')[0]}
+                            </td>
+                            <td className="px-6 py-4 text-sm text-gray-900">{user.email}</td>
+                            <td className="px-6 py-4 text-sm">
+                              <button
+                                onClick={() => console.log(user.id)}
+                                className="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 transition-all"
+                              >
+                                Delete user
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
               </div>
             )}
 
