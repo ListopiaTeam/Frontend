@@ -45,6 +45,8 @@ const Register = () => {
                   type="text"
                   name="displayName"
                   required
+                  minLength={5}
+                  maxLength={20}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition-all"
                   placeholder="Enter your username"
                 />
@@ -86,6 +88,7 @@ const Register = () => {
                   type={showPassword ? "text" : "password"}
                   name="password"
                   required
+                  minLength={6}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition-all pr-12"
                   placeholder="••••••••"
                 />

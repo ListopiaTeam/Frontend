@@ -1,4 +1,4 @@
-import { StrictMode, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
@@ -37,12 +37,7 @@ const AppWrapper = () => {
           path="/"
           element={
             location.pathname !== prevLocation.current ? (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.125 }}
-              >
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.125 }}>
                 <App />
               </motion.div>
             ) : (
@@ -50,17 +45,12 @@ const AppWrapper = () => {
             )
           }
         />
-       
+
         <Route
           path="/register"
           element={
             location.pathname !== prevLocation.current ? (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.1 }}
-              >
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }}>
                 <Register />
               </motion.div>
             ) : (
@@ -72,12 +62,7 @@ const AppWrapper = () => {
           path="/login"
           element={
             location.pathname !== prevLocation.current ? (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.1 }}
-              >
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }}>
                 <Login />
               </motion.div>
             ) : (
@@ -89,12 +74,7 @@ const AppWrapper = () => {
           path="/create"
           element={
             location.pathname !== prevLocation.current ? (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.1 }}
-              >
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }}>
                 <CreateList />
               </motion.div>
             ) : (
@@ -106,12 +86,7 @@ const AppWrapper = () => {
           path="/lists"
           element={
             location.pathname !== prevLocation.current ? (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.1 }}
-              >
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }}>
                 <Lists />
               </motion.div>
             ) : (
@@ -123,12 +98,7 @@ const AppWrapper = () => {
           path="/*"
           element={
             location.pathname !== prevLocation.current ? (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.1 }}
-              >
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }}>
                 <Error />
               </motion.div>
             ) : (
@@ -141,12 +111,7 @@ const AppWrapper = () => {
           path="/profile"
           element={
             location.pathname !== prevLocation.current ? (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.1 }}
-              >
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }}>
                 <Profile />
               </motion.div>
             ) : (
@@ -159,12 +124,7 @@ const AppWrapper = () => {
           path="/details/:id"
           element={
             location.pathname !== prevLocation.current ? (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.1 }}
-              >
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }}>
                 <Details />
               </motion.div>
             ) : (
@@ -172,18 +132,13 @@ const AppWrapper = () => {
             )
           }
         />
-      
 
-      <Route
+
+        <Route
           path="/passwordreset"
           element={
             location.pathname !== prevLocation.current ? (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.1 }}
-              >
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }}>
                 <PasswordReset />
               </motion.div>
             ) : (
@@ -192,16 +147,11 @@ const AppWrapper = () => {
           }
         />
 
-<Route
+        <Route
           path="/adminpanel"
           element={
             location.pathname !== prevLocation.current ? (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.1 }}
-              >
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }}>
                 <AdminPanel />
               </motion.div>
             ) : (
@@ -209,27 +159,24 @@ const AppWrapper = () => {
             )
           }
         />
-      </Routes> 
-
-      
-
+      </Routes>
     </AnimatePresence>
   );
 };
 
 createRoot(document.getElementById("root")).render(
-  <QueryClientProvider client={queryClient}> 
-  <LastDocProvider>
-    <UserProvider>
-      <BrowserRouter>
-        <div className="flex flex-col min-h-screen">
-          <Header />
-          <AppWrapper />
-          <ScrollTopButton />
-          <Footer />
-        </div>
-      </BrowserRouter>
-    </UserProvider>
-  </LastDocProvider>
-</QueryClientProvider> 
+  <QueryClientProvider client={queryClient}>
+    <LastDocProvider>
+      <UserProvider>
+        <BrowserRouter>
+          <div className="flex flex-col min-h-screen">
+            <Header />
+            <AppWrapper />
+            <ScrollTopButton />
+            <Footer />
+          </div>
+        </BrowserRouter>
+      </UserProvider>
+    </LastDocProvider>
+  </QueryClientProvider>
 );

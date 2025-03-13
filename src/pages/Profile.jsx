@@ -16,8 +16,6 @@ export default function Profile() {
   const navigate = useNavigate();
   const userImgId = user?.photoURL ? extractUrlAndId(user.photoURL).id : null;
   
-  
-  
   useEffect(() => {
     user?.photoURL && setAvatar(extractUrlAndId(user.photoURL).url);
   }, [user]);
@@ -81,6 +79,8 @@ export default function Profile() {
             {...register("displayName", { required: "Username is required" })}
             placeholder="Username"
             className="peer h-8 w-full border-none bg-transparent p-0 placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
+            minLength={5}
+            maxLength={20}
           />
           <span className="absolute start-3 top-3 -translate-y-1/2 text-xs transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:text-xs text-slate-600 select-none">
             Username

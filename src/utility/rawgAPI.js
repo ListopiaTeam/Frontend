@@ -1,5 +1,7 @@
 import axios from "axios";
 import { badWords } from "./badwords";
+import { deleteDoc, doc } from "firebase/firestore";
+import { db } from "./firebaseApp";
 
 const URL = import.meta.env.VITE_RENDER_URL
 
@@ -31,8 +33,10 @@ export const getTags = async () => {
 }
 
 export const deleteUser = async (uid) => {
+    const userDocRef = doc(db, "Users", uid)
     try {
         const resp= await axios.delete(URL + "deleteUser/"+uid)
+        await deleteDoc(userDocRef)
         return resp.data
     } catch (error) {
         console.log(error)

@@ -1,14 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useInfiniteQuery, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteList, fetchLists, fetchUsers } from "../utility/crudUtility";
-import { deleteUser } from "firebase/auth";
+import { deleteList, fetchLists, fetchUsers, getUser } from "../utility/crudUtility";
+import { deleteUser } from "../utility/rawgAPI";
+import { UserContext } from "../UserContext";
 import { NavLink } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
+import { addEvent } from "../utility/crudUtility";
 export default function AdminPanel() {
+
   const [activeTab, setActiveTab] = useState("users");
   const [selCateg, setSelCateg] = useState([]);
+  const { user } = useContext(UserContext); 
   const queryClient = useQueryClient()
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  const navigate = useNavigate()
 
   const {
     data: usersData,
@@ -23,7 +30,20 @@ export default function AdminPanel() {
     onError: (error) => console.error("Error fetching users:", error)
   });
 
-
+  const fetchAdminStatus = async () => {
+    if (user?.uid) {
+      const userData = await getUser(user.uid);
+      if (userData && userData.isAdmin) {
+        setIsAdmin(true); 
+      } else {
+        setIsAdmin(false);
+      }
+    }
+  }
+  
+  useEffect(() => {
+    if(isAdmin) navigate("/") 
+  }, [user, navigate]);
 
   const { data: reportedLists, isLoading: loadingReportedLists, isError: errorReportedLists } = useInfiniteQuery({
     queryKey: ["reportedLists", selCateg],
@@ -42,25 +62,47 @@ export default function AdminPanel() {
       console.error("Error fetching lists:", error);
     },
 
-  });
-  console.log(reportedLists);
-  
+  });  
 
   const filteredLists = reportedLists?.pages
   .flatMap((page) => page.docs) 
   .filter((doc) => doc.reports?.length > 0); 
 
-
   const handleDeleteList = async (listId) => {
     if (window.confirm("Are you sure you want to delete this list?")) {
       try {
-        await deleteList(listId); // Assuming this deletes the list
-        queryClient.invalidateQueries(["reportedLists"]); // Refetch the reported lists query
+        await deleteList(listId); 
+        queryClient.invalidateQueries(["reportedLists"]); 
       } catch (error) {
         console.error("Error deleting list:", error);
       }
     }
   };
+
+  const handleDeleteUser = async (userId) => {
+    if(window.confirm("Are you sure to delete this user?")){
+      try {
+        await deleteUser(userId)
+        queryClient.invalidateQueries(["all-users"])
+      } catch (error) {
+        console.log(error);
+        
+      }
+    }
+  }
+
+  const handleEventCreation = async (e) => {
+    e.preventDefault();
+    const formData = {
+      title: e.target[0].value,
+      desc: e.target[1].value,
+      endDate: e.target[2].value,
+      eventImage: e.target[3].value
+    }
+    console.log(formData);
+    
+    // await addEvent(data)
+  }
 
   return (
     <div className="min-h-screen py-16 mt-16">
@@ -126,7 +168,7 @@ export default function AdminPanel() {
                             <td className="px-6 py-4 text-sm text-gray-900">{user.email}</td>
                             <td className="px-6 py-4 text-sm">
                               <button
-                                onClick={() => console.log(user.id)}
+                                onClick={() => handleDeleteUser(user.id)}
                                 className="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 transition-all"
                               >
                                 Delete user
@@ -190,12 +232,7 @@ export default function AdminPanel() {
                 <h2 className="text-2xl font-semibold text-gray-800 mb-6">Create Event</h2>
                 <div className="bg-white shadow-md p-6 rounded-lg">
                   <form
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      const eventName = e.target.eventName.value;
-                      const eventDate = e.target.eventDate.value;
-                      handleEventCreation(eventName, eventDate);
-                    }}
+                    onSubmit={handleEventCreation}
                   >
                     <div className="mb-4">
                       <label htmlFor="eventName" className="block text-sm font-medium text-gray-700">
@@ -205,7 +242,19 @@ export default function AdminPanel() {
                         type="text"
                         id="eventName"
                         name="eventName"
+                        className="mt-1 block w-full p-3 border border-gray-300 rounded-lg mb-4"
+                        maxLength="30"
+                        required
+                      />
+                       <label htmlFor="eventDesc" className="block text-sm font-medium text-gray-700">
+                        Event Description
+                      </label>
+                      <input
+                        type="text"
+                        id="eventDesc"
+                        name="eventDesc"
                         className="mt-1 block w-full p-3 border border-gray-300 rounded-lg"
+                        maxLength="50"
                         required
                       />
                     </div>
@@ -221,6 +270,11 @@ export default function AdminPanel() {
                         required
                       />
                     </div>
+                    <input
+                      type="file"
+                      required
+                      className="peer h-8 w-full border-none bg-transparent p-0 placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
+                    />
                     <button
                       type="submit"
                       className="w-full px-6 py-2 bg-rose-500 text-white font-semibold rounded-lg hover:bg-rose-600 transition-all"

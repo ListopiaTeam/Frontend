@@ -38,9 +38,9 @@ const TemplateList = ({ src, selectedTags, onTagRemove, onTagModalOpen }) => {
             className="mt-4 text-lg font-mono font-bold text-gray-900 placeholder:text-gray-800 border-bottom-1 outline-none" 
             type="text" 
             id='title' 
-            placeholder='Edit List Title (35)' 
+            placeholder='Edit List Title'
+            minLength={5}
             maxLength={35} 
-            onChange={(e) => e.target.value.length === 35 && alert("Title too long (Max 35 Characters)")}
           />
           <hr />
           <textarea 
@@ -48,9 +48,9 @@ const TemplateList = ({ src, selectedTags, onTagRemove, onTagModalOpen }) => {
             className="mt-4 text-md font-medium text-gray-900 placeholder:text-gray-800 border-bottom-1 outline-none" 
             type="text" 
             id='description' 
-            placeholder='Edit List Description (200)' 
-            maxLength={200} 
-            onChange={(e) => e.target.value.length === 200 && alert("Description too long (Max 200 Characters)")}
+            placeholder='Edit List Description' 
+            minLength={5}
+            maxLength={200}
           />
         </div>
       </div>

@@ -229,3 +229,20 @@ export const fetchUsers = async () => {
     return { docs: [], lastDoc: null };
   }
 };
+
+export const readEvents = (setEvent,currentEvent) => {
+  const collectionRef = collection(db, "Events");
+  let q;
+    q = query(collectionRef, orderBy("endDate", "desc"));
+    
+  const unsubscribe = onSnapshot(q, (snapshot) => {
+    setList(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+  });
+  return unsubscribe;
+};
+
+export const addEvent = async (formData) => {
+  const collectionRef = collection(db, "Events");
+  const newItem = { ...formData};
+  await addDoc(collectionRef, newItem);
+};
