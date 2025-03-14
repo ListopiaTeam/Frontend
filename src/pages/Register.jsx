@@ -1,11 +1,12 @@
 import React, { useContext, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { UserContext } from "../UserContext";
 import Alert from "../components/Alert";
 
 const Register = () => {
-  const { signUpUser, message, setMessage } = useContext(UserContext);
+  const { signUpUser, message, setMessage, user } = useContext(UserContext);
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate()
 
   const handleRegistration = (e) => {
     e.preventDefault();
@@ -15,8 +16,10 @@ const Register = () => {
       data.get("password"),
       data.get("displayName")
     );
-    setTimeout(() => setMessage(""), 5000);
   };
+
+  // Go back to home page once user is created
+  user && setTimeout(() => (setMessage(""), navigate("/")), 5000);
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 flex items-center">
