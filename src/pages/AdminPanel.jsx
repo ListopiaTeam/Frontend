@@ -7,15 +7,25 @@ import { UserContext } from "../UserContext";
 import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { addEvent } from "../utility/crudUtility";
+import { uploadFile } from "../utility/uploadFile";
+import { useForm } from "react-hook-form";
 export default function AdminPanel() {
 
   const [activeTab, setActiveTab] = useState("users");
   const [selCateg, setSelCateg] = useState([]);
   const { user } = useContext(UserContext); 
   const queryClient = useQueryClient()
-  const [isAdmin, setIsAdmin] = useState(false);
 
   const navigate = useNavigate()
+
+  
+    const {
+      register,
+      handleSubmit,
+      formState: { errors },
+    } = useForm({
+        
+    });
 
   const {
     data: usersData,
@@ -93,16 +103,20 @@ export default function AdminPanel() {
   }
 
   const handleEventCreation = async (e) => {
-    e.preventDefault();
+    const file = e?.file ? e.file[0] : null;
+    
+    const { url, id } = file ? await uploadFile(file) : {};
+    console.log(url);
+    
     const formData = {
       title: e.target[0].value,
       desc: e.target[1].value,
       endDate: e.target[2].value,
-      eventImage: e.target[3].value
+      eventImage: e.target[3].value,
+      submitedLists: []
     }
-    console.log(formData);
     
-    // await addEvent(data)
+    // await addEvent(formData)
   }
 
   return (
@@ -233,7 +247,7 @@ export default function AdminPanel() {
                 <h2 className="text-2xl font-semibold text-gray-800 mb-6">Create Event</h2>
                 <div className="bg-white shadow-md p-6 rounded-lg">
                   <form
-                    onSubmit={handleEventCreation}
+                    onSubmit={handleSubmit(handleEventCreation)}
                   >
                     <div className="mb-4">
                       <label htmlFor="eventName" className="block text-sm font-medium text-gray-700">
@@ -273,6 +287,7 @@ export default function AdminPanel() {
                     </div>
                     <input
                       type="file"
+                      {...register("file")}
                       required
                       className="peer h-8 w-full border-none bg-transparent p-0 placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
                     />
