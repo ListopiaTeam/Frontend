@@ -19,6 +19,9 @@ import PasswordReset from "./pages/PasswordReset.jsx";
 import Details from "./pages/Details.jsx";
 import { LastDocProvider } from "./context/LastDocContext.jsx";
 import AdminPanel from "./pages/AdminPanel.jsx";
+import Users from "./components/admin/Users.jsx";
+import ReportedPosts from "./components/admin/ReportedPosts.jsx";
+import CreateEvent from "./components/admin/CreateEvent.jsx";
 
 const queryClient = new QueryClient();
 
@@ -146,7 +149,6 @@ const AppWrapper = () => {
             )
           }
         />
-
         <Route
           path="/adminpanel"
           element={
@@ -158,7 +160,11 @@ const AppWrapper = () => {
               <AdminPanel />
             )
           }
-        />
+        >
+          <Route path="users" element={<Users />} />
+          <Route path="reportedposts" element={<ReportedPosts />} />
+          <Route path="createevent" element={<CreateEvent />} />
+        </Route>
       </Routes>
     </AnimatePresence>
   );

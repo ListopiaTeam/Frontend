@@ -78,7 +78,7 @@ const Header = () => {
                   {/* ✅ Admin Panel - Only for Admins */}
                   {isAdmin && (
                     <NavLink 
-                      to="/adminpanel" 
+                      to="/adminpanel/users" 
                       className={({isActive}) => 
                         `block px-3 py-2 rounded-md transition-colors relative ${
                           isActive 
@@ -217,7 +217,7 @@ const Header = () => {
                   {/* ✅ Admin Panel - Only for Admins */}
                   {isAdmin && (
                     <NavLink 
-                      to="/adminpanel" 
+                      to="/adminpanel/users" 
                       onClick={() => setShow(false)}
                       className={({isActive}) => 
                         `block px-3 py-2 rounded-md transition-colors relative ${
