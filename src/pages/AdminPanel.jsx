@@ -31,19 +31,20 @@ export default function AdminPanel() {
   });
 
   const fetchAdminStatus = async () => {
-    if (user?.uid) {
-      const userData = await getUser(user.uid);
-      if (userData && userData.isAdmin) {
-        setIsAdmin(true); 
-      } else {
-        setIsAdmin(false);
-      }
+    if (!user) {
+      navigate("/");
+      return;
+    }
+    const userData = await getUser(user.uid);
+    if (!userData || !userData.isAdmin) {
+      navigate("/");
     }
   }
   
   useEffect(() => {
-    if(isAdmin) navigate("/") 
-  }, [user, navigate]);
+    fetchAdminStatus();
+  }, [user])
+
 
   const { data: reportedLists, isLoading: loadingReportedLists, isError: errorReportedLists } = useInfiniteQuery({
     queryKey: ["reportedLists", selCateg],
