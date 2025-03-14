@@ -7,15 +7,28 @@ import { UserContext } from "../UserContext";
 import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { addEvent } from "../utility/crudUtility";
+import { uploadFile } from "../utility/uploadFile";
+import { useForm } from "react-hook-form";
+import Alert from "../components/Alert";
 export default function AdminPanel() {
 
   const [activeTab, setActiveTab] = useState("users");
   const [selCateg, setSelCateg] = useState([]);
   const { user } = useContext(UserContext); 
+  const [message, setMessage] = useState("")
+  const [errorMessage, setErrorMessage] = useState("")
   const queryClient = useQueryClient()
-  const [isAdmin, setIsAdmin] = useState(false);
 
   const navigate = useNavigate()
+
+  
+    const {
+      register,
+      handleSubmit,
+      formState: { errors },
+    } = useForm({
+        
+    });
 
   const {
     data: usersData,
@@ -92,18 +105,28 @@ export default function AdminPanel() {
     }
   }
 
-  const handleEventCreation = async (e) => {
-    e.preventDefault();
-    const formData = {
-      title: e.target[0].value,
-      desc: e.target[1].value,
-      endDate: e.target[2].value,
-      eventImage: e.target[3].value
+  const handleEventCreation = async (data) => {
+    try {
+      const file = data?.file ? data.file[0] : null;
+  
+      const { url, id } = file ? await uploadFile(file) : {};
+  
+      const formData = {
+        title: data.eventName,
+        desc: data.eventDesc,
+        endDate: data.eventDate,
+        eventImage: url,
+        submitedLists: [],
+      };
+  
+      await addEvent(formData);
+      setMessage("Successfull event creation!")
+    } catch (error) {
+      console.log(error);
+      setErrorMessage("Error creating event")
     }
-    console.log(formData);
-    
-    // await addEvent(data)
-  }
+  };
+  
 
   return (
     <div className="min-h-screen py-16 mt-16">
@@ -232,9 +255,7 @@ export default function AdminPanel() {
               <div>
                 <h2 className="text-2xl font-semibold text-gray-800 mb-6">Create Event</h2>
                 <div className="bg-white shadow-md p-6 rounded-lg">
-                  <form
-                    onSubmit={handleEventCreation}
-                  >
+                  <form onSubmit={handleSubmit(handleEventCreation)}>
                     <div className="mb-4">
                       <label htmlFor="eventName" className="block text-sm font-medium text-gray-700">
                         Event Name
@@ -242,23 +263,25 @@ export default function AdminPanel() {
                       <input
                         type="text"
                         id="eventName"
-                        name="eventName"
+                        {...register("eventName", { required: "Event name is required" })}
                         className="mt-1 block w-full p-3 border border-gray-300 rounded-lg mb-4"
-                        maxLength="30"
-                        required
                       />
-                       <label htmlFor="eventDesc" className="block text-sm font-medium text-gray-700">
+                      {errors.eventName && <p className="text-red-500 text-sm">{errors.eventName.message}</p>}
+                    </div>
+
+                    <div className="mb-4">
+                      <label htmlFor="eventDesc" className="block text-sm font-medium text-gray-700">
                         Event Description
                       </label>
                       <input
                         type="text"
                         id="eventDesc"
-                        name="eventDesc"
+                        {...register("eventDesc", { required: "Event description is required" })}
                         className="mt-1 block w-full p-3 border border-gray-300 rounded-lg"
-                        maxLength="50"
-                        required
                       />
+                      {errors.eventDesc && <p className="text-red-500 text-sm">{errors.eventDesc.message}</p>}
                     </div>
+
                     <div className="mb-4">
                       <label htmlFor="eventDate" className="block text-sm font-medium text-gray-700">
                         Event Date
@@ -266,16 +289,24 @@ export default function AdminPanel() {
                       <input
                         type="date"
                         id="eventDate"
-                        name="eventDate"
+                        {...register("eventDate", { required: "Event date is required" })}
                         className="mt-1 block w-full p-3 border border-gray-300 rounded-lg"
-                        required
                       />
+                      {errors.eventDate && <p className="text-red-500 text-sm">{errors.eventDate.message}</p>}
                     </div>
-                    <input
-                      type="file"
-                      required
-                      className="peer h-8 w-full border-none bg-transparent p-0 placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
-                    />
+
+                    <div className="mb-4">
+                      <label htmlFor="file" className="block text-sm font-medium text-gray-700">
+                        Event Image
+                      </label>
+                      <input
+                        type="file"
+                        {...register("file", { required: "Event image is required" })}
+                        className="mt-1 block w-full p-3 border border-gray-300 rounded-lg"
+                      />
+                      {errors.file && <p className="text-red-500 text-sm">{errors.file.message}</p>}
+                    </div>
+
                     <button
                       type="submit"
                       className="w-full px-6 py-2 bg-rose-500 text-white font-semibold rounded-lg hover:bg-rose-600 transition-all"
@@ -289,6 +320,11 @@ export default function AdminPanel() {
           </motion.div>
         </div>
       </div>
+        {message ? (
+          <Alert msg={message} />
+        ) : (
+          errorMessage && <Alert err={errorMessage} />
+        )}
     </div>
   );
 }
