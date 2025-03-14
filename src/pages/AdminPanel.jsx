@@ -9,11 +9,14 @@ import { useNavigate } from "react-router-dom";
 import { addEvent } from "../utility/crudUtility";
 import { uploadFile } from "../utility/uploadFile";
 import { useForm } from "react-hook-form";
+import Alert from "../components/Alert";
 export default function AdminPanel() {
 
   const [activeTab, setActiveTab] = useState("users");
   const [selCateg, setSelCateg] = useState([]);
   const { user } = useContext(UserContext); 
+  const [message, setMessage] = useState("")
+  const [errorMessage, setErrorMessage] = useState("")
   const queryClient = useQueryClient()
 
   const navigate = useNavigate()
@@ -103,20 +106,27 @@ export default function AdminPanel() {
   }
 
   const handleEventCreation = async (data) => {
-    const file = e?.file ? e.file[0] : null;
-    
-    const { url, id } = file ? await uploadFile(file) : {};
-    
-    const formData = {
-      title: data.eventName,
-      desc: data.eventDesc,
-      endDate: data.eventDate,
-      eventImage: "",
-      submitedLists: [],
+    try {
+      const file = data?.file ? data.file[0] : null;
+  
+      const { url, id } = file ? await uploadFile(file) : {};
+  
+      const formData = {
+        title: data.eventName,
+        desc: data.eventDesc,
+        endDate: data.eventDate,
+        eventImage: url,
+        submitedLists: [],
+      };
+  
+      await addEvent(formData);
+      setMessage("Successfull event creation!")
+    } catch (error) {
+      console.log(error);
+      setErrorMessage("Error creating event")
     }
-    
-     await addEvent(formData)
-  }
+  };
+  
 
   return (
     <div className="min-h-screen py-16 mt-16">
@@ -310,6 +320,11 @@ export default function AdminPanel() {
           </motion.div>
         </div>
       </div>
+        {message ? (
+          <Alert msg={message} />
+        ) : (
+          errorMessage && <Alert err={errorMessage} />
+        )}
     </div>
   );
 }
