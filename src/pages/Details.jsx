@@ -75,6 +75,7 @@ const ListDetail = () => {
       timestamp: serverTimestamp(),
       userId: user?.uid,
       username: user?.displayName,
+      reports:[],
     };
     setCurrentComment((prevComments) => [...prevComments, newComment]);
 

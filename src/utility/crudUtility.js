@@ -68,6 +68,8 @@ export const toggleLike = async (id, uid) => {
 };
 
 export const addReport = async (listId, currentReport) => {
+  console.log("THIS GOT CALLED FOR NO REASON");
+  
   const reportsRef = collection(db, `Lists/${listId}/reports`);
   const q = query(reportsRef, where("userId", "==", currentReport.userId));
   const querySnapshot = await getDocs(q);
@@ -78,6 +80,17 @@ export const addReport = async (listId, currentReport) => {
   await addDoc(reportsRef, currentReport);
 
   return false;
+};
+
+export const addCommentReport = async (listId, commentId, currentReport) => {
+  console.log("addCommentReport called", { listId, commentId, currentReport });
+  try {
+    const reportsRef = collection(db, `Lists/${listId}/comments/${commentId}/comment_reports`);
+    await addDoc(reportsRef, currentReport);
+    console.log("Report added successfully!");
+  } catch (error) {
+    console.error("Error adding report: ", error);
+  }
 };
 
 export const addComment = async (listId, newComment) => {
