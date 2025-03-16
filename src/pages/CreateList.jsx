@@ -234,7 +234,7 @@ const CreateList = () => {
       >
         <div className="p-6 pb-8">
           <div className="border-b border-gray-200 pb-4">
-            <h2 className="text-2xl font-bold text-gray-900">Add Games to List</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Add Games to Your List</h2>
           </div>
 
           <div className="mt-6">

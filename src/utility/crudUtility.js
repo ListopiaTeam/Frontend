@@ -219,8 +219,6 @@ export const fetchLists = async (listCount, selCateg, lastDoc) => {
   }
 };
 
-
-
 export const fetchUsers = async () => {
   try {
     const usersQuery = query(

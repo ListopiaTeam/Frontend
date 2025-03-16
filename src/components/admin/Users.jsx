@@ -1,35 +1,38 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { deleteUser } from 'firebase/auth';
-import React from 'react'
-import { fetchUsers } from '../../utility/crudUtility';
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import React, { useState } from "react";
+import { deleteUser } from "../../utility/rawgAPI";
+import { fetchUsers } from "../../utility/crudUtility";
 
 const Users = () => {
-    const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
+  const [showPopup, setShowPopup] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState(null); 
 
-      const {
-        data: usersData,
-        isLoading: usersLoading,
-        isError: usersError
-      } = useQuery({
-        queryKey: ['all-users'],
-        queryFn: async () => {
-          const { docs } = await fetchUsers(); 
-          return docs;
-        },
-        onError: (error) => console.error("Error fetching users:", error)
-      });
+  const {
+    data: usersData,
+    isLoading: usersLoading,
+    isError: usersError,
+  } = useQuery({
+    queryKey: ["all-users"],
+    queryFn: async () => {
+      const { docs } = await fetchUsers();
+      return docs;
+    },
+    onError: (error) => console.error("Error fetching users:", error),
+  });
 
-       const handleDeleteUser = async (userId) => {
-          if(window.confirm("Are you sure to delete this user?")){
-            try {
-              await deleteUser(userId)
-              queryClient.invalidateQueries(["all-users"])
-            } catch (error) {
-              console.log(error);
-              
-            }
-          }
-        }
+  const handleDeleteUser = async () => {
+    if (!selectedUserId) return;
+    try {
+      await deleteUser(selectedUserId);
+      queryClient.invalidateQueries(["all-users"]);
+      setShowPopup(false); 
+      setSelectedUserId(null); 
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <>
       <div>
@@ -52,12 +55,15 @@ const Users = () => {
                 {usersData?.map((user) => (
                   <tr key={user.id} className="border-b">
                     <td className="px-6 py-4 text-sm text-gray-900">
-                      {user.displayName || user.email.split('@')[0]}
+                      {user.displayName || user.email.split("@")[0]}
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-900">{user.email}</td>
                     <td className="px-6 py-4 text-sm">
                       <button
-                        onClick={() => handleDeleteUser(user.id)}
+                        onClick={() => {
+                          setSelectedUserId(user.id);
+                          setShowPopup(true);
+                        }}
                         className="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 transition-all"
                       >
                         Delete user
@@ -70,78 +76,50 @@ const Users = () => {
           </div>
         )}
       </div>
-      </>
 
+      {showPopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl p-6 sm:p-8 w-full max-w-xs sm:max-w-md shadow-xl">
+            <div className="text-center">
+              <div className="mx-auto flex items-center justify-center h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-red-100 mb-4">
+                <svg
+                  className="h-5 w-5 sm:h-6 sm:w-6 text-red-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-lg sm:text-xl font-medium text-gray-900 mb-2">Delete Account</h3>
+              <p className="text-gray-500 mb-4 sm:mb-6 text-sm sm:text-base">
+                Are you sure you want to delete this user? This action cannot be undone.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center">
+                <button
+                  onClick={() => setShowPopup(false)}
+                  className="px-4 py-2 sm:px-5 sm:py-2.5 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-sm sm:text-base"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDeleteUser}
+                  className="px-4 py-2 sm:px-5 sm:py-2.5 text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors text-sm sm:text-base"
+                >
+                  Confirm Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
 
-//     {/* Create Event Tab */}
-//     {activeTab === "createEvent" && (
-//       <div>
-//         <h2 className="text-2xl font-semibold text-gray-800 mb-6">Create Event</h2>
-//         <div className="bg-white shadow-md p-6 rounded-lg">
-//           <form onSubmit={handleSubmit(handleEventCreation)}>
-//             <div className="mb-4">
-//               <label htmlFor="eventName" className="block text-sm font-medium text-gray-700">
-//                 Event Name
-//               </label>
-//               <input
-//                 type="text"
-//                 id="eventName"
-//                 {...register("eventName", { required: "Event name is required" })}
-//                 className="mt-1 block w-full p-3 border border-gray-300 rounded-lg mb-4"
-//               />
-//               {errors.eventName && <p className="text-red-500 text-sm">{errors.eventName.message}</p>}
-//             </div>
-
-//             <div className="mb-4">
-//               <label htmlFor="eventDesc" className="block text-sm font-medium text-gray-700">
-//                 Event Description
-//               </label>
-//               <input
-//                 type="text"
-//                 id="eventDesc"
-//                 {...register("eventDesc", { required: "Event description is required" })}
-//                 className="mt-1 block w-full p-3 border border-gray-300 rounded-lg"
-//               />
-//               {errors.eventDesc && <p className="text-red-500 text-sm">{errors.eventDesc.message}</p>}
-//             </div>
-
-//             <div className="mb-4">
-//               <label htmlFor="eventDate" className="block text-sm font-medium text-gray-700">
-//                 Event Date
-//               </label>
-//               <input
-//                 type="date"
-//                 id="eventDate"
-//                 {...register("eventDate", { required: "Event date is required" })}
-//                 className="mt-1 block w-full p-3 border border-gray-300 rounded-lg"
-//               />
-//               {errors.eventDate && <p className="text-red-500 text-sm">{errors.eventDate.message}</p>}
-//             </div>
-
-//             <div className="mb-4">
-//               <label htmlFor="file" className="block text-sm font-medium text-gray-700">
-//                 Event Image
-//               </label>
-//               <input
-//                 type="file"
-//                 {...register("file", { required: "Event image is required" })}
-//                 className="mt-1 block w-full p-3 border border-gray-300 rounded-lg"
-//               />
-//               {errors.file && <p className="text-red-500 text-sm">{errors.file.message}</p>}
-//             </div>
-
-//             <button
-//               type="submit"
-//               className="w-full px-6 py-2 bg-rose-500 text-white font-semibold rounded-lg hover:bg-rose-600 transition-all"
-//             >
-//               Create Event
-//             </button>
-//           </form>
-//         </div>
-//       </div>
-//     )}
-//   </motion.div>
-  )
-}
-
-export default Users
+export default Users;
