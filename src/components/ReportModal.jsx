@@ -13,9 +13,9 @@ const ReportModal = ({ id, user }) => {
     "Explicit Content",
     "Illegal Activity",
     "Privacy Violations",
-    "Impersonation",
     "Copyright or Intellectual Property Violation",
-    "Self-Harm or Suicide Promotion"
+    "Self-Harm or Suicide Promotion",
+    "Problematic Comment"
   ];
 
   const [selectedReasons, setSelectedReasons] = useState([]);

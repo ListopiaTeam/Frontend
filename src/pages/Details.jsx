@@ -109,12 +109,25 @@ const ListDetail = () => {
     );
   }  
 
+  const copyToClipboard = () => {
+    const currentUrl = window.location.href;
+
+    navigator.clipboard.writeText(currentUrl)
+      .then(() => {
+        alert('URL copied to clipboard!');
+      })
+      .catch((err) => {
+        console.error('Failed to copy the URL: ', err);
+      });
+  };
+
   return (
     <div className="min-h-screen py-16 mt-16">
       <GoBackButton/>
       {list && (
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="bg-white rounded-2xl shadow-lg p-8 sm:p-12">
+       
             <button
               onClick={user && handleLike}
               disabled={!user}
@@ -144,8 +157,14 @@ const ListDetail = () => {
                 {currentLikes.length}
               </span>
             </button>
-            
-            <ReportModal id={id} user={user}/>
+
+            <div className="flex gap-5 md:flex-row flex-col">
+              <ReportModal id={id} user={user}/>
+              <button
+                className={`mt-3 px-6 py-2 bg-rose-500 text-white font-semibold rounded-lg shadow-md hover:bg-rose-600 transition-all mb-10`}
+                onClick={copyToClipboard}>Share list
+              </button>
+            </div>
 
             <div className="mb-8 mt-24 md:mt-0">
               <p className="font-bold mb-10 text-lg">

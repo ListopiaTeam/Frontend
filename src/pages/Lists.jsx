@@ -7,6 +7,8 @@ import { fetchLists, generateSchema, searchListsByPrefix } from "../utility/crud
 const Lists = () => {
   const [selCateg, setSelCateg] = useState([]);
   const [categoriesSelectionIsOpen, setCategoriesSelectionIsOpen] = useState(false);
+  const [gameQuery, setGameQuery] = useState("")
+  
 
   useEffect(
 
@@ -69,6 +71,11 @@ const Lists = () => {
     );
   };
 
+  //Search for a game
+  const searchGame = () => {
+    console.log(gameQuery)
+  }
+
   return (
     <div className="mt-32 mx-8 pb-6">
       <div className="mb-4 relative">
@@ -80,7 +87,6 @@ const Lists = () => {
           {selCateg.length > 0 ? selCateg.join(", ") : "Select categories"}
           <span className="ml-2">&#9662;</span>
         </button>
-
         {categoriesSelectionIsOpen && (
           <div className="absolute w-full mt-1 bg-white border rounded-md shadow-lg max-h-48 overflow-y-auto z-10">
             {tags.map((category) => (
@@ -96,6 +102,22 @@ const Lists = () => {
             ))}
           </div>
         )}
+      <div className="flex items-center gap-2 bg-white border w-fit mt-5 border-gray-300 rounded-lg p-1 shadow-sm focus-within:border-rose-600 focus-within:ring-1 focus-within:ring-rose-600">
+        <input
+          type="text"
+          className="w-full border-none outline-none p-2 text-gray-900 placeholder-gray-400"
+          placeholder="Search for a game"
+          onChange={e => setGameQuery(e.target.value)}
+          value={gameQuery}
+        />
+        <button
+          onClick={() => searchGame()}
+          className="flex items-center gap-2 px-4 py-2.5 bg-rose-600 text-white rounded-md hover:bg-rose-700 transition-colors"
+        >
+          Search
+        </button>
+          </div>
+       
       </div>
 
       {isLoading && <p className="text-center text-gray-600">Loading...</p>}
