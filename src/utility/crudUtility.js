@@ -25,6 +25,29 @@ export const addList = async (formData) => {
   await addDoc(collectionRef, newItem);
 };
 
+//dump file creation
+export const generateSchema = async (collectionName) => {
+  const collectionRef = collection(db, collectionName);
+  const snapshot = await getDocs(collectionRef);
+
+  const schema = {};
+
+  snapshot.docs.forEach((doc) => {
+    const data = doc.data();
+    Object.keys(data).forEach((key) => {
+      const value = data[key];
+      const type = Array.isArray(value)
+        ? "array"
+        : value === null
+        ? "null"
+        : typeof value;
+      schema[key] = type; // Egyedi mezőnév és típus tárolása
+    });
+  });
+
+  console.log("Schema:", schema);
+};
+
 export const readList = (setList, selCateg) => {
   const collectionRef = collection(db, "Lists");
   console.log("Selected Categories:", selCateg);
@@ -82,17 +105,6 @@ export const addReport = async (listId, currentReport) => {
   return false;
 };
 
-export const addCommentReport = async (listId, commentId, currentReport) => {
-  console.log("addCommentReport called", { listId, commentId, currentReport });
-  try {
-    const reportsRef = collection(db, `Lists/${listId}/comments/${commentId}/comment_reports`);
-    await addDoc(reportsRef, currentReport);
-    console.log("Report added successfully!");
-  } catch (error) {
-    console.error("Error adding report: ", error);
-  }
-};
-
 export const addComment = async (listId, newComment) => {
   const commentRef = doc(collection(db, `Lists/${listId}/comments`));
   try {
@@ -117,7 +129,26 @@ export const listenToComments = (listId, setComments) => {
 
 export const deleteList = async (id) => {
   const docRef = doc(db, "Lists", id);
-  await deleteDoc(docRef);
+  
+  try {
+    // Get all subcollections of the document
+    const subcollections = ["comments", "reports"]; // List all known subcollections
+    
+    for (const subcollection of subcollections) {
+      const subCollectionRef = collection(db, "Lists", id, subcollection);
+      const snapshot = await getDocs(subCollectionRef);
+
+      const deletePromises = snapshot.docs.map(doc => deleteDoc(doc.ref));
+      await Promise.all(deletePromises); // Delete all documents in the subcollection
+    }
+
+    // Delete the parent document
+    await deleteDoc(docRef);
+    
+    console.log(`Document with ID ${id} and its subcollections deleted successfully.`);
+  } catch (error) {
+    console.error("Error deleting document and subcollections:", error);
+  }
 };
 
 export const deleteComment = async (listId, commentId) => {
@@ -257,3 +288,6 @@ export const addEvent = async (formData) => {
   const newItem = { ...formData};
   await addDoc(collectionRef, newItem);
 };
+
+//search for list
+

@@ -24,6 +24,8 @@ export const searchGamesByName = async (setGames, query, url, setNextPageUrl, se
 
 export const getTags = async () => {
     try {
+        console.log(URL);
+        
         const response = await axios.get(URL + "getGenres/")
         const tags = response.data.results.map(tag => tag.name)
         return tags
