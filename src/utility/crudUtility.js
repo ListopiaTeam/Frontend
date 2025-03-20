@@ -289,5 +289,30 @@ export const addEvent = async (formData) => {
   await addDoc(collectionRef, newItem);
 };
 
-//search for list
+//search for list based on title
+export const searchListsByPrefix = async (prefix) => {
+  const listsRef = collection(db, "Lists");
+
+  // Firestore can search for words that start with "prefix"
+  const q = query(
+    listsRef,
+    where("title", ">=", prefix),
+    where("title", "<=", prefix + "\uf8ff"),
+    orderBy("title")
+  );
+
+  try {
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+  } catch (error) {
+    console.error("Error searching for lists:", error);
+    return [];
+  }
+};
+
+
+
 
