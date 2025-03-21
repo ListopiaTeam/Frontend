@@ -1,12 +1,15 @@
-import React, { useState } from 'react'
-import { useForm } from 'react-hook-form';
-import Alert from '../Alert.jsx'
-import { uploadFile } from "../../utility/uploadFile"
-import { addEvent } from "../../utility/crudUtility"
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import Alert from "../Alert.jsx";
+import { uploadFile } from "../../utility/uploadFile";
+import { addEvent } from "../../utility/crudUtility";
 
 const CreateEvent = () => {
-  const [message, setMessage] = useState("")
-  const [errorMessage, setErrorMessage] = useState("")
+  const [message, setMessage] = useState([]);
+  const [date, setDate] = useState();
+  useEffect(() => {
+    setDate(new Date().toISOString().split("T")[0]);
+  }, []);
 
   const {
     register,
@@ -29,28 +32,30 @@ const CreateEvent = () => {
         isActive: true,
       };
 
-      await addEvent(formData);
-      setMessage("Successfull event creation!")
+      await addEvent(formData, setMessage);
       setTimeout(() => {
-        setMessage("")
-      }, 3000)
+        setMessage("");
+      }, 3000);
     } catch (error) {
       console.log(error);
-      setErrorMessage("Error creating event")
       setTimeout(() => {
-        setErrorMessage("")
-      }, 3000)
+        setMessage("");
+      }, 3000);
     }
   };
 
-
   return (
     <div>
-      <h2 className="text-2xl font-semibold text-gray-800 mb-6">Create Event</h2>
+      <h2 className="text-2xl font-semibold text-gray-800 mb-6">
+        Create Event
+      </h2>
       <div className="bg-white shadow-md p-6 rounded-lg">
         <form onSubmit={handleSubmit(handleEventCreation)}>
           <div className="mb-4">
-            <label htmlFor="eventName" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="eventName"
+              className="block text-sm font-medium text-gray-700"
+            >
               Event Name
             </label>
             <input
@@ -59,37 +64,55 @@ const CreateEvent = () => {
               {...register("eventName", { required: "Event name is required" })}
               className="mt-1 block w-full p-3 border border-gray-300 rounded-lg mb-4"
             />
-            {errors.eventName && <p className="text-red-500 text-sm">{errors.eventName.message}</p>}
+            {errors.eventName && (
+              <p className="text-red-500 text-sm">{errors.eventName.message}</p>
+            )}
           </div>
 
           <div className="mb-4">
-            <label htmlFor="eventDesc" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="eventDesc"
+              className="block text-sm font-medium text-gray-700"
+            >
               Event Description
             </label>
             <input
               type="text"
               id="eventDesc"
-              {...register("eventDesc", { required: "Event description is required" })}
+              {...register("eventDesc", {
+                required: "Event description is required",
+              })}
               className="mt-1 block w-full p-3 border border-gray-300 rounded-lg"
             />
-            {errors.eventDesc && <p className="text-red-500 text-sm">{errors.eventDesc.message}</p>}
+            {errors.eventDesc && (
+              <p className="text-red-500 text-sm">{errors.eventDesc.message}</p>
+            )}
           </div>
 
           <div className="mb-4">
-            <label htmlFor="eventDate" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="eventDate"
+              className="block text-sm font-medium text-gray-700"
+            >
               Event Date
             </label>
             <input
               type="date"
               id="eventDate"
+              min={date}
               {...register("eventDate", { required: "Event date is required" })}
               className="mt-1 block w-full p-3 border border-gray-300 rounded-lg"
             />
-            {errors.eventDate && <p className="text-red-500 text-sm">{errors.eventDate.message}</p>}
+            {errors.eventDate && (
+              <p className="text-red-500 text-sm">{errors.eventDate.message}</p>
+            )}
           </div>
 
           <div className="mb-4">
-            <label htmlFor="file" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="file"
+              className="block text-sm font-medium text-gray-700"
+            >
               Event Image
             </label>
             <input
@@ -97,7 +120,9 @@ const CreateEvent = () => {
               {...register("file", { required: "Event image is required" })}
               className="mt-1 block w-full p-3 border border-gray-300 rounded-lg"
             />
-            {errors.file && <p className="text-red-500 text-sm">{errors.file.message}</p>}
+            {errors.file && (
+              <p className="text-red-500 text-sm">{errors.file.message}</p>
+            )}
           </div>
 
           <button
@@ -108,13 +133,13 @@ const CreateEvent = () => {
           </button>
         </form>
       </div>
-      {message ? (
-        <Alert msg={message} />
+      {message.success == true ? (
+        <Alert msg={message.message} />
       ) : (
-        errorMessage && <Alert err={errorMessage} />
+        message && <Alert err={message.message} />
       )}
     </div>
-  )
-}
+  );
+};
 
-export default CreateEvent
+export default CreateEvent;
