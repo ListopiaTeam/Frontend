@@ -18,19 +18,19 @@ export const searchGamesByName = async (setGames, query, url, setNextPageUrl, se
         setPrevPageUrl(response.data.previous || null);
         setGames(filteredGames)
     } catch (error) {
-        console.log(error)
+        console.log("searchGamesByName Error: " + error)
     }
 }
 
 export const getTags = async () => {
     try {
-        console.log(URL);
+        console.log("Backend URL: " + URL);
         
         const response = await axios.get(URL + "getGenres/")
         const tags = response.data.results.map(tag => tag.name)
         return tags
     } catch (error) {
-        console.log(error);
+        console.log("getTags Error: " + error);
     }
 }
 
