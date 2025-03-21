@@ -83,6 +83,8 @@ const Lists = () => {
     setTriggerSearch(false)
   }, [searchedGames])
   
+  console.log("Tags data:", tags);
+
   return (
     <div className="mt-32 mx-8 pb-6">
       <div className="mb-4 relative">
@@ -95,8 +97,9 @@ const Lists = () => {
           <span className="ml-2">&#9662;</span>
         </button>
         {categoriesSelectionIsOpen && (
-          <div className="absolute w-full mt-1 bg-white border rounded-md shadow-lg max-h-48 overflow-y-auto z-10">
-            {tags.map((category) => (
+        <div className="absolute w-full mt-1 bg-white border rounded-md shadow-lg max-h-48 overflow-y-auto z-10">
+          {tags?.length > 0 ? (
+            tags.map((category) => (
               <div
                 key={category}
                 onClick={() => handleCategoryChange(category)}
@@ -106,9 +109,12 @@ const Lists = () => {
               >
                 {category}
               </div>
-            ))}
-          </div>
-        )}
+            ))
+          ) : (
+            <p className="text-center text-gray-500">No categories available.</p>
+          )}
+        </div>
+      )}
       <div className="flex items-center gap-2 bg-white border w-fit mt-5 border-gray-300 rounded-lg p-1 shadow-sm focus-within:border-rose-600 focus-within:ring-1 focus-within:ring-rose-600">
         <input
           type="text"
