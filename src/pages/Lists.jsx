@@ -8,13 +8,7 @@ const Lists = () => {
   const [selCateg, setSelCateg] = useState([]);
   const [categoriesSelectionIsOpen, setCategoriesSelectionIsOpen] = useState(false);
   const [gameQuery, setGameQuery] = useState("")
-  
-
-  useEffect(
-
-    async()=>{console.log(await searchListsByPrefix("car"))}
-    ,[])
-
+  const [triggerSearch, setTriggerSearch] = useState(false); 
 
   const {data: tags, isLoading: loadingTags, isError: errorTags, error} = useQuery({
     queryKey: ['tag'],
@@ -71,11 +65,24 @@ const Lists = () => {
     );
   };
 
-  //Search for a game
+  const { data: searchedGames, error: searchError, isLoading: searchIsLoading } = useQuery(
+    {
+      queryKey: ['games', gameQuery],
+      queryFn: () => searchListsByPrefix(gameQuery),
+      enabled: triggerSearch && gameQuery.length > 0,
+    }
+  );
+
   const searchGame = () => {
-    console.log(gameQuery)
+  if (gameQuery.length > 0) {
+      setTriggerSearch(true); 
+    }  
   }
 
+  useEffect(() => {
+    setTriggerSearch(false)
+  }, [searchedGames])
+  
   return (
     <div className="mt-32 mx-8 pb-6">
       <div className="mb-4 relative">
@@ -120,26 +127,47 @@ const Lists = () => {
        
       </div>
 
-      {isLoading && <p className="text-center text-gray-600">Loading...</p>}
-      {isError && <p className="text-center text-rose-600">Error loading lists!</p>}
+      {isLoading || searchIsLoading && <p className="text-center text-gray-600">Loading...</p>}
+      {isError || searchError && <p className="text-center text-rose-600">Error loading lists!</p>}
       {!lists?.pages?.length && <p className="text-rose-600 text-center text-xl font-semibold">No list available for the selected category!</p>}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-        {lists?.pages?.map((page) =>
-          page?.docs?.map((list) => (
-            <div key={list.id}>
-              <ListCard
-                description={list.desc}
-                title={list.title}
-                likes={list.likes}
-                categories={list.categories}
-                url={list.games[0]?.background_image}
-                id={list.id}
-                username={list?.username}
-              />
-            </div>
-          ))
-        )}
+      {searchedGames ? (
+  <>
+    {searchedGames.map((game) => (
+      <div key={game.id}>
+        <ListCard
+          description={game.desc}
+          title={game.title}
+          likes={game.likes}
+          categories={game.categories}
+          url={game.games[0]?.background_image}
+          id={game.id}
+          username={game.username}
+        />
+      </div>
+    ))}
+  </>
+) : (
+  <>
+    {lists?.pages?.map((page) =>
+      page?.docs?.map((list) => (
+        <div key={list.id}>
+          <ListCard
+            description={list.desc}
+            title={list.title}
+            likes={list.likes}
+            categories={list.categories}
+            url={list.games[0]?.background_image}
+            id={list.id}
+            username={list?.username}
+          />
+        </div>
+      ))
+    )}
+  </>
+)}
+
       </div>
 
       {isFetching && <p className="text-center text-gray-600">Loading more...</p>}
