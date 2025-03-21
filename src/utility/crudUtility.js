@@ -285,15 +285,43 @@ export const readEvents = (setEvent,currentEvent) => {
 
 export const addEvent = async (formData) => {
   const collectionRef = collection(db, "Events");
-  const newItem = { ...formData};
+  const q = query(collectionRef, where("isActive", "==", true));
+  const querySnapshot = await getDocs(q);
+
+  if (!querySnapshot.empty) {
+    return { success: false, message: "An active event already exists." };
+  }
+
+  const newItem = { ...formData };
   await addDoc(collectionRef, newItem);
+
+  return { success: true, message: "Event added successfully." };
+};
+
+//get active eventid
+export const getActiveEventIds = async () => {
+  const eventsRef = collection(db, "Events");
+  const q = query(eventsRef, where("isActive", "==", true)); 
+  const querySnapshot = await getDocs(q);
+  const activeEventIds = querySnapshot.docs.map(doc => doc.id);
+  return activeEventIds;
+};
+
+export const addListToEvent = async (listId, eventId) => {
+  const docRef = doc(db, "Events", eventId);
+  
+  try {
+    await updateDoc(docRef, {
+      submitedLists: arrayUnion(listId),
+    });
+  } catch (error) {
+    console.error("Error updating list:", error);
+  }
 };
 
 //search for list based on title
 export const searchListsByPrefix = async (prefix) => {
   const listsRef = collection(db, "Lists");
-
-  // Firestore can search for words that start with "prefix"
   const q = query(
     listsRef,
     where("title", ">=", prefix),
