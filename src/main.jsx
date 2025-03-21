@@ -19,6 +19,7 @@ import PasswordReset from "./pages/PasswordReset.jsx";
 import Details from "./pages/Details.jsx";
 import { LastDocProvider } from "./context/LastDocContext.jsx";
 import AdminPanel from "./pages/AdminPanel.jsx";
+import EventPage from "./pages/EventPage.jsx"
 import Users from "./components/admin/Users.jsx";
 import ReportedPosts from "./components/admin/ReportedPosts.jsx";
 import CreateEvent from "./components/admin/CreateEvent.jsx";
@@ -132,6 +133,19 @@ const AppWrapper = () => {
               </motion.div>
             ) : (
               <Details />
+            )
+          }
+        />
+
+        <Route
+          path="/currentEvent"
+          element={
+            location.pathname !== prevLocation.current ? (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }}>
+                <EventPage />
+              </motion.div>
+            ) : (
+              <EventPage />
             )
           }
         />
