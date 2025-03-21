@@ -325,6 +325,19 @@ export const addListToEvent = async (listId, eventId) => {
   }
 };
 
+export const getActiveEvent = async () => {
+  const eventsRef = collection(db, "Events");
+  const q = query(eventsRef, where("isActive", "==", true));
+
+  const querySnapshot = await getDocs(q);
+
+  if (querySnapshot.empty) {
+    return null;
+  }
+
+  return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); 
+};
+
 //search for list based on title
 export const searchListsByPrefix = async (prefix) => {
   const listsRef = collection(db, "Lists");

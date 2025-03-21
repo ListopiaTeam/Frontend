@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import ListCard from "../components/ListCard";
 import { getTags } from "../utility/rawgAPI";
-import { addListToEvent, fetchLists, generateSchema, getActiveEventIds, searchListsByPrefix } from "../utility/crudUtility";
+import { addListToEvent, fetchLists, generateSchema, getActiveEvent, getActiveEventIds, searchListsByPrefix } from "../utility/crudUtility";
 
 const Lists = () => {
   const [selCateg, setSelCateg] = useState([]);
@@ -41,6 +41,7 @@ const Lists = () => {
     },
     
   });
+  getActiveEvent().then(event => console.log(event));
 
   // Handle scroll event for lazy loading
   const handleScroll = useCallback(() => {
