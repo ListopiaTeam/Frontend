@@ -67,16 +67,14 @@ export const readList = (setList, selCateg) => {
   return unsubscribe;
 };
 
-
 export const readLists = async (id) => {
   return new Promise((resolve) => {
     const docRef = doc(db, "Lists", id);
     const unsubscribe = onSnapshot(docRef, (snapshot) => {
       resolve({ ...snapshot.data(), id: snapshot.id });
     });
-    return unsubscribe
+    return unsubscribe;
   });
-
 };
 
 export const toggleLike = async (id, uid) => {
@@ -92,7 +90,7 @@ export const toggleLike = async (id, uid) => {
 
 export const addReport = async (listId, currentReport) => {
   console.log("THIS GOT CALLED FOR NO REASON");
-  
+
   const reportsRef = collection(db, `Lists/${listId}/reports`);
   const q = query(reportsRef, where("userId", "==", currentReport.userId));
   const querySnapshot = await getDocs(q);
@@ -129,23 +127,25 @@ export const listenToComments = (listId, setComments) => {
 
 export const deleteList = async (id) => {
   const docRef = doc(db, "Lists", id);
-  
+
   try {
     // Get all subcollections of the document
     const subcollections = ["comments", "reports"]; // List all known subcollections
-    
+
     for (const subcollection of subcollections) {
       const subCollectionRef = collection(db, "Lists", id, subcollection);
       const snapshot = await getDocs(subCollectionRef);
 
-      const deletePromises = snapshot.docs.map(doc => deleteDoc(doc.ref));
+      const deletePromises = snapshot.docs.map((doc) => deleteDoc(doc.ref));
       await Promise.all(deletePromises); // Delete all documents in the subcollection
     }
 
     // Delete the parent document
     await deleteDoc(docRef);
-    
-    console.log(`Document with ID ${id} and its subcollections deleted successfully.`);
+
+    console.log(
+      `Document with ID ${id} and its subcollections deleted successfully.`
+    );
   } catch (error) {
     console.error("Error deleting document and subcollections:", error);
   }
@@ -158,7 +158,7 @@ export const deleteComment = async (listId, commentId) => {
     const repliesSnapshot = await getDocs(repliesQuery);
 
     // Delete all replies
-    const deleteRepliesPromises = repliesSnapshot.docs.map((docSnap) => 
+    const deleteRepliesPromises = repliesSnapshot.docs.map((docSnap) =>
       deleteDoc(doc(db, `Lists/${listId}/comments`, docSnap.id))
     );
     await Promise.all(deleteRepliesPromises);
@@ -171,10 +171,9 @@ export const deleteComment = async (listId, commentId) => {
   }
 };
 
-
 export const getUser = async (userId) => {
   try {
-    const userRef = doc(db, "Users", userId); 
+    const userRef = doc(db, "Users", userId);
     const userSnap = await getDoc(userRef);
 
     if (userSnap.exists()) {
@@ -188,7 +187,6 @@ export const getUser = async (userId) => {
     return null;
   }
 };
-
 
 export const fetchLists = async (listCount, selCateg, lastDoc) => {
   try {
@@ -210,7 +208,7 @@ export const fetchLists = async (listCount, selCateg, lastDoc) => {
     }
 
     if (lastDoc) {
-      listsQuery = query(listsQuery, startAfter(lastDoc)); 
+      listsQuery = query(listsQuery, startAfter(lastDoc));
     }
 
     const querySnapshot = await getDocs(listsQuery);
@@ -260,11 +258,11 @@ export const fetchUsers = async () => {
     const querySnapshot = await getDocs(usersQuery);
 
     return {
-      docs: querySnapshot.docs.map(doc => ({
+      docs: querySnapshot.docs.map((doc) => ({
         id: doc.id,
-        ...doc.data()
+        ...doc.data(),
       })),
-      lastDoc: null
+      lastDoc: null,
     };
   } catch (error) {
     console.error("Error fetching users:", error);
@@ -272,44 +270,45 @@ export const fetchUsers = async () => {
   }
 };
 
-export const readEvents = (setEvent,currentEvent) => {
+export const readEvents = (setEvent, currentEvent) => {
   const collectionRef = collection(db, "Events");
   let q;
-    q = query(collectionRef, orderBy("endDate", "desc"));
-    
+  q = query(collectionRef, orderBy("endDate", "desc"));
+
   const unsubscribe = onSnapshot(q, (snapshot) => {
     setList(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
   });
   return unsubscribe;
 };
 
-export const addEvent = async (formData) => {
+export const addEvent = async (formData, setMsg) => {
   const collectionRef = collection(db, "Events");
   const q = query(collectionRef, where("isActive", "==", true));
   const querySnapshot = await getDocs(q);
 
   if (!querySnapshot.empty) {
-    return { success: false, message: "An active event already exists." };
+    setMsg({ success: false, message: "An active event already exists." });
+    return
+  }else{
+    const newItem = { ...formData };
+    await addDoc(collectionRef, newItem);
+    setMsg({ success: true, message: "Event added successfully." });
   }
 
-  const newItem = { ...formData };
-  await addDoc(collectionRef, newItem);
-
-  return { success: true, message: "Event added successfully." };
 };
 
 //get active eventid
 export const getActiveEventIds = async () => {
   const eventsRef = collection(db, "Events");
-  const q = query(eventsRef, where("isActive", "==", true)); 
+  const q = query(eventsRef, where("isActive", "==", true));
   const querySnapshot = await getDocs(q);
-  const activeEventIds = querySnapshot.docs.map(doc => doc.id);
+  const activeEventIds = querySnapshot.docs.map((doc) => doc.id);
   return activeEventIds;
 };
 
 export const addListToEvent = async (listId, eventId) => {
   const docRef = doc(db, "Events", eventId);
-  
+
   try {
     await updateDoc(docRef, {
       submitedLists: arrayUnion(listId),
@@ -331,7 +330,7 @@ export const searchListsByPrefix = async (prefix) => {
 
   try {
     const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(doc => ({
+    return querySnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
@@ -340,7 +339,3 @@ export const searchListsByPrefix = async (prefix) => {
     return [];
   }
 };
-
-
-
-
