@@ -341,19 +341,21 @@ export const getActiveEvent = async () => {
 //search for list based on title
 export const searchListsByPrefix = async (prefix) => {
   const listsRef = collection(db, "Lists");
-  const q = query(
-    listsRef,
-    where("title", ">=", prefix),
-    where("title", "<=", prefix + "\uf8ff"),
-    orderBy("title")
-  );
+  const q = query(listsRef, orderBy("title"));
 
   try {
     const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+    const filteredLists = querySnapshot.docs
+      .map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+        titleLowercase: doc.data().title.toLowerCase(),
+      }))
+      .filter((doc) =>
+        doc.titleLowercase.startsWith(prefix.toLowerCase())
+      );
+
+    return filteredLists;
   } catch (error) {
     console.error("Error searching for lists:", error);
     return [];
