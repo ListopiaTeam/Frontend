@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import ListCard from "../components/ListCard";
 import { getTags } from "../utility/rawgAPI";
-import { fetchLists, generateSchema, searchListsByPrefix } from "../utility/crudUtility";
+import { addListToEvent, fetchLists, generateSchema, getActiveEventIds, searchListsByPrefix } from "../utility/crudUtility";
 
 const Lists = () => {
   const [selCateg, setSelCateg] = useState([]);
