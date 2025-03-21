@@ -19,10 +19,16 @@ import {
 } from "firebase/firestore";
 import { db } from "./firebaseApp";
 
-export const addList = async (formData) => {
+
+export const addList = async (formData, setList) => {
   const collectionRef = collection(db, "Lists");
   const newItem = { ...formData, timestamp: serverTimestamp() };
-  await addDoc(collectionRef, newItem);
+
+  const docRef = await addDoc(collectionRef, newItem);
+
+  const itemWithId = { ...newItem, id: docRef.id };
+
+  setList(docRef.id);
 };
 
 //dump file creation
@@ -299,12 +305,13 @@ export const addEvent = async (formData) => {
 };
 
 //get active eventid
-export const getActiveEventIds = async () => {
+export const getActiveEventIds = async (setActiveEvent) => {
   const eventsRef = collection(db, "Events");
   const q = query(eventsRef, where("isActive", "==", true)); 
   const querySnapshot = await getDocs(q);
   const activeEventIds = querySnapshot.docs.map(doc => doc.id);
-  return activeEventIds;
+  
+  setActiveEvent(activeEventIds)
 };
 
 export const addListToEvent = async (listId, eventId) => {

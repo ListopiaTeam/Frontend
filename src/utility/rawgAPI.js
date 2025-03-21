@@ -24,15 +24,20 @@ export const searchGamesByName = async (setGames, query, url, setNextPageUrl, se
 
 export const getTags = async () => {
     try {
-        console.log("Backend URL: " + URL);
-        
-        const response = await axios.get(URL + "getGenres/")
-        const tags = response.data.results.map(tag => tag.name)
-        return tags
+      console.log("Backend URL:", URL);
+      const response = await axios.get(URL + "getGenres/");
+      console.log("Full API Response:", response.data);
+      if (!response.data || !response.data.results) {
+        throw new Error("Invalid API response: Missing 'results' field");
+      }
+      const tags = response.data.results.map(tag => tag.name);
+      return tags;
     } catch (error) {
-        console.log("getTags Error: " + error);
+      console.error("getTags Error:", error);
+      return [];
     }
-}
+  };
+  
 
 export const deleteUser = async (uid) => {
     const userDocRef = doc(db, "Users", uid)

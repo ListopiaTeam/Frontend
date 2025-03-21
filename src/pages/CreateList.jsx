@@ -4,7 +4,7 @@ import 'react-responsive-modal/styles.css';
 import { UserContext } from "../UserContext";
 import { Modal } from 'react-responsive-modal';
 import { getTags, searchGamesByName } from '../utility/rawgAPI';
-import { addList } from "../utility/crudUtility";
+import { addList, getActiveEventIds, addListToEvent } from "../utility/crudUtility";
 import Alert from "../components/Alert";
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from "react-router-dom";
@@ -33,7 +33,11 @@ const CreateList = () => {
   const [nextPageUrl, setNextPageUrl] = useState(null);
   const [prevPageUrl, setPrevPageUrl] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [list, setList] = useState([]);
+  const [activeEvent, setActiveEvent] = useState("")
 
+      
   const searchGame = async (url = null) => {
     setLoading(true);
     await searchGamesByName(setGames, searchedGame, url || null, setNextPageUrl, setPrevPageUrl);
@@ -61,6 +65,11 @@ const CreateList = () => {
     setSelectedTags(selectedTags.filter(tag => tag !== tagToRemove));
   };
 
+  useEffect(() => {
+    getActiveEventIds(setActiveEvent)
+  }, [])
+  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!user) {
@@ -87,7 +96,10 @@ const CreateList = () => {
     };
 
     try {
-      await addList(formData);
+      await addList(formData, setList);
+      if(submitted){
+        await addListToEvent(list, activeEvent[0])
+      }
       setMsg("List successfully created!");
       setTimeout(() => setMsg(""), 4000);
       setSelectedGames([]);
@@ -141,6 +153,7 @@ const CreateList = () => {
         onTagModalOpen={() => setIsTagModalOpen(true)}
       />
 
+ 
       <div className="flex flex-col sm:flex-row gap-3 mt-8 justify-center">
         <button
           type="button"
@@ -156,7 +169,19 @@ const CreateList = () => {
         >
           Publish List
         </button>
+       
       </div>
+      <div className="flex items-center space-x-3 mt-5">
+      <input 
+        type="checkbox" 
+        id="event" 
+        name="event" 
+        className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500" 
+        checked={submitted} 
+        onChange={() => setSubmitted(!submitted)} 
+      />
+          <label for="event" className="text-gray-700 font-medium">Submit to event</label>
+    </div>
 
       {/* Tag selection modal */}
 

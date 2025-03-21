@@ -40,7 +40,7 @@ const Event = () => {
                         </NavLink>
 
                         <NavLink
-                            to="/"
+                            to="/currentEvent"
                             className="flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 text-sm font-semibold text-gray-200 bg-white/10 rounded-lg backdrop-blur-sm hover:bg-white/20 transition-all border border-white/20 hover:border-white/30"
                         >
                             <svg 
