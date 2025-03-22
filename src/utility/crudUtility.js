@@ -83,6 +83,36 @@ export const readLists = async (id) => {
   });
 };
 
+export const readEventLists = async (ids) => {
+  if (!ids || ids.length === 0) {
+    console.log("No submitted lists to fetch.");
+    return [];
+  }
+
+  try {
+    const listsPromises = ids.map((id) => getDoc(doc(db, "Lists", id)));
+    const listsDocs = await Promise.all(listsPromises);
+
+    const lists = listsDocs.map((docSnapshot) => {
+      if (docSnapshot.exists()) {
+        return docSnapshot.data();
+      } else {
+        console.log(`No document found for ID: ${docSnapshot.id}`);
+        return null;
+      }
+    }).filter((data) => data !== null); 
+
+    if (lists.length === 0) {
+      console.log("No lists found for the provided IDs.");
+    }
+
+    return lists;
+  } catch (error) {
+    console.error("Error fetching event lists:", error);
+    return [];
+  }
+};
+
 export const toggleLike = async (id, uid) => {
   const docRef = doc(db, "Lists", id);
   const docSnap = await getDoc(docRef);
@@ -330,7 +360,6 @@ export const getActiveEvent = async () => {
   const q = query(eventsRef, where("isActive", "==", true));
 
   const querySnapshot = await getDocs(q);
-
   if (querySnapshot.empty) {
     return null;
   }
