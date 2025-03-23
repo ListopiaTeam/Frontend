@@ -28,6 +28,8 @@ export const addList = async (formData, setList) => {
 
   const itemWithId = { ...newItem, id: docRef.id };
 
+  console.log(docRef.id);
+  
   setList(docRef.id);
 };
 
@@ -344,6 +346,11 @@ export const getActiveEventIds = async (setActiveEvent) => {
 };
 
 export const addListToEvent = async (listId, eventId) => {
+  if (Array.isArray(listId)) {
+    console.error("Error: listId should not be an array", listId);
+    return;
+  }
+
   const docRef = doc(db, "Events", eventId);
 
   try {
@@ -354,6 +361,7 @@ export const addListToEvent = async (listId, eventId) => {
     console.error("Error updating list:", error);
   }
 };
+
 
 export const getActiveEvent = async () => {
   const eventsRef = collection(db, "Events");
