@@ -1,23 +1,27 @@
-import React, { useContext, useEffect, useState } from 'react';
-import TemplateList from '../components/TemplateList';
-import 'react-responsive-modal/styles.css';
+import React, { useContext, useEffect, useState } from "react";
+import TemplateList from "../components/TemplateList";
+import "react-responsive-modal/styles.css";
 import { UserContext } from "../UserContext";
-import { Modal } from 'react-responsive-modal';
-import { getTags, searchGamesByName } from '../utility/rawgAPI';
-import { addList, getActiveEventIds, addListToEvent } from "../utility/crudUtility";
+import { Modal } from "react-responsive-modal";
+import { getTags, searchGamesByName } from "../utility/rawgAPI";
+import {
+  addList,
+  getActiveEventIds,
+  addListToEvent,
+} from "../utility/crudUtility";
 import Alert from "../components/Alert";
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
 const CreateList = () => {
-  const { user } = useContext(UserContext); 
+  const { user } = useContext(UserContext);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!user) {
-      navigate("/"); 
+      navigate("/");
     }
-  }, [user, navigate]); 
+  }, [user, navigate]);
 
   // Modal and game states
   const [open, setOpen] = useState(false);
@@ -35,17 +39,42 @@ const CreateList = () => {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [list, setList] = useState([]);
-  const [activeEvent, setActiveEvent] = useState("")
+  const [activeEvent, setActiveEvent] = useState([]);
 
-      
+  useEffect(() => {
+    getActiveEventIds(setActiveEvent);
+  }, []);
+
+
+  useEffect(() => {
+    if (submitted && list) {
+      addListToEvent(list, activeEvent[0]);
+    }
+  }, [list, submitted, activeEvent]);
+
+  const onOpenModal = () => setOpen(true);
+  const onCloseModal = () => setOpen(false);
+
+
   const searchGame = async (url = null) => {
     setLoading(true);
-    await searchGamesByName(setGames, searchedGame, url || null, setNextPageUrl, setPrevPageUrl);
+    await searchGamesByName(
+      setGames,
+      searchedGame,
+      url || null,
+      setNextPageUrl,
+      setPrevPageUrl
+    );
     setLoading(false);
   };
 
-  const { data: tags, isLoading, isError, error } = useQuery({
-    queryKey: ['tags'],
+  const {
+    data: tags,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["tags"],
     queryFn: getTags,
   });
 
@@ -62,13 +91,10 @@ const CreateList = () => {
   }
 
   const removeTag = (tagToRemove) => {
-    setSelectedTags(selectedTags.filter(tag => tag !== tagToRemove));
+    setSelectedTags(selectedTags.filter((tag) => tag !== tagToRemove));
   };
 
-  useEffect(() => {
-    getActiveEventIds(setActiveEvent)
-  }, [])
-  
+  console.log(activeEvent);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -87,8 +113,8 @@ const CreateList = () => {
     const formData = {
       title: e.target[0].value,
       desc: e.target[1].value,
-      categories: selectedTags.map((tags) => tags),
-      games: selectedGames.map((game) => game),
+      categories: selectedTags,
+      games: selectedGames,
       likes: [],
       userID: user.uid,
       username: user.displayName,
@@ -97,9 +123,6 @@ const CreateList = () => {
 
     try {
       await addList(formData, setList);
-      if(submitted){
-        await addListToEvent(list, activeEvent[0])
-      }
       setMsg("List successfully created!");
       setTimeout(() => setMsg(""), 4000);
       setSelectedGames([]);
@@ -115,37 +138,38 @@ const CreateList = () => {
     }
   };
 
-  const onOpenModal = () => setOpen(true);
-  const onCloseModal = () => setOpen(false);
-
   const modalStyles = {
     modal: {
-      maxWidth: '640px',
-      width: '90%',
-      padding: '0',
-      borderRadius: '12px',
+      maxWidth: "640px",
+      width: "90%",
+      padding: "0",
+      borderRadius: "12px",
     },
     closeButton: {
-      top: '1.5rem',
-      right: '1.5rem',
+      top: "1.5rem",
+      right: "1.5rem",
     },
   };
 
   const tagModalStyles = {
     modal: {
-      maxWidth: '500px',
-      width: '90%',
-      padding: '0',
-      borderRadius: '12px',
+      maxWidth: "500px",
+      width: "90%",
+      padding: "0",
+      borderRadius: "12px",
     },
     closeButton: {
-      top: '1.5rem',
-      right: '1.5rem',
+      top: "1.5rem",
+      right: "1.5rem",
     },
   };
 
+
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center mt-24 mb-6 mx-6">
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col items-center justify-center mt-24 mb-6 mx-6"
+    >
       <TemplateList
         src={selectedGames && selectedGames[0]?.background_image}
         selectedTags={selectedTags}
@@ -153,7 +177,6 @@ const CreateList = () => {
         onTagModalOpen={() => setIsTagModalOpen(true)}
       />
 
- 
       <div className="flex flex-col sm:flex-row gap-3 mt-8 justify-center">
         <button
           type="button"
@@ -169,19 +192,20 @@ const CreateList = () => {
         >
           Publish List
         </button>
-       
       </div>
       <div className="flex items-center space-x-3 mt-5">
-      <input 
-        type="checkbox" 
-        id="event" 
-        name="event" 
-        className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500" 
-        checked={submitted} 
-        onChange={() => setSubmitted(!submitted)} 
-      />
-          <label for="event" className="text-gray-700 font-medium">Submit to event</label>
-    </div>
+        <input
+          type="checkbox"
+          id="event"
+          name="event"
+          className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+          checked={submitted}
+          onChange={() => setSubmitted(!submitted)}
+        />
+        <label for="event" className="text-gray-700 font-medium">
+          Submit to event
+        </label>
+      </div>
 
       {/* Tag selection modal */}
 
@@ -189,7 +213,7 @@ const CreateList = () => {
         open={isTagModalOpen}
         onClose={() => setIsTagModalOpen(false)}
         styles={tagModalStyles}
-        classNames={{ modal: '!rounded-xl' }}
+        classNames={{ modal: "!rounded-xl" }}
       >
         <div className="p-6 pb-8">
           <div className="border-b border-gray-200 pb-4">
@@ -199,7 +223,9 @@ const CreateList = () => {
           <div className="mt-6">
             {tags.length > 0 && (
               <div className="mt-4 p-4 border border-gray-200 rounded-lg bg-gray-50">
-                <h3 className="text-sm font-semibold text-gray-900 mb-3">Available Tags ({5 - selectedTags.length})</h3>
+                <h3 className="text-sm font-semibold text-gray-900 mb-3">
+                  Available Tags ({5 - selectedTags.length})
+                </h3>
                 <div className="flex flex-wrap gap-2">
                   {tags.map((tag) => (
                     <button
@@ -207,15 +233,19 @@ const CreateList = () => {
                       type="button"
                       onClick={() => {
                         if (selectedTags.includes(tag)) {
-                          setSelectedTags(selectedTags.filter((t) => t !== tag));
+                          setSelectedTags(
+                            selectedTags.filter((t) => t !== tag)
+                          );
                         } else {
-                          selectedTags.length <= 4 && setSelectedTags([...selectedTags, tag]);
+                          selectedTags.length <= 4 &&
+                            setSelectedTags([...selectedTags, tag]);
                         }
                       }}
-                      className={`px-3 py-1.5 rounded-full text-sm transition-colors ${selectedTags.includes(tag)
-                        ? 'bg-rose-600 text-white hover:bg-rose-700'
-                        : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-100'
-                        }`}
+                      className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
+                        selectedTags.includes(tag)
+                          ? "bg-rose-600 text-white hover:bg-rose-700"
+                          : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-100"
+                      }`}
                     >
                       {tag}
                     </button>
@@ -226,7 +256,9 @@ const CreateList = () => {
 
             {selectedTags.length > 0 && (
               <div className="mt-6 p-4 border border-rose-200 rounded-lg bg-rose-50">
-                <h3 className="font-semibold text-gray-900 mb-3">Selected Tags ({selectedTags.length})</h3>
+                <h3 className="font-semibold text-gray-900 mb-3">
+                  Selected Tags ({selectedTags.length})
+                </h3>
                 <div className="flex flex-wrap gap-2">
                   {selectedTags.map((tag) => (
                     <span
@@ -255,11 +287,13 @@ const CreateList = () => {
         open={open}
         onClose={onCloseModal}
         styles={modalStyles}
-        classNames={{ modal: '!rounded-xl' }}
+        classNames={{ modal: "!rounded-xl" }}
       >
         <div className="p-6 pb-8">
           <div className="border-b border-gray-200 pb-4">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Add Games to Your List</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              Add Games to Your List
+            </h2>
           </div>
 
           <div className="mt-6">
@@ -271,7 +305,7 @@ const CreateList = () => {
                 placeholder="Search games..."
                 value={searchedGame}
                 onChange={(e) => setSearchedGame(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && searchGame()}
+                onKeyDown={(e) => e.key === "Enter" && searchGame()}
               />
               <button
                 onClick={() => searchGame()}
@@ -285,10 +319,11 @@ const CreateList = () => {
               <button
                 disabled={!prevPageUrl}
                 onClick={() => searchGame(prevPageUrl)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium ${prevPageUrl
-                  ? "bg-gray-900 text-white hover:bg-gray-800"
-                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                  }`}
+                className={`px-4 py-2 rounded-lg text-sm font-medium ${
+                  prevPageUrl
+                    ? "bg-gray-900 text-white hover:bg-gray-800"
+                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                }`}
               >
                 Previous
               </button>
@@ -296,10 +331,11 @@ const CreateList = () => {
               <button
                 disabled={!nextPageUrl}
                 onClick={() => searchGame(nextPageUrl)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium ${nextPageUrl
-                  ? "bg-rose-600 text-white hover:bg-rose-700"
-                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                  }`}
+                className={`px-4 py-2 rounded-lg text-sm font-medium ${
+                  nextPageUrl
+                    ? "bg-rose-600 text-white hover:bg-rose-700"
+                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                }`}
               >
                 Next
               </button>
@@ -309,7 +345,8 @@ const CreateList = () => {
               <div className="mt-6 p-4 border border-rose-200 rounded-lg bg-rose-50">
                 <div className="flex justify-between items-center">
                   <h3 className="font-semibold text-gray-900">
-                    Selected Games ({selectedGames.length}) - Games left ({15 - selectedGames.length})
+                    Selected Games ({selectedGames.length}) - Games left (
+                    {15 - selectedGames.length})
                   </h3>
                   <button
                     onClick={() => setIsGamesOpen(!isGamesOpen)}
@@ -328,7 +365,11 @@ const CreateList = () => {
                       >
                         {game.name}
                         <button
-                          onClick={() => setSelectedGames((prev) => prev.filter((g) => g.id !== game.id))}
+                          onClick={() =>
+                            setSelectedGames((prev) =>
+                              prev.filter((g) => g.id !== game.id)
+                            )
+                          }
                           className="text-rose-400 hover:text-rose-600"
                         >
                           ×
@@ -346,37 +387,49 @@ const CreateList = () => {
               <div className="flex justify-center">
                 <div className="w-6 h-6 border-4 border-rose-600 border-t-transparent rounded-full animate-spin"></div>
               </div>
-            ) : (
-              games.length > 0 ? (
-                games.map((item) => (
-                  <div key={item.id} className="group flex items-center gap-4 p-3 border border-gray-200 rounded-lg hover:border-rose-200 hover:bg-rose-50 transition-colors">
-                    <img src={item.background_image} className="w-16 h-16 flex-shrink-0 rounded-lg object-cover" alt={item.name} />
-                    <span className="text-base font-medium text-gray-900 flex-1">{item.name}</span>
-                    {selectedGames.length < 15 && (
-                      <button
-                        onClick={() => {
-                          setSelectedGames((prev) =>
-                            prev.some((g) => g.id === item.id)
-                              ? prev.filter((g) => g.id !== item.id)
-                              : [...prev, item]
-                          );
-                        }}
-                        className={`px-4 py-2 rounded-md font-medium text-sm transition-colors ${selectedGames.some((g) => g.id === item.id)
-                            ? 'bg-gray-900 text-white hover:bg-gray-800'
-                            : 'bg-rose-600 text-white hover:bg-rose-700'
-                          }`}
-                      >
-                        {selectedGames.some((g) => g.id === item.id) ? 'Remove' : 'Add'}
-                      </button>
-                    )}
-                  </div>
-                ))
-              ) : (
-                <div className="p-8 text-center">
-                  <div className="text-gray-400 mb-2">No games found</div>
-                  <p className="text-sm text-gray-500">Try searching for your favorite games</p>
+            ) : games.length > 0 ? (
+              games.map((item) => (
+                <div
+                  key={item.id}
+                  className="group flex items-center gap-4 p-3 border border-gray-200 rounded-lg hover:border-rose-200 hover:bg-rose-50 transition-colors"
+                >
+                  <img
+                    src={item.background_image}
+                    className="w-16 h-16 flex-shrink-0 rounded-lg object-cover"
+                    alt={item.name}
+                  />
+                  <span className="text-base font-medium text-gray-900 flex-1">
+                    {item.name}
+                  </span>
+                  {selectedGames.length < 15 && (
+                    <button
+                      onClick={() => {
+                        setSelectedGames((prev) =>
+                          prev.some((g) => g.id === item.id)
+                            ? prev.filter((g) => g.id !== item.id)
+                            : [...prev, item]
+                        );
+                      }}
+                      className={`px-4 py-2 rounded-md font-medium text-sm transition-colors ${
+                        selectedGames.some((g) => g.id === item.id)
+                          ? "bg-gray-900 text-white hover:bg-gray-800"
+                          : "bg-rose-600 text-white hover:bg-rose-700"
+                      }`}
+                    >
+                      {selectedGames.some((g) => g.id === item.id)
+                        ? "Remove"
+                        : "Add"}
+                    </button>
+                  )}
                 </div>
-              )
+              ))
+            ) : (
+              <div className="p-8 text-center">
+                <div className="text-gray-400 mb-2">No games found</div>
+                <p className="text-sm text-gray-500">
+                  Try searching for your favorite games
+                </p>
+              </div>
             )}
           </div>
         </div>
