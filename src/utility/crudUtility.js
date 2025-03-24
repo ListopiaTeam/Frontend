@@ -127,8 +127,6 @@ export const toggleLike = async (id, uid) => {
 };
 
 export const addReport = async (listId, currentReport) => {
-  console.log("THIS GOT CALLED FOR NO REASON");
-
   const reportsRef = collection(db, `Lists/${listId}/reports`);
   const q = query(reportsRef, where("userId", "==", currentReport.userId));
   const querySnapshot = await getDocs(q);
