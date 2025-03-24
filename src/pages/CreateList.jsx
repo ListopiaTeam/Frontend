@@ -27,7 +27,6 @@ const CreateList = () => {
   const [open, setOpen] = useState(false);
   const [isGamesOpen, setIsGamesOpen] = useState(true);
   const [isTagModalOpen, setIsTagModalOpen] = useState(false);
-
   const [games, setGames] = useState([]);
   const [selectedGames, setSelectedGames] = useState([]);
   const [searchedGame, setSearchedGame] = useState("");

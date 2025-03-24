@@ -84,7 +84,8 @@ const ListCard = ({categories, title, description, likes, url, id}) => {
           </p>
         </div>
 
-        <NavLink to={'/details/' + id} className="flex w-full items-center justify-center gap-2 rounded-lg bg-rose-600 px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-rose-700 hover:gap-3">
+        <NavLink to={'/details/' + id} onClick={()=>{console.log(id)}
+        } className="flex w-full items-center justify-center gap-2 rounded-lg bg-rose-600 px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-rose-700 hover:gap-3">
           View Details
           <svg
             xmlns="http://www.w3.org/2000/svg"
