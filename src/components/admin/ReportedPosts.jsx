@@ -24,6 +24,9 @@ const ReportedPosts = () => {
         },
       });  
 
+      if(loadingReportedLists) return "Loading reported lists."
+      if(errorReportedLists) return "An error occured loading the reported lists."
+
       const filteredLists = reportedLists?.pages
       .flatMap((page) => page.docs) 
       .filter((doc) => doc.reports?.length > 0); 
