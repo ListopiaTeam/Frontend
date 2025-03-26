@@ -10,15 +10,15 @@ const EventPage = () => {
   });
 
   const { data: submittedLists, error: submittedError, isLoading: submittedLoading } = useQuery({
-    queryKey: ["submittedLists"],
-    queryFn: async () => {
-      if (data?.[0]?.submitedLists?.length) {
-        return await readEventLists(data[0].submitedLists);
-      }
-      return [];
-    },
-    enabled: !!data?.[0]?.submitedLists?.length,
-  });
+  queryKey: ["submittedLists", data?.[0]?.id], 
+  queryFn: async () => {
+    if (data?.[0]?.submitedLists?.length) {
+      return await readEventLists(data[0].submitedLists);
+    }
+    return [];
+  },
+  enabled: !!data?.[0]?.submitedLists?.length,
+});
 
   if (isLoading || submittedLoading) return <div>Loading...</div>;
   if (error || submittedError) return <div>Error loading event.</div>;
@@ -33,10 +33,11 @@ const EventPage = () => {
     listId: data[0].submitedLists[index],
   }));
 
-  const sortedLists = listsWithIds.sort((a, b) => b.likes - a.likes);
+  const sortedLists = listsWithIds.sort((a, b) => b.likes.length - a.likes.length);
   const topLists = sortedLists.slice(0, 3);
   const remainingLists = sortedLists.slice(3);
 
+  
   return (
     <div className="mt-28 font-mono">
       <div className="text-center mb-20">
@@ -61,7 +62,7 @@ const EventPage = () => {
                   likes={game.likes}
                   categories={game.categories}
                   url={game.games[0]?.background_image}
-                  id={game.listId} // ✅ Correct listId
+                  id={game.listId} 
                   username={game.username}
                 />
               </div>
@@ -69,6 +70,8 @@ const EventPage = () => {
           </div>
         </div>
       )}
+
+      <hr className='h-6'/>
 
       <div className="mx-8 pb-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
