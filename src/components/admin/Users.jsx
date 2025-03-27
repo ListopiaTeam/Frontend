@@ -3,12 +3,15 @@ import React, { useContext, useState } from "react";
 import { deleteUser } from "../../utility/rawgAPI";
 import { fetchUsers } from "../../utility/crudUtility";
 import { UserContext } from "../../UserContext";
+import Alert from "../Alert";
 
 const Users = () => {
   const queryClient = useQueryClient();
   const [showPopup, setShowPopup] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const { user } = useContext(UserContext);
+  const [alertMsg, setAlertMsg] = useState("");
+  const [alertErr, setAlertErr] = useState("");
 
   const {
     data: usersData,
@@ -30,8 +33,12 @@ const Users = () => {
       queryClient.invalidateQueries(["all-users"]);
       setShowPopup(false); 
       setSelectedUserId(null); 
+      setAlertMsg("User deleted successfully.")
+      setTimeout(() => setAlertMsg(""), 3000);
     } catch (error) {
       console.error(error);
+      setAlertErr("Error deleting user.");
+      setTimeout(() => setAlertErr(""), 3000)
     }
   };
 
@@ -119,8 +126,11 @@ const Users = () => {
               </div>
             </div>
           </div>
+          <Alert msg={alertMsg} err={alertErr} />
         </div>
+        
       )}
+
     </>
   );
 };

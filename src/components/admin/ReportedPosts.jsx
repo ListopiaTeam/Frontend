@@ -2,10 +2,14 @@ import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react'
 import { deleteList, fetchLists, getReportedLists } from '../../utility/crudUtility';
 import { NavLink } from 'react-router-dom';
+import Alert from '../Alert';
 
 const ReportedPosts = () => {
     const [selCateg, setSelCateg] = useState([]);
     const [selectedPostId, setSelectedPostId] = useState(null);
+    const [alertMsg, setAlertMsg] = useState("");
+    const [alertErr, setAlertErr] = useState("");
+  
     const queryClient = useQueryClient()
 
       const { data: reportedLists, isLoading: loadingReportedLists, isError: errorReportedLists } = useInfiniteQuery({
@@ -39,8 +43,12 @@ const ReportedPosts = () => {
             await deleteList(selectedPostId); 
             queryClient.invalidateQueries(["reportedLists"]);
             setSelectedPostId(null);
+            setAlertMsg("List deleted successfully.")
+            setTimeout(() => setAlertMsg(""), 3000);
           } catch (error) {
-            console.error("Error deleting list:", error);
+            setAlertErr("Error deleting list.");
+            setTimeout(() => setAlertErr(""), 3000);
+
           }
         }
       };
@@ -123,6 +131,8 @@ const ReportedPosts = () => {
           </div>
         </div>
       )}
+      <Alert msg={alertMsg} err={alertErr} />
+
     </div>
   )
 }
