@@ -387,7 +387,7 @@ export const searchListsByPrefix = async (prefix) => {
         titleLowercase: doc.data().title.toLowerCase(),
       }))
       .filter((doc) =>
-        doc.titleLowercase.startsWith(prefix.toLowerCase())
+        doc.titleLowercase.includes(prefix.toLowerCase()) // Changed from startsWith to includes
       );
 
     return filteredLists;
