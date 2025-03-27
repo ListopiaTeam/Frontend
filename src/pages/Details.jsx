@@ -20,7 +20,7 @@ const ListDetail = () => {
   const { id } = useParams();
   const { user } = useContext(UserContext);
   const [currentPostUser, setCurrentPostUser] = useState(null); 
-
+  const [isAdmin, setIsAdmin] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [currentLikes, setCurrentLikes] = useState([]);
   const [currentComment, setCurrentComment] = useState([]);
@@ -63,6 +63,23 @@ const ListDetail = () => {
     }
     setIsLiked(!isLiked);
   };
+
+ useEffect(() => {
+     const fetchAdminStatus = async () => {
+       if (user?.uid) {
+         const userData = await getUser(user.uid);
+         if (userData && userData.isAdmin) {
+           setIsAdmin(true);
+         } else {
+           setIsAdmin(false);
+         }
+       }
+     }
+     fetchAdminStatus();
+   }, []);
+
+   
+   
     
   const handleComment = () => {
     const commentText = document.querySelector("textarea").value.trim();
@@ -244,6 +261,7 @@ const ListDetail = () => {
                   currentComment={currentComment}
                   listId={id}
                   userUid={user?.uid}
+                  isAdmin={isAdmin}
                 />
               </div>
             </div>
