@@ -1,11 +1,21 @@
 import React from "react";
+import { useQuery } from '@tanstack/react-query'
+import { getActiveEvent } from '../utility/crudUtility'
 import { NavLink } from "react-router-dom";
 
 const Event = () => {
+    const { data, error, isLoading } = useQuery({
+        queryKey: ["activeEvent"],
+        queryFn: () => getActiveEvent(),
+      });
+      const eventEndDate = new Date(data?.[0]?.endDate.seconds * 1000);
+      const currentDate = new Date();
+      const daysRemaining = Math.ceil((eventEndDate - currentDate) / (1000 * 3600 * 24));
+      console.log(data?.[0]?.eventImage);
+      
     return (
-        <section className="relative min-h-[80vh] bg-[url('/banner.jpg')] bg-cover bg-center bg-no-repeat bg-fixed">
+        <section style={{backgroundImage:`url(${data?.[0]?.eventImage})`}} className={`relative min-h-[80vh] bg-cover bg-center bg-no-repeat bg-fixed`}>
             <div className="absolute inset-0 bg-gradient-to-t sm:bg-gradient-to-tr from-gray-900/95 via-gray-900/70 to-transparent"></div>
-
             <div className="relative mx-auto max-w-screen-xl px-4 py-24 sm:px-6 lg:flex lg:h-[80vh] lg:items-center lg:px-8">
                 <div className="max-w-2xl text-center sm:text-left space-y-8">
                     <div className="space-y-4">
@@ -60,7 +70,7 @@ const Event = () => {
                             <svg className="w-5 h-5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <span>3 Days Remaining</span>
+                            <span>{daysRemaining} Days Remaining</span>
                         </div>
                     </div>
                 </div>

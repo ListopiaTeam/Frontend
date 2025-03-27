@@ -121,10 +121,16 @@ const CreateList = () => {
     };
 
     try {
-      await addList(formData, setList);
-      setMsg("List successfully created!");
-      setTimeout(() => setMsg(""), 4000);
-      setSelectedGames([]);
+      if(e.target[0].value.length <= 35 && e.target[1].value.length <= 200){
+        await addList(formData, setList);
+        setMsg("List successfully created!");
+        setTimeout(() => setMsg(""), 4000);
+        setSelectedGames([]);
+      }else{
+        setErr("The title or description length is too long.")
+        setTimeout(() => setErr(""), 4000);
+      }
+     
     } catch (error) {
       console.error("Error creating list:", error);
       setErr("Failed to create the list. Please try again.");

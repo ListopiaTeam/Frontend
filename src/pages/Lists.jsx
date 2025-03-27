@@ -122,6 +122,7 @@ const Lists = () => {
             </div>
           </div>
 
+          {/* Category Selector */}
           <div className="flex-1 min-w-[300px]">
             <label className="block text-gray-700 text-sm font-bold mb-2">Select Categories:</label>
             <div className="relative">
@@ -143,11 +144,10 @@ const Lists = () => {
                 <div className="absolute z-10 w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-xl max-h-96 overflow-y-auto">
                   <div className="p-2 text-sm text-gray-500 border-b">Select categories:</div>
                   <div className="divide-y">
-                    {tags?.map((category) => (
+                    {tags?.map((category, index) => (
                       <label
                         key={category}
-                        className={`flex items-center p-3 space-x-3 cursor-pointer hover:bg-rose-50 ${selectedCategories.includes(category) ? 'bg-rose-50' : ''
-                          }`}
+                        className={`flex items-center p-3 space-x-3 cursor-pointer hover:bg-rose-300 ${selectedCategories.includes(category) ? 'bg-rose-50' : ''} ${index % 2 == 0 ? "bg-rose-100" : ""}`}
                       >
                         <input
                           type="checkbox"
@@ -163,8 +163,6 @@ const Lists = () => {
               )}
             </div>
           </div>
-
-
         </div>
       </div>
 

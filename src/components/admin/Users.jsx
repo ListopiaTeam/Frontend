@@ -1,12 +1,14 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { deleteUser } from "../../utility/rawgAPI";
 import { fetchUsers } from "../../utility/crudUtility";
+import { UserContext } from "../../UserContext";
 
 const Users = () => {
   const queryClient = useQueryClient();
   const [showPopup, setShowPopup] = useState(false);
-  const [selectedUserId, setSelectedUserId] = useState(null); 
+  const [selectedUserId, setSelectedUserId] = useState(null);
+  const { user } = useContext(UserContext);
 
   const {
     data: usersData,
@@ -52,21 +54,22 @@ const Users = () => {
                 </tr>
               </thead>
               <tbody>
-                {usersData?.map((user) => (
-                  <tr key={user.id} className="border-b">
+                {usersData?.map((u, index) => (
+                  <tr key={u.id} className={`border-b ${u.id == user.uid ? "bg-yellow-50" : index % 2 == 0 ? "bg-rose-100 hover:bg-rose-300" : "hover:bg-rose-300"}`}>
                     <td className="px-6 py-4 text-sm text-gray-900">
-                      {user.displayName || user.email.split("@")[0]}
+                      {u.displayName || u.email.split("@")[0]}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-900">{user.email}</td>
+                    <td className="px-6 py-4 text-sm text-gray-900">{u.email}</td>
                     <td className="px-6 py-4 text-sm">
                       <button
+                        disabled={u.id == user.uid}
                         onClick={() => {
-                          setSelectedUserId(user.id);
+                          setSelectedUserId(u.id);
                           setShowPopup(true);
                         }}
-                        className="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 transition-all"
+                        className={`px-4 py-2 ${u.id == user.uid ? "bg-black" : "bg-red-500 hover:bg-red-600"} text-white font-semibold rounded-lg transition-all`}
                       >
-                        Delete user
+                        {u.id == user.uid ? "Current User" : "Delete User"}
                       </button>
                     </td>
                   </tr>
