@@ -138,10 +138,12 @@ const ListDetail = () => {
 
     navigator.clipboard.writeText(currentUrl)
       .then(() => {
-        alert('URL copied to clipboard!');
+        setAlertMsg("URL copied to clipboard.")
+        setTimeout(() => setAlertMsg(""), 3000);
       })
       .catch((err) => {
-        console.error('Failed to copy the URL: ', err);
+        setAlertErr("Failed to copy the URL:");
+        setTimeout(() => setAlertErr(""), 3000);
       });
   };
 

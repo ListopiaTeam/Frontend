@@ -27,19 +27,20 @@ const EventPage = () => {
   const currentDate = new Date();
   const daysRemaining = Math.ceil((eventEndDate - currentDate) / (1000 * 3600 * 24));
 
-  const listsWithIds = submittedLists.map((list, index) => ({
+  const listsWithIds = submittedLists?.map((list, index) => ({
     ...list,
     listId: data[0].submitedLists[index],
   }));
 
-  const sortedLists = listsWithIds.sort((a, b) => b.likes.length - a.likes.length);
-  const topLists = sortedLists.slice(0, 3);
-  const remainingLists = sortedLists.slice(3);
+  const sortedLists = listsWithIds?.sort((a, b) => b.likes.length - a.likes.length);
+  const topLists = sortedLists?.slice(0, 3);
+  const remainingLists = sortedLists?.slice(3);
 
   
   return (
     <div className="mt-28 font-mono">
-      <div className="text-center mb-20">
+      {data?.length > 0 ? (
+        <div className="text-center mb-20">
         <h1 className="text-4xl font-semibold text-rose-500 mb-5">
           <span className="text-black">Event title:</span> {data?.[0]?.title}
         </h1>
@@ -48,12 +49,17 @@ const EventPage = () => {
           <span>{daysRemaining} Days Remaining</span>
         </div>
       </div>
+      ) : 
+      (
+        <h1 className='text-center text-3xl'>There is no active event at the moment.</h1>
+      )}
+    
 
-      {topLists.length > 0 && (
+      {topLists?.length > 0 && (
         <div className="mx-8 pb-6">
           <h2 className="text-2xl font-semibold text-center mb-6">Top 3 Most Liked Lists</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-            {topLists.map((game) => (
+            {topLists?.map((game) => (
               <div key={game.listId}>
                 <ListCard
                   description={game.desc}
@@ -67,14 +73,15 @@ const EventPage = () => {
               </div>
             ))}
           </div>
+          <hr className='h-6'/>
         </div>
       )}
 
-      <hr className='h-6'/>
+  
 
       <div className="mx-8 pb-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-          {remainingLists.map((game) => (
+          {remainingLists?.map((game) => (
             <div key={game.listId}>
               <ListCard
                 description={game.desc}
@@ -82,7 +89,7 @@ const EventPage = () => {
                 likes={game.likes}
                 categories={game.categories}
                 url={game.games[0]?.background_image}
-                id={game.listId} // ✅ Correct listId
+                id={game.listId} 
                 username={game.username}
               />
             </div>

@@ -8,6 +8,7 @@ const Event = () => {
         queryKey: ["activeEvent"],
         queryFn: () => getActiveEvent(),
       });
+
       const eventEndDate = new Date(data?.[0]?.endDate.seconds * 1000);
       const currentDate = new Date();
       const daysRemaining = Math.ceil((eventEndDate - currentDate) / (1000 * 3600 * 24));
@@ -64,15 +65,17 @@ const Event = () => {
                             <span>Event Details</span>
                         </NavLink>
                     </div>
-
-                    <div className="mt-12 flex items-center justify-center sm:justify-start gap-4 text-gray-300 text-sm">
+                    {data?.[0].endDate && (
+                        <div className="mt-12 flex items-center justify-center sm:justify-start gap-4 text-gray-300 text-sm">
                         <div className="flex items-center gap-2">
                             <svg className="w-5 h-5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <span>{daysRemaining} Days Remaining</span>
+                            <span>{data?.[0].endDate && daysRemaining + " Days Remaining"} </span>
                         </div>
                     </div>
+                    )}
+                    
                 </div>
             </div>
         </section>
