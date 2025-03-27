@@ -3,12 +3,12 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from "framer-motion"
 import { UserContext } from '../UserContext'
 import { extractUrlAndId } from '../utility/utils'
-import { getUser } from '../utility/crudUtility' // Import the function to get user data
+import { getUser } from '../utility/crudUtility' 
 
 const Header = () => {
   const [show, setShow] = useState(false)
   const [avatar, setAvatar] = useState(null)
-  const [isAdmin, setIsAdmin] = useState(false); // New state to hold admin status
+  const [isAdmin, setIsAdmin] = useState(false); 
   const { user, logoutUser } = useContext(UserContext)
   const navigate = useNavigate()
 
@@ -23,14 +23,13 @@ const Header = () => {
       !user && setAvatar(null)
     }
 
-    // Fetch admin status from the Users collection
     const fetchAdminStatus = async () => {
       if (user?.uid) {
         const userData = await getUser(user.uid);
         if (userData && userData.isAdmin) {
-          setIsAdmin(true); // Set to true if the user is an admin
+          setIsAdmin(true);
         } else {
-          setIsAdmin(false); // Set to false if the user is not an admin
+          setIsAdmin(false); 
         }
       }
     }
@@ -75,7 +74,7 @@ const Header = () => {
                     Create List
                   </NavLink>
 
-                  {/* ✅ Admin Panel - Only for Admins */}
+                  {/* Admin Panel - Only for Admins */}
                   {isAdmin && (
                     <NavLink 
                       to="/adminpanel/users" 
@@ -214,7 +213,7 @@ const Header = () => {
                     Create List
                   </NavLink>
 
-                  {/* ✅ Admin Panel - Only for Admins */}
+                  {/* Admin Panel - Only for Admins */}
                   {isAdmin && (
                     <NavLink 
                       to="/adminpanel/users" 

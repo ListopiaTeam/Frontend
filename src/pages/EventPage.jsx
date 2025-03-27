@@ -23,11 +23,10 @@ const EventPage = () => {
   if (isLoading || submittedLoading) return <div>Loading...</div>;
   if (error || submittedError) return <div>Error loading event.</div>;
 
-  const eventEndDate = new Date(data[0]?.endDate.seconds * 1000);
+  const eventEndDate = new Date(data?.[0]?.endDate.seconds * 1000);
   const currentDate = new Date();
   const daysRemaining = Math.ceil((eventEndDate - currentDate) / (1000 * 3600 * 24));
 
-  
   const listsWithIds = submittedLists.map((list, index) => ({
     ...list,
     listId: data[0].submitedLists[index],
@@ -42,9 +41,9 @@ const EventPage = () => {
     <div className="mt-28 font-mono">
       <div className="text-center mb-20">
         <h1 className="text-4xl font-semibold text-rose-500 mb-5">
-          <span className="text-black">Event title:</span> {data[0].title}
+          <span className="text-black">Event title:</span> {data?.[0]?.title}
         </h1>
-        <p className="italic mb-3">Description: {data[0].desc}</p>
+        <p className="italic mb-3">Description: {data?.[0]?.desc}</p>
         <div className="flex items-center justify-center gap-2">
           <span>{daysRemaining} Days Remaining</span>
         </div>

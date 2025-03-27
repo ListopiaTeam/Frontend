@@ -32,6 +32,7 @@ export default function Profile() {
 
   const onSubmit = async (data) => {
     try {
+      
       userImgId && await deletePhoto(userImgId);      
       const file = data?.file ? data.file[0] : null;
       
@@ -60,6 +61,7 @@ export default function Profile() {
   };
 
   useEffect(() => {
+    if (user === undefined) return
     if (!user) navigate("/");
   }, [user]);
 

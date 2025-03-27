@@ -11,6 +11,7 @@ import { toggleLike } from "../utility/crudUtility";
 import { UserContext } from "../UserContext";
 import { serverTimestamp } from "firebase/firestore";
 import CommentSection from "../components/CommentSection";
+import Alert from "../components/Alert"
 import ReportModal from "../components/ReportModal";
 import GoBackButton from "../components/GoBackButton";
 import { useQuery } from "@tanstack/react-query";
@@ -24,6 +25,9 @@ const ListDetail = () => {
   const [isLiked, setIsLiked] = useState(false);
   const [currentLikes, setCurrentLikes] = useState([]);
   const [currentComment, setCurrentComment] = useState([]);
+
+  const [alertMsg, setAlertMsg] = useState("");
+  const [alertErr, setAlertErr] = useState("");
 
   const { data: list, isLoading, error } = useQuery({
     queryKey: ["list", id],
@@ -78,9 +82,6 @@ const ListDetail = () => {
      fetchAdminStatus();
    }, []);
 
-   
-   
-    
   const handleComment = () => {
     const commentText = document.querySelector("textarea").value.trim();
     if (!commentText) return;
@@ -97,10 +98,16 @@ const ListDetail = () => {
     setCurrentComment((prevComments) => [...prevComments, newComment]);
 
     document.querySelector("textarea").value = "";
+    
+    if(commentText.length <= 200){
+      addComment(id, newComment);
+      setAlertMsg("Comment successfully posted.");
+      setTimeout(() => setAlertMsg(""), 3000);
+    }else{
+      setAlertErr("Comment is too long (200 max)");
+      setTimeout(() => setAlertErr(""), 3000);
+    }
 
-    console.log("New comment added:", newComment);
-
-    addComment(id, newComment);
   };
 
   const getPostUser = async () => {
@@ -268,6 +275,8 @@ const ListDetail = () => {
           </div>
         </div>
       )}
+      <Alert msg={alertMsg} err={alertErr} />
+
     </div>
   );
 };

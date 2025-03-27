@@ -258,17 +258,17 @@ export const fetchLists = async (listCount, selCateg, lastDoc) => {
     for (const docSnap of querySnapshot.docs) {
       const listData = docSnap.data();
       const listId = docSnap.id;
-
+      
       // Fetch the reports subcollection for each list
-      const reportsRef = collection(db, `Lists/${listId}/reports`);
-      const reportsSnapshot = await getDocs(reportsRef);
-      const reports = reportsSnapshot.docs.map((reportDoc) => reportDoc.data());
+      // const reportsRef = collection(db, `Lists/${listId}/reports`);
+      // const reportsSnapshot = await getDocs(reportsRef);
+      // const reports = reportsSnapshot.docs.map((reportDoc) => reportDoc.data());
 
       // Push the list data along with the reports
       newLists.push({
         id: listId,
         ...listData,
-        reports, // Include the reports subcollection data here
+        // reports, // Include the reports subcollection data here
       });
     }
 
@@ -277,6 +277,48 @@ export const fetchLists = async (listCount, selCateg, lastDoc) => {
     return {
       docs: newLists,
       lastDoc: lastDocRef || null,
+    };
+  } catch (error) {
+    console.error("Error fetching lists:", error);
+    return { docs: [], lastDoc: null };
+  }
+};
+
+export const getReportedLists = async () => {
+  try {
+    const listsQuery = query(
+      collection(db, "Lists"),
+      orderBy("timestamp", "desc")
+    );
+
+    const querySnapshot = await getDocs(listsQuery);
+
+    if (querySnapshot.empty) {
+      return { docs: [], lastDoc: null };
+    }
+
+    const newLists = [];
+
+    for (const docSnap of querySnapshot.docs) {
+      const listId = docSnap.id;
+      const {title, desc} = docSnap.data();
+
+      // console.log(listData);
+
+      // Fetch reports
+      const reportsRef = collection(db, `Lists/${listId}/reports`);
+      const reportsSnapshot = await getDocs(reportsRef);
+      const reports = reportsSnapshot.docs.map((reportDoc) => reportDoc.data());
+
+      newLists.push({  
+        id: listId,
+        reports,
+        listData: {title, desc},
+      });
+    }
+
+    return {
+      docs: newLists
     };
   } catch (error) {
     console.error("Error fetching lists:", error);

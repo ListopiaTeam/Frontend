@@ -28,6 +28,7 @@ export default function AdminPanel() {
   }
   
   useEffect(() => {
+    if (user === undefined) return
     fetchAdminStatus();
   }, [user])
 

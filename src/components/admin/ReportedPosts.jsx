@@ -1,6 +1,6 @@
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react'
-import { deleteList, fetchLists } from '../../utility/crudUtility';
+import { deleteList, fetchLists, getReportedLists } from '../../utility/crudUtility';
 import { NavLink } from 'react-router-dom';
 
 const ReportedPosts = () => {
@@ -10,7 +10,7 @@ const ReportedPosts = () => {
 
       const { data: reportedLists, isLoading: loadingReportedLists, isError: errorReportedLists } = useInfiniteQuery({
         queryKey: ["reportedLists", selCateg],
-        queryFn: ({ pageParam = null }) => fetchLists(10, selCateg, pageParam),
+        queryFn: ({ pageParam = null }) => getReportedLists(),
         getNextPageParam: (lastPage) => {
           if (!lastPage?.lastDoc) return undefined;
           return lastPage.lastDoc;
@@ -23,6 +23,8 @@ const ReportedPosts = () => {
           console.error("Error fetching lists:", error);
         },
       });  
+
+      console.log(reportedLists);
 
       if(loadingReportedLists) return "Loading reported lists."
       if(errorReportedLists) return "An error occured loading the reported lists."
@@ -50,6 +52,7 @@ const ReportedPosts = () => {
         <table className="min-w-full table-auto">
           <thead>
             <tr className="text-left border-b">
+              <th className="px-6 py-3 text-sm font-medium text-gray-900">Post Name</th>
               <th className="px-6 py-3 text-sm font-medium text-gray-900">Reasons</th>
               <th className="px-6 py-3 text-sm font-medium text-gray-900">Reported By</th>
               <th className="px-6 py-3 text-sm font-medium text-gray-900">Reported List</th>
@@ -57,10 +60,12 @@ const ReportedPosts = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredLists.map((post) => (
-              <tr key={post.id} className="border-b">
+            {filteredLists.map((post, index) => (
+              <tr key={index} className={`border-b ${index % 2 == 0 ? "bg-rose-100 hover:bg-rose-300" : "hover:bg-rose-300"}`}>
+                <td className="px-6 py-4 text-sm text-gray-900">{post.listData.title}</td>
                 <td className="px-6 py-4 text-sm text-gray-900">
                   {post.reports.map(report => report.content.join(', ')).join(', ')}
+                  {console.log(post)}
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-900">{post.reports.length} people</td>
                 <td className="px-6 py-4 text-sm">

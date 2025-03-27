@@ -7,6 +7,7 @@ import { serverTimestamp } from "firebase/firestore";
 import { addComment, deleteComment, getUser } from "../utility/crudUtility";
 
 import { extractUrlAndId } from "../utility/utils";
+import Alert from '../components/Alert.jsx'
 
 const CommentSection = ({ currentComment, listId, userUid, isAdmin }) => {
   const [replyInputs, setReplyInputs] = useState({});
@@ -20,6 +21,8 @@ const CommentSection = ({ currentComment, listId, userUid, isAdmin }) => {
   const { user } = useContext(UserContext);
 
   const [userData, setUserData] = useState({});
+  const [alertMsg, setAlertMsg] = useState("");
+  const [alertErr, setAlertErr] = useState("");
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -101,8 +104,16 @@ const CommentSection = ({ currentComment, listId, userUid, isAdmin }) => {
 
       username: user?.displayName,
     };
-
-    addComment(listId, newReply);
+    
+    if(newReply.content.length <= 120){
+      addComment(listId, newReply);
+      setAlertMsg("Comment successfully posted.");
+      setTimeout(() => setAlertMsg(""), 3000);
+    }{
+      setAlertErr("Comment is too long (200 max)");
+      setTimeout(() => setAlertErr(""), 3000);
+    }
+ 
 
     setReplyInputs((prev) => ({
       ...prev,
@@ -321,6 +332,8 @@ const CommentSection = ({ currentComment, listId, userUid, isAdmin }) => {
       )}
     </div>
   );
+  <Alert msg={alertMsg} err={alertErr} />
+
 };
 
 export default CommentSection;

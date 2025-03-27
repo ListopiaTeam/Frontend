@@ -8,7 +8,7 @@ const Home = () => {
   const selCateg = []; 
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ['infiniteLists', selCateg],
+    queryKey: ['infiniteLists'],
     queryFn: () => fetchLists(Infinity, selCateg, null),
     select: (data) => data?.docs?.sort((a, b) => b.likes.length - a.likes.length) || [],
   });
@@ -24,7 +24,6 @@ const Home = () => {
   if (!data || data.length === 0) {
     return <p>No lists found.</p>;
   }
-
 
   return (
     <>
