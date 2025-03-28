@@ -49,8 +49,6 @@ const ReportModal = ({ id, user }) => {
       msg: hasReported ? "You've already reported this." : "Report submitted successfully!",
       err: hasReported,
     });
-
-    
     
     setTimeout(() => setAlert({ msg: "", err: false }), 3000);
     
@@ -64,7 +62,7 @@ const ReportModal = ({ id, user }) => {
 
   return (
     <>
-      <button  className={`${!user && "hidden"} mt-3 px-6 py-2 bg-rose-500 text-white font-semibold rounded-lg shadow-md hover:bg-rose-600 transition-all mb-10`} onClick={() => document.getElementById('report_modal').showModal()}>
+      <button  className={`${!user && "hidden"} px-6 py-2 bg-rose-500 text-white font-semibold rounded-lg shadow-md hover:bg-rose-600 transition-all`} onClick={() => document.getElementById('report_modal').showModal()}>
         Report
       </button>
       <dialog id="report_modal" className="modal rounded-md" onClose={handleClose}>

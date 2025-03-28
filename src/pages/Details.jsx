@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   addComment,
   deleteList,
@@ -25,7 +25,6 @@ const ListDetail = () => {
   const [isLiked, setIsLiked] = useState(false);
   const [currentLikes, setCurrentLikes] = useState([]);
   const [currentComment, setCurrentComment] = useState([]);
-
   const [alertMsg, setAlertMsg] = useState("");
   const [alertErr, setAlertErr] = useState("");
 
@@ -33,6 +32,8 @@ const ListDetail = () => {
     queryKey: ["list", id],
     queryFn: () => readLists(id),
   });
+  
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (!id) return;
@@ -68,19 +69,20 @@ const ListDetail = () => {
     setIsLiked(!isLiked);
   };
 
- useEffect(() => {
-     const fetchAdminStatus = async () => {
-       if (user?.uid) {
-         const userData = await getUser(user.uid);
-         if (userData && userData.isAdmin) {
-           setIsAdmin(true);
-         } else {
-           setIsAdmin(false);
-         }
-       }
-     }
-     fetchAdminStatus();
-   }, []);
+const fetchAdminStatus = async () => {
+  if (user?.uid) {
+      const userData = await getUser(user.uid);
+      // console.log(userData.isAdmin);
+      if (userData && userData.isAdmin) {
+        setIsAdmin(true);
+      } else {
+        setIsAdmin(false);
+      }
+    }
+  }
+  fetchAdminStatus();  
+   
+  // console.log(isAdmin);
 
   const handleComment = () => {
     const commentText = document.querySelector("textarea").value.trim();
@@ -134,9 +136,7 @@ const ListDetail = () => {
   }  
 
   const copyToClipboard = () => {
-    const currentUrl = window.location.href;
-
-    navigator.clipboard.writeText(currentUrl)
+    navigator.clipboard.writeText(`https://listopia-frontend.netlify.app/details/${id}`)
       .then(() => {
         setAlertMsg("URL copied to clipboard.")
         setTimeout(() => setAlertMsg(""), 3000);
@@ -153,50 +153,47 @@ const ListDetail = () => {
       {list && (
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="bg-white rounded-2xl shadow-lg p-8 sm:p-12">
-       
-            <button
-              onClick={user && handleLike}
-              disabled={!user}
-              className={`flex items-center gap-1.5 group transition-colors w-fit absolute right-14 sm:top-14 top-24`}
-              aria-label={isLiked ? "Remove like" : "Like this game"}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className={`h-6 w-6 transition-all ${
-                  isLiked
-                    ? "text-rose-500 fill-rose-500"
-                    : "text-gray-900 fill-transparent stroke-current stroke-[2px]"
-                }`}
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                />
-              </svg>
-              <span
-                className={`text-sm font-medium ${
-                  isLiked ? "text-rose-500" : "text-gray-500"
-                }`}
-              >
-                {currentLikes.length}
-              </span>
-            </button>
-
-            <div className="flex gap-5 sm:flex-row flex-col">
-              <ReportModal id={id} user={user}/>
-              <button
-                    onClick={copyToClipboard}
-                    className="flex sm:mt-6 mt-0 sm:justify-start justify-end space-x-2 text-gray-600 hover:text-rose-700"
+            <div className="flex flex-wrap justify-between gap-4">
+              <div className="flex gap-2">
+                {list.userID !== user?.uid ? <ReportModal id={id} user={user}/> : ""}
+                {(list.userID === user?.uid || isAdmin) && (
+                  // Delete List
+                  <button
+                    onClick={() => {
+                      deleteList(id);
+                      setAlertMsg("List deleted successfully!")
+                      setTimeout(() =>{ setAlertMsg(""); navigate("/lists")}, 3000)
+                    }}
+                    className="px-6 py-2 w-fit bg-rose-500 text-white font-semibold rounded-lg shadow-md hover:bg-rose-600 transition-all"
                   >
+                    Delete List
+                  </button>
+                )}
+              </div>
+            <div className="flex items-center gap-1.5">
+              {/* Share Button */}
+              <button onClick={copyToClipboard} className="flex text-gray-600 hover:text-rose-700">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
                     </svg>
-                  </button>
+              </button>
+              {/* Like Button */}
+              <button
+                onClick={user && handleLike}
+                disabled={!user}
+                className={`flex items-center gap-1.5 group transition-colors w-fit`}
+                aria-label={isLiked ? "Remove like" : "Like this game"}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className={`h-6 w-6 transition-all ${isLiked ? "text-rose-500 fill-rose-500 hover:text-rose-600 hover:fill-rose-600" : "text-gray-900 hover:fill-rose-300 fill-transparent"} stroke-current stroke-[2px]`} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                </svg>
+                <span className={`text-sm font-medium ${isLiked ? "text-rose-500 hover:text-rose-600" : "text-gray-500 hover:-text-gray-600"}`}>
+                  {currentLikes.length}
+                </span>
+              </button>
             </div>
-
-            <div className="mb-8 mt-24 md:mt-0">
+            </div>
+            <div className="mb-4 mt-4 md:mt-0">
               <p className="font-bold mb-10 text-lg">
                 Created by: <span className="text-rose-600">{currentPostUser?.displayName || "Deleted User"}</span> 
               </p>
@@ -237,18 +234,6 @@ const ListDetail = () => {
                 ))}
               </div>
             </div>
-            {list.userID === user?.uid && (
-              <div className="text-right">
-                <button
-                  onClick={() => {
-                    deleteList(id);
-                  }}
-                  className="mt-3 px-6 py-2 bg-rose-500 text-white font-semibold rounded-lg shadow-md hover:bg-rose-600 transition-all"
-                >
-                  Delete list
-                </button>
-              </div>
-            )}
             <div className="mt-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">
                 Comments

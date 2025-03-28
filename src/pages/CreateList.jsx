@@ -8,6 +8,7 @@ import {
   addList,
   getActiveEventIds,
   addListToEvent,
+  getActiveEvent
 } from "../utility/crudUtility";
 import Alert from "../components/Alert";
 import { useQuery } from "@tanstack/react-query";
@@ -16,6 +17,11 @@ import { useNavigate } from "react-router-dom";
 const CreateList = () => {
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
+
+  const { data: dataEvent, error: activeEventError, isLoading: activeEventIsLoading } = useQuery({
+    queryKey: ["activeEvent"],
+    queryFn: () => getActiveEvent(),
+  });
 
   useEffect(() => {
     if (!user) {
@@ -93,7 +99,6 @@ const CreateList = () => {
     setSelectedTags(selectedTags.filter((tag) => tag !== tagToRemove));
   };
 
-  console.log(activeEvent);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -199,17 +204,21 @@ const CreateList = () => {
         </button>
       </div>
       <div className="flex items-center space-x-3 mt-5">
-        <input
-          type="checkbox"
-          id="event"
-          name="event"
-          className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-          checked={submitted}
-          onChange={() => setSubmitted(!submitted)}
-        />
-        <label for="event" className="text-gray-700 font-medium">
-          Submit to event
-        </label>
+        {dataEvent?.[0].title?.length > 0 &&(
+          <>
+          <input
+            type="checkbox"
+            id="event"
+            name="event"
+            className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            checked={submitted}
+            onChange={() => setSubmitted(!submitted)}
+          />
+          <label htmlFor="event" className="text-gray-700 font-medium">
+            Submit to event
+          </label>
+          </>
+        )}
       </div>
 
       {/* Tag selection modal */}
@@ -440,7 +449,7 @@ const CreateList = () => {
         </div>
       </Modal>
 
-      {msg ? <Alert msg={msg} /> : err && <Alert err={err} />}
+      <Alert msg={msg} err={err} />
     </form>
   );
 };
