@@ -61,12 +61,6 @@ const Lists = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
 
-  const handleCategoryChange = (category) => {
-    setSelCateg((prev) =>
-      prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category]
-    );
-  };
-
   const toggleCategory = (category) => {
     setSelCateg(prev =>
       prev.includes(category)
@@ -171,42 +165,51 @@ const Lists = () => {
       {!lists?.pages?.length && <p className="text-rose-600 text-center text-xl font-semibold">No list available for the selected category!</p>}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-8">
-        {searchedGames ? (
-          <>
-            {searchedGames.map((game) => (
-              <div key={game.id}>
-                <ListCard
-                  description={game.desc}
-                  title={game.title}
-                  likes={game.likes}
-                  categories={game.categories}
-                  url={game.games[0]?.background_image}
-                  id={game.id}
-                  username={game.username}
-                />
-              </div>
-            ))}
-          </>
-        ) : (
-          <>
-            {lists?.pages?.map((page) =>
-              page?.docs?.map((list) => (
-                <div key={list.id}>
-                  <ListCard
-                    description={list.desc}
-                    title={list.title}
-                    likes={list.likes}
-                    categories={list.categories}
-                    url={list.games[0]?.background_image}
-                    id={list.id}
-                    username={list?.username}
-                  />
-                </div>
-              ))
-            )}
-          </>
-        )}
+  {searchedGames ? (
+    searchedGames.length === 0 ? ( 
+      <div className="col-span-full text-center">
+        <p className="text-rose-600 text-xl font-semibold">No lists found.</p>
       </div>
+    ) : (
+      searchedGames.map((game) => (
+        <div key={game.id}>
+          <ListCard
+            description={game.desc}
+            title={game.title}
+            likes={game.likes}
+            categories={game.categories}
+            url={game.games[0]?.background_image}
+            id={game.id}
+            username={game.username}
+          />
+        </div>
+      ))
+    )
+  ) : (
+    lists?.pages?.length === 0 || 
+    lists?.pages?.every(page => page.docs?.length === 0) ? (
+      <div className="col-span-full text-center">
+        <p className="text-rose-600 text-xl font-semibold">No list available for the selected category!</p>
+      </div>
+    ) : (
+      lists?.pages?.map((page) =>
+        page?.docs?.map((list) => (
+          <div key={list.id}>
+            <ListCard
+              description={list.desc}
+              title={list.title}
+              likes={list.likes}
+              categories={list.categories}
+              url={list.games[0]?.background_image}
+              id={list.id}
+              username={list?.username}
+            />
+          </div>
+        ))
+      )
+    )
+  )}
+</div>
       {isFetching && <p className="text-center text-gray-600">Loading more...</p>}
     </div>
   );
