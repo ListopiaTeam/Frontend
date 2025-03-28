@@ -162,30 +162,57 @@ export const listenToComments = (listId, setComments) => {
 };
 
 export const deleteList = async (id) => {
-  const docRef = doc(db, "Lists", id);
-
   try {
-    // Get all subcollections of the document
-    const subcollections = ["comments", "reports"]; // List all known subcollections
+    const eventIds = await getActiveEventIds();
+    
+    if (!eventIds || eventIds.length === 0) {
+      console.error("No active event found.");
+      return;
+    }
 
+    const eventId = eventIds[0];
+    
+    const eventDocRef = doc(db, "Events", eventId);
+    
+    const eventSnapshot = await getDoc(eventDocRef);
+    
+    if (!eventSnapshot.exists()) {
+      console.error(`Active event document with ID ${eventId} not found.`);
+      return;
+    }
+
+    const eventData = eventSnapshot.data();
+    let updatedSubmittedLists = eventData.submitedLists || [];
+    
+    if (updatedSubmittedLists.includes(id)) {
+      updatedSubmittedLists = updatedSubmittedLists.filter(listId => listId !== id);
+
+      await updateDoc(eventDocRef, { submitedLists: updatedSubmittedLists });
+      console.log(`Removed ID ${id} from submitedLists`);
+    }
+
+    const docRef = doc(db, "Lists", id);
+    
+    const subcollections = ["comments", "reports"];
     for (const subcollection of subcollections) {
       const subCollectionRef = collection(db, "Lists", id, subcollection);
       const snapshot = await getDocs(subCollectionRef);
 
       const deletePromises = snapshot.docs.map((doc) => deleteDoc(doc.ref));
-      await Promise.all(deletePromises); // Delete all documents in the subcollection
+      await Promise.all(deletePromises);
     }
 
-    // Delete the parent document
     await deleteDoc(docRef);
 
     console.log(
       `Document with ID ${id} and its subcollections deleted successfully.`
     );
+
   } catch (error) {
     console.error("Error deleting document and subcollections:", error);
   }
 };
+
 
 export const deleteComment = async (listId, commentId) => {
   try {
@@ -253,22 +280,15 @@ export const fetchLists = async (listCount, selCateg, lastDoc) => {
       return { docs: [], lastDoc: null };
     }
 
-    // Fetch the lists and include their reports
+
     const newLists = [];
     for (const docSnap of querySnapshot.docs) {
       const listData = docSnap.data();
       const listId = docSnap.id;
-      
-      // Fetch the reports subcollection for each list
-      // const reportsRef = collection(db, `Lists/${listId}/reports`);
-      // const reportsSnapshot = await getDocs(reportsRef);
-      // const reports = reportsSnapshot.docs.map((reportDoc) => reportDoc.data());
-
-      // Push the list data along with the reports
+   
       newLists.push({
         id: listId,
         ...listData,
-        // reports, // Include the reports subcollection data here
       });
     }
 
@@ -381,15 +401,14 @@ export const getActiveEventIds = async (setActiveEvent) => {
   const q = query(eventsRef, where("isActive", "==", true));
   const querySnapshot = await getDocs(q);
   const activeEventIds = querySnapshot.docs.map(doc => doc.id);
-  
-  setActiveEvent(activeEventIds)
+  if(setActiveEvent){
+    setActiveEvent(activeEventIds)
+  }else{
+    return activeEventIds
+  }
 };
 
 export const addListToEvent = async (listId, eventId) => {
-  if (Array.isArray(listId)) {
-    console.error("Error: listId should not be an array", listId);
-    return;
-  }
 
   const docRef = doc(db, "Events", eventId);
 
