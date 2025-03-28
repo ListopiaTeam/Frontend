@@ -98,7 +98,7 @@ const GameDetailModal = ({ id, user, game }) => {
                         <h3 className="font-bold text-lg mb-2 text-center">Screenshots</h3>
                         
                         {screenshots.map(screenshot => (
-                            <img className="hidden" src={screenshot.image}/>
+                            <img key={screenshot.image} className="hidden" src={screenshot.image}/>
                         ))}
 
                         <div className=" w-full h-48 overflow-hidden rounded-lg">
@@ -128,15 +128,15 @@ const GameDetailModal = ({ id, user, game }) => {
                                     onClick={prevSlide}
                                 >
                                      <span ><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" className="bi bi-arrow-left font-bold" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8" stroke="currentColor" stroke-width="1"/>
+                                    <path fillRule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8" stroke="currentColor" strokeWidth="1"/>
                                     </svg></span>
                                 </button>
                                 <button
                                     className="font-bold text-2xl flex justify-center bg-rose-500 select-none text-white p-2 w-12 rounded-full hover:bg-rose-600 transition"
                                     onClick={nextSlide}
                                 >
-                                  <span><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" className="bi bi-arrow-right" viewBox="0 0 16 16" stroke="currentColor" stroke-width="1">
-                                    <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+                                  <span><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" className="bi bi-arrow-right" viewBox="0 0 16 16" stroke="currentColor" strokeWidth="1">
+                                    <path fillRule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
                                     </svg></span>
                                 </button>
                             </div>
