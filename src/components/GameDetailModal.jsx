@@ -5,7 +5,6 @@ const GameDetailModal = ({ id, user, game }) => {
     const modalId = `details_modal_${game.id}`;
     const [currentIndex, setCurrentIndex] = useState(0);
 
-    // Remove the first screenshot
     const screenshots = game.short_screenshots?.slice(1) || [];
 
     const prevSlide = () => {
@@ -15,10 +14,9 @@ const GameDetailModal = ({ id, user, game }) => {
     const nextSlide = () => {
         setCurrentIndex((prev) => (prev === screenshots.length - 1 ? 0 : prev + 1));
     };
-
+    
     return (
         <>
-            {/* Card that opens the modal */}
             <div
                 key={game.id}
                 className={`cursor-pointer group bg-white hover:bg-gray-50 border rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-200`}
@@ -62,7 +60,7 @@ const GameDetailModal = ({ id, user, game }) => {
             {/* Modal */}
             <dialog
                 id={modalId}
-                className="modal rounded-md"
+                className="modal rounded-md w-2/3"
                 onClick={(e) => {
                     const dialog = document.getElementById(modalId);
                     if (e.target === dialog) {
@@ -71,7 +69,6 @@ const GameDetailModal = ({ id, user, game }) => {
                 }}
             >
                 <div className="modal-box p-6 rounded-xl relative">
-                    {/* Banner */}
                     <div
                         className="bg-cover bg-center w-full h-48 flex justify-center items-center text-center p-4"
                         style={{ backgroundImage: `url(${game.background_image})` }}
@@ -81,17 +78,15 @@ const GameDetailModal = ({ id, user, game }) => {
                         </h3>
                     </div>
 
-                    {/* Metacritic Score & Rating */}
                     <div className="text-center mt-4 flex justify-center gap-4">
                         <span className="bg-blue-500 text-white font-bold py-1 px-3 rounded-full">
-                            Metacritic: {game.metacritic}
+                            Metacritic Score: {game.metacritic}
                         </span>
                         <span className="bg-rose-500 text-white font-bold py-1 px-3 rounded-full">
                             ⭐ {game.rating} / 5
                         </span>
                     </div>
 
-                    {/* Available Platforms */}
                     <div className="text-center mt-4">
                         <h4 className="font-semibold text-gray-700">Available on:</h4>
                         <p className="text-gray-500">
@@ -99,43 +94,52 @@ const GameDetailModal = ({ id, user, game }) => {
                         </p>
                     </div>
 
-                    {/* Screenshot Carousel */}
                     <div className="mt-6 relative w-full max-w-md mx-auto">
                         <h3 className="font-bold text-lg mb-2 text-center">Screenshots</h3>
+                        
+                        {screenshots.map(screenshot => (
+                            <img className="hidden" src={screenshot.image}/>
+                        ))}
 
-                        {/* Image Container */}
-                        <div className="relative w-full h-48 overflow-hidden rounded-lg">
-                            {screenshots.length > 0 ? (
-                                <motion.img
-                                    key={screenshots[currentIndex]?.id}
-                                    src={screenshots[currentIndex]?.image}
-                                    alt="screenshot"
-                                    className="w-full h-full object-cover rounded-lg"
-                                    initial={{ opacity: 0, scale: 0.95 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    transition={{ duration: 0.3 }}
-                                />
-                            ) : (
-                                <p className="text-center text-gray-500">No screenshots available</p>
-                            )}
+                        <div className=" w-full h-48 overflow-hidden rounded-lg">
+                        
+                        {screenshots.length > 0 ? screenshots.map(screenshot => (
+                           <motion.img
+                            key={screenshot.id}
+                            src={screenshots[currentIndex]?.image}
+                            alt="screenshot"
+                            className={`w-full h-full object-cover rounded-lg`}
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.3 }}
+                       />
+                        )) : (
+                            <p>There are no images available.</p>
+                        )}
+                           
+
                         </div>
 
                         {/* Navigation Buttons */}
                         {screenshots.length > 1 && (
-                            <>
+                            <div className="flex justify-center gap-8 mt-8">
                                 <button
-                                    className="absolute left-2 top-1/2 transform -translate-y-1/2 font-bold bg-gray-800 text-white p-2 w-12 rounded-full hover:bg-gray-600 transition"
+                                    className="font-bold text-2xl flex justify-center bg-rose-500 select-none  text-white p-2 w-12 rounded-full hover:bg-rose-600 transition"
                                     onClick={prevSlide}
                                 >
-                                    {"<"}
+                                     <span ><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" className="bi bi-arrow-left font-bold" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8" stroke="currentColor" stroke-width="1"/>
+                                    </svg></span>
                                 </button>
                                 <button
-                                    className="absolute right-2 top-1/2 transform -translate-y-1/2 font-bold bg-gray-800 text-white p-2 w-12 rounded-full hover:bg-gray-600 transition"
+                                    className="font-bold text-2xl flex justify-center bg-rose-500 select-none text-white p-2 w-12 rounded-full hover:bg-rose-600 transition"
                                     onClick={nextSlide}
                                 >
-                                    {">"}
+                                  <span><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" className="bi bi-arrow-right" viewBox="0 0 16 16" stroke="currentColor" stroke-width="1">
+                                    <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+                                    </svg></span>
                                 </button>
-                            </>
+                            </div>
                         )}
                     </div>
 

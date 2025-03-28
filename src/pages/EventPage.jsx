@@ -35,7 +35,7 @@ const EventPage = () => {
   const sortedLists = listsWithIds?.sort((a, b) => b.likes.length - a.likes.length);
   const topLists = sortedLists?.slice(0, 3);
   const remainingLists = sortedLists?.slice(3);
-
+  
   
   return (
     <div className="mt-28 font-mono">
@@ -69,7 +69,7 @@ const EventPage = () => {
                   url={game.games[0]?.background_image}
                   id={game.listId} 
                   username={game.username}
-                />
+                  />
               </div>
             ))}
           </div>

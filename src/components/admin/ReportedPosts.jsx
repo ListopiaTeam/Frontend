@@ -28,7 +28,6 @@ const ReportedPosts = () => {
         },
       });  
 
-      console.log(reportedLists);
 
       if(loadingReportedLists) return "Loading reported lists."
       if(errorReportedLists) return "An error occured loading the reported lists."
@@ -73,7 +72,6 @@ const ReportedPosts = () => {
                 <td className="px-6 py-4 text-sm text-gray-900">{post.listData.title}</td>
                 <td className="px-6 py-4 text-sm text-gray-900">
                   {post.reports.map(report => report.content.join(', ')).join(', ')}
-                  {console.log(post)}
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-900">{post.reports.length} people</td>
                 <td className="px-6 py-4 text-sm">
@@ -93,6 +91,7 @@ const ReportedPosts = () => {
                 </td>
               </tr>
             ))}
+            
           </tbody>
         </table>
       </div>

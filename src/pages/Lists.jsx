@@ -170,7 +170,7 @@ const Lists = () => {
       {isError || searchError && <p className="text-center text-rose-600">Error loading lists!</p>}
       {!lists?.pages?.length && <p className="text-rose-600 text-center text-xl font-semibold">No list available for the selected category!</p>}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-8">
         {searchedGames ? (
           <>
             {searchedGames.map((game) => (

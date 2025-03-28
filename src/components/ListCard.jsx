@@ -28,7 +28,7 @@ const ListCard = ({categories, title, description, likes, url, id}) => {
   }
 
   return (
-    <article className="group relative h-full overflow-hidden rounded-2xl bg-slate-100 shadow-lg shadow-gray-100/40 transition-all duration-300 hover:shadow-xl hover:shadow-gray-200/50">
+    <article className="group relative h-full w-[90%] m-auto overflow-hidden rounded-2xl bg-slate-100 shadow-lg shadow-gray-100/40 transition-all duration-300 hover:shadow-xl hover:shadow-gray-200/50 flex flex-col">
   
       <div className="relative aspect-[5/3] overflow-hidden">
         {url ? (
@@ -52,7 +52,7 @@ const ListCard = ({categories, title, description, likes, url, id}) => {
         </div>
       </div>
 
-      <div className="p-5">
+      <div className="p-5 flex flex-col flex-grow">
         <div className="flex items-start justify-between">
           <h3 className="text-xl font-bold text-gray-900 truncate pr-2">{title}</h3>
           <button 
@@ -84,20 +84,22 @@ const ListCard = ({categories, title, description, likes, url, id}) => {
           </p>
         </div>
 
-        <NavLink to={'/details/' + id} onClick={()=>{console.log(id)}
-        } className="flex w-full items-center justify-center gap-2 rounded-lg bg-rose-600 px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-rose-700 hover:gap-3">
-          View Details
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2" 
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-          </svg>
-        </NavLink>
+        <div className="mt-auto">
+          <NavLink to={'/details/' + id}
+           className="flex w-full items-center mt-auto justify-center gap-2 rounded-lg bg-rose-600 px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-rose-700 hover:gap-3">
+            View Details
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2" 
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </NavLink>
+        </div>
       </div>
     </article>
   );
