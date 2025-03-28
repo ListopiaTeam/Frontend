@@ -33,13 +33,13 @@ export const UserProvider = ({ children }) => {
   const signInUser = async (email, password) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      setMessage({});
       setMessage({ signin: "Successfully logged in!" });
     } catch (error) {
       console.log(error);
       setMessage({ err: error.message });
     }
   };
+  
 
   const logoutUser = async () => {
     await signOut(auth);
