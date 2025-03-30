@@ -20,7 +20,7 @@ import { deleteDoc, doc, setDoc, updateDoc } from "firebase/firestore";
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(undefined);
+  const [user, setUser] = useState(null);
   const [message, setMessage] = useState({});
 
   useEffect(() => {
