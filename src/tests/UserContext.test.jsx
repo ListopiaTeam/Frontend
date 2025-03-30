@@ -1,28 +1,66 @@
-import { render, screen, act, waitFor } from "@testing-library/react";
+import { render, act, waitFor } from "@testing-library/react";
 import { vi } from "vitest";
-import { UserProvider, UserContext } from "../UserContext"; // Adjust the path accordingly
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut, updateProfile, deleteUser } from "firebase/auth";
+import { UserProvider, UserContext } from "../UserContext";
 
-// Mock Firebase functions
+// Mock Firebase auth and firestore completely
 vi.mock("firebase/auth", () => ({
-    signInWithEmailAndPassword: vi.fn(),
-    createUserWithEmailAndPassword: vi.fn(),
-    sendPasswordResetEmail: vi.fn(),
-    signOut: vi.fn(),
-    updateProfile: vi.fn(),
-    deleteUser: vi.fn(),
-    getAuth: vi.fn(() => ({
-      currentUser: null,  // You can mock the current user object here
-    })),
-    onAuthStateChanged: vi.fn((auth, callback) => {
-      callback(null); // Initial state: user is `null`
-      const unsubscribeMock = vi.fn();
-      return unsubscribeMock; // Return the mock unsubscribe function
-    }),
-  }));
+  getAuth: vi.fn(() => ({
+    currentUser: {
+      uid: '123',
+      email: 'test@example.com',
+      sendEmailVerification: vi.fn().mockResolvedValue(true)
+    }
+  })),
+  signInWithEmailAndPassword: vi.fn().mockResolvedValue({ 
+    user: { 
+      uid: '123', 
+      email: 'test@example.com',
+      sendEmailVerification: vi.fn().mockResolvedValue(true)
+    } 
+  }),
+  createUserWithEmailAndPassword: vi.fn().mockResolvedValue({ 
+    user: { 
+      uid: '123', 
+      email: 'newuser@example.com',
+      sendEmailVerification: vi.fn().mockResolvedValue(true)
+    } 
+  }),
+  sendPasswordResetEmail: vi.fn().mockResolvedValue(),
+  sendEmailVerification: vi.fn().mockResolvedValue(),
+  signOut: vi.fn().mockResolvedValue(),
+  updateProfile: vi.fn().mockResolvedValue(),
+  deleteUser: vi.fn().mockResolvedValue(),
+  onAuthStateChanged: vi.fn((auth, callback) => {
+    callback({ 
+      uid: '123', 
+      email: 'test@example.com',
+      sendEmailVerification: vi.fn().mockResolvedValue(true)
+    });
+    return vi.fn();
+  })
+}));
+
+// Mock Firestore to prevent permission errors
+vi.mock("firebase/firestore", () => ({
+  getFirestore: vi.fn(),
+  doc: vi.fn(),
+  setDoc: vi.fn().mockResolvedValue(),
+  updateDoc: vi.fn().mockResolvedValue(),
+  deleteDoc: vi.fn().mockResolvedValue()
+}));
 
 describe("UserContext", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it("should initialize with user as null", async () => {
+    const { onAuthStateChanged } = await import("firebase/auth");
+    onAuthStateChanged.mockImplementationOnce((auth, callback) => {
+      callback(null);
+      return vi.fn();
+    });
+
     render(
       <UserProvider>
         <UserContext.Consumer>
@@ -35,28 +73,51 @@ describe("UserContext", () => {
     );
   });
 
-  /*it("should sign in a user successfully", async () => {
+  it("should sign in a user successfully", async () => {
     const mockEmail = "test@example.com";
     const mockPassword = "password123";
     const mockMessage = { signin: "Successfully logged in!" };
+    const mockUser = { 
+      uid: '123', 
+      email: mockEmail,
+      sendEmailVerification: vi.fn().mockResolvedValue(true)
+    };
 
-    signInWithEmailAndPassword.mockResolvedValueOnce({ user: { email: mockEmail } });
+    const { signInWithEmailAndPassword } = await import("firebase/auth");
+    signInWithEmailAndPassword.mockResolvedValueOnce({ user: mockUser });
+
+    let contextValue;
 
     render(
       <UserProvider>
         <UserContext.Consumer>
           {(value) => {
-            const signIn = async () => {
-              await value.signInUser(mockEmail, mockPassword);
-              expect(value.message).toEqual(mockMessage);
-            };
-            act(() => signIn());
+            contextValue = value;
             return null;
           }}
         </UserContext.Consumer>
       </UserProvider>
     );
-  });*/
+
+    await waitFor(() => expect(contextValue.signInUser).toBeDefined());
+
+    await act(async () => {
+      await contextValue.signInUser(mockEmail, mockPassword);
+    });
+
+    await waitFor(() => {
+      expect(contextValue.message).toEqual(mockMessage);
+      expect(contextValue.user).toEqual(expect.objectContaining({
+        email: mockEmail,
+        uid: '123'
+      }));
+      expect(signInWithEmailAndPassword).toHaveBeenCalledWith(
+        expect.anything(),
+        mockEmail,
+        mockPassword
+      );
+    });
+  });
 
   it("should sign up a user successfully", async () => {
     const mockEmail = "newuser@example.com";
@@ -64,44 +125,75 @@ describe("UserContext", () => {
     const mockDisplayName = "New User";
     const mockMessage = { signup: "Successful registration!" };
 
-    createUserWithEmailAndPassword.mockResolvedValueOnce({ user: { uid: "123" } });
+    const { 
+      createUserWithEmailAndPassword,
+      updateProfile,
+      sendEmailVerification
+    } = await import("firebase/auth");
+
+    let contextValue;
 
     render(
       <UserProvider>
         <UserContext.Consumer>
           {(value) => {
-            const signUp = async () => {
-              await value.signUpUser(mockEmail, mockPassword, mockDisplayName);
-              expect(value.message).toEqual(mockMessage);
-            };
-            act(() => signUp());
+            contextValue = value;
             return null;
           }}
         </UserContext.Consumer>
       </UserProvider>
     );
+
+    await waitFor(() => expect(contextValue.signUpUser).toBeDefined());
+
+    await act(async () => {
+      await contextValue.signUpUser(mockEmail, mockPassword, mockDisplayName);
+    });
+
+    await waitFor(() => {
+      expect(contextValue.message).toEqual(mockMessage);
+      expect(createUserWithEmailAndPassword).toHaveBeenCalledWith(
+        expect.anything(),
+        mockEmail,
+        mockPassword
+      );
+      expect(updateProfile).toHaveBeenCalled();
+      expect(sendEmailVerification).toHaveBeenCalled();
+    });
   });
 
   it("should send password reset email successfully", async () => {
     const mockEmail = "reset@example.com";
     const mockMessage = { resetPassword: "Password reset email sent!" };
 
-    sendPasswordResetEmail.mockResolvedValueOnce();
+    const { sendPasswordResetEmail } = await import("firebase/auth");
+
+    let contextValue;
 
     render(
       <UserProvider>
         <UserContext.Consumer>
           {(value) => {
-            const resetPassword = async () => {
-              await value.resetPassword(mockEmail);
-              expect(value.message).toEqual(mockMessage);
-            };
-            act(() => resetPassword());
+            contextValue = value;
             return null;
           }}
         </UserContext.Consumer>
       </UserProvider>
     );
+
+    await waitFor(() => expect(contextValue.resetPassword).toBeDefined());
+
+    await act(async () => {
+      await contextValue.resetPassword(mockEmail);
+    });
+
+    await waitFor(() => {
+      expect(contextValue.message).toEqual(mockMessage);
+      expect(sendPasswordResetEmail).toHaveBeenCalledWith(
+        expect.anything(),
+        mockEmail
+      );
+    });
   });
 
   it("should update user profile successfully", async () => {
@@ -109,63 +201,107 @@ describe("UserContext", () => {
     const mockPhotoURL = "http://example.com/photo.jpg";
     const mockMessage = { update: "Successful update!" };
 
-    updateProfile.mockResolvedValueOnce();
+    const { updateProfile } = await import("firebase/auth");
+
+    let contextValue;
 
     render(
       <UserProvider>
         <UserContext.Consumer>
           {(value) => {
-            const updateProfileTest = async () => {
-              await value.updateCredentials(mockDisplayName, mockPhotoURL);
-              expect(value.message).toEqual(mockMessage);
-            };
-            act(() => updateProfileTest());
+            contextValue = value;
             return null;
           }}
         </UserContext.Consumer>
       </UserProvider>
     );
+
+    await waitFor(() => expect(contextValue.updateCredentials).toBeDefined());
+
+    await act(async () => {
+      await contextValue.updateCredentials(mockDisplayName, mockPhotoURL);
+    });
+
+    await waitFor(() => {
+      expect(contextValue.message).toEqual(mockMessage);
+      expect(updateProfile).toHaveBeenCalledWith(
+        expect.anything(),
+        { displayName: mockDisplayName, photoURL: mockPhotoURL }
+      );
+    });
   });
 
   it("should log out a user successfully", async () => {
     const mockMessage = {};
 
-    signOut.mockResolvedValueOnce();
+    const { signOut, onAuthStateChanged } = await import("firebase/auth");
+    
+    // Override to return null after logout
+    onAuthStateChanged.mockImplementationOnce((auth, callback) => {
+      callback(null);
+      return vi.fn();
+    });
+
+    let contextValue;
 
     render(
       <UserProvider>
         <UserContext.Consumer>
           {(value) => {
-            const logout = async () => {
-              await value.logoutUser();
-              expect(value.message).toEqual(mockMessage);
-            };
-            act(() => logout());
+            contextValue = value;
             return null;
           }}
         </UserContext.Consumer>
       </UserProvider>
     );
+
+    await waitFor(() => expect(contextValue.logoutUser).toBeDefined());
+
+    await act(async () => {
+      await contextValue.logoutUser();
+    });
+
+    await waitFor(() => {
+      expect(contextValue.message).toEqual(mockMessage);
+      expect(contextValue.user).toBeNull();
+      expect(signOut).toHaveBeenCalled();
+    });
   });
 
   it("should delete user account successfully", async () => {
     const mockMessage = {};
 
-    deleteUser.mockResolvedValueOnce();
+    const { deleteUser, onAuthStateChanged } = await import("firebase/auth");
+    
+    // Override to return null after deletion
+    onAuthStateChanged.mockImplementationOnce((auth, callback) => {
+      callback(null);
+      return vi.fn();
+    });
+
+    let contextValue;
 
     render(
       <UserProvider>
         <UserContext.Consumer>
           {(value) => {
-            const deleteAccount = async () => {
-              await value.deleteAccount();
-              expect(deleteUser).toHaveBeenCalled();
-            };
-            act(() => deleteAccount());
+            contextValue = value;
             return null;
           }}
         </UserContext.Consumer>
       </UserProvider>
     );
+
+    await waitFor(() => expect(contextValue.deleteAccount).toBeDefined());
+
+    await act(async () => {
+      await contextValue.deleteAccount();
+    });
+
+    await waitFor(() => {
+      expect(deleteUser).toHaveBeenCalled();
+      expect(contextValue.user).toBeNull();
+      expect(contextValue.message).toEqual(mockMessage);
+    });
   });
 });
