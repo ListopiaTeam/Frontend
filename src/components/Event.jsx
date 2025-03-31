@@ -30,13 +30,12 @@ const Event = () => {
 								Listopia
 							</span>
 							<strong className="block mt-3 text-3xl sm:text-5xl font-extrabold text-white">
-								Be The Best
+								Create Lists!
 							</strong>
 						</h1>
 
 						<p className="text-lg sm:text-xl text-gray-200 max-w-2xl leading-relaxed">
-							Submit your list to be the winner of the List Creating event and
-							be on the leaderboard!
+							Submit a list to help other people discover new things!
 						</p>
 					</div>
 
