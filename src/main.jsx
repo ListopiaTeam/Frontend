@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import App from "./App.jsx";
 import "./index.css";
 import { UserProvider } from "./UserContext";
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import CreateList from "./pages/CreateList.jsx";
@@ -19,7 +19,7 @@ import PasswordReset from "./pages/PasswordReset.jsx";
 import Details from "./pages/Details.jsx";
 import { LastDocProvider } from "./context/LastDocContext.jsx";
 import AdminPanel from "./pages/AdminPanel.jsx";
-import EventPage from "./pages/EventPage.jsx"
+import EventPage from "./pages/EventPage.jsx";
 import Users from "./components/admin/Users.jsx";
 import ReportedPosts from "./components/admin/ReportedPosts.jsx";
 import CreateEvent from "./components/admin/CreateEvent.jsx";
@@ -27,176 +27,230 @@ import CreateEvent from "./components/admin/CreateEvent.jsx";
 const queryClient = new QueryClient();
 
 const AppWrapper = () => {
-  const location = useLocation();
-  const prevLocation = useRef(location.pathname);
+	const location = useLocation();
+	const prevLocation = useRef(location.pathname);
 
-  useEffect(() => {
-    prevLocation.current = location.pathname;
-  }, [location]);
+	useEffect(() => {
+		prevLocation.current = location.pathname;
+	}, [location]);
 
-  return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        <Route
-          path="/"
-          element={
-            location.pathname !== prevLocation.current ? (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.125 }}>
-                <App />
-              </motion.div>
-            ) : (
-              <App />
-            )
-          }
-        />
+	return (
+		<AnimatePresence mode="wait">
+			<Routes location={location} key={location.pathname}>
+				<Route
+					path="/"
+					element={
+						location.pathname !== prevLocation.current ? (
+							<motion.div
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								exit={{ opacity: 0 }}
+								transition={{ duration: 0.125 }}
+							>
+								<App />
+							</motion.div>
+						) : (
+							<App />
+						)
+					}
+				/>
 
-        <Route
-          path="/register"
-          element={
-            location.pathname !== prevLocation.current ? (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }}>
-                <Register />
-              </motion.div>
-            ) : (
-              <Register />
-            )
-          }
-        />
-        <Route
-          path="/login"
-          element={
-            location.pathname !== prevLocation.current ? (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }}>
-                <Login />
-              </motion.div>
-            ) : (
-              <Login />
-            )
-          }
-        />
-        <Route
-          path="/create"
-          element={
-            location.pathname !== prevLocation.current ? (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }}>
-                <CreateList />
-              </motion.div>
-            ) : (
-              <CreateList />
-            )
-          }
-        />
-        <Route
-          path="/lists"
-          element={
-            location.pathname !== prevLocation.current ? (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }}>
-                <Lists />
-              </motion.div>
-            ) : (
-              <Lists />
-            )
-          }
-        />
-        <Route
-          path="/*"
-          element={
-            location.pathname !== prevLocation.current ? (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }}>
-                <Error />
-              </motion.div>
-            ) : (
-              <Error />
-            )
-          }
-        />
+				<Route
+					path="/register"
+					element={
+						location.pathname !== prevLocation.current ? (
+							<motion.div
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								exit={{ opacity: 0 }}
+								transition={{ duration: 0.1 }}
+							>
+								<Register />
+							</motion.div>
+						) : (
+							<Register />
+						)
+					}
+				/>
+				<Route
+					path="/login"
+					element={
+						location.pathname !== prevLocation.current ? (
+							<motion.div
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								exit={{ opacity: 0 }}
+								transition={{ duration: 0.1 }}
+							>
+								<Login />
+							</motion.div>
+						) : (
+							<Login />
+						)
+					}
+				/>
+				<Route
+					path="/create"
+					element={
+						location.pathname !== prevLocation.current ? (
+							<motion.div
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								exit={{ opacity: 0 }}
+								transition={{ duration: 0.1 }}
+							>
+								<CreateList />
+							</motion.div>
+						) : (
+							<CreateList />
+						)
+					}
+				/>
+				<Route
+					path="/lists"
+					element={
+						location.pathname !== prevLocation.current ? (
+							<motion.div
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								exit={{ opacity: 0 }}
+								transition={{ duration: 0.1 }}
+							>
+								<Lists />
+							</motion.div>
+						) : (
+							<Lists />
+						)
+					}
+				/>
+				<Route
+					path="/*"
+					element={
+						location.pathname !== prevLocation.current ? (
+							<motion.div
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								exit={{ opacity: 0 }}
+								transition={{ duration: 0.1 }}
+							>
+								<Error />
+							</motion.div>
+						) : (
+							<Error />
+						)
+					}
+				/>
 
-        <Route
-          path="/profile"
-          element={
-            location.pathname !== prevLocation.current ? (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }}>
-                <Profile />
-              </motion.div>
-            ) : (
-              <Profile />
-            )
-          }
-        />
+				<Route
+					path="/profile"
+					element={
+						location.pathname !== prevLocation.current ? (
+							<motion.div
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								exit={{ opacity: 0 }}
+								transition={{ duration: 0.1 }}
+							>
+								<Profile />
+							</motion.div>
+						) : (
+							<Profile />
+						)
+					}
+				/>
 
-        <Route
-          path="/details/:id"
-          element={
-            location.pathname !== prevLocation.current ? (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }}>
-                <Details />
-              </motion.div>
-            ) : (
-              <Details />
-            )
-          }
-        />
+				<Route
+					path="/details/:id"
+					element={
+						location.pathname !== prevLocation.current ? (
+							<motion.div
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								exit={{ opacity: 0 }}
+								transition={{ duration: 0.1 }}
+							>
+								<Details />
+							</motion.div>
+						) : (
+							<Details />
+						)
+					}
+				/>
 
-        <Route
-          path="/currentEvent"
-          element={
-            location.pathname !== prevLocation.current ? (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }}>
-                <EventPage />
-              </motion.div>
-            ) : (
-              <EventPage />
-            )
-          }
-        />
+				<Route
+					path="/currentEvent"
+					element={
+						location.pathname !== prevLocation.current ? (
+							<motion.div
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								exit={{ opacity: 0 }}
+								transition={{ duration: 0.1 }}
+							>
+								<EventPage />
+							</motion.div>
+						) : (
+							<EventPage />
+						)
+					}
+				/>
 
-
-        <Route
-          path="/passwordreset"
-          element={
-            location.pathname !== prevLocation.current ? (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }}>
-                <PasswordReset />
-              </motion.div>
-            ) : (
-              <PasswordReset />
-            )
-          }
-        />
-        <Route
-          path="/adminpanel"
-          element={
-            location.pathname !== prevLocation.current ? (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }}>
-                <AdminPanel />
-              </motion.div>
-            ) : (
-              <AdminPanel />
-            )
-          }
-        >
-          <Route path="users" element={<Users />} />
-          <Route path="reportedposts" element={<ReportedPosts />} />
-          <Route path="createevent" element={<CreateEvent />} />
-        </Route>
-      </Routes>
-    </AnimatePresence>
-  );
+				<Route
+					path="/passwordreset"
+					element={
+						location.pathname !== prevLocation.current ? (
+							<motion.div
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								exit={{ opacity: 0 }}
+								transition={{ duration: 0.1 }}
+							>
+								<PasswordReset />
+							</motion.div>
+						) : (
+							<PasswordReset />
+						)
+					}
+				/>
+				<Route
+					path="/adminpanel"
+					element={
+						location.pathname !== prevLocation.current ? (
+							<motion.div
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								exit={{ opacity: 0 }}
+								transition={{ duration: 0.1 }}
+							>
+								<AdminPanel />
+							</motion.div>
+						) : (
+							<AdminPanel />
+						)
+					}
+				>
+					<Route path="users" element={<Users />} />
+					<Route path="reportedposts" element={<ReportedPosts />} />
+					<Route path="createevent" element={<CreateEvent />} />
+				</Route>
+			</Routes>
+		</AnimatePresence>
+	);
 };
 
 createRoot(document.getElementById("root")).render(
-  <QueryClientProvider client={queryClient}>
-    <LastDocProvider>
-      <UserProvider>
-        <BrowserRouter>
-          <div className="flex flex-col min-h-screen">
-            <Header />
-            <AppWrapper />
-            <ScrollTopButton />
-            <Footer />
-          </div>
-        </BrowserRouter>
-      </UserProvider>
-    </LastDocProvider>
-  </QueryClientProvider>
+	<QueryClientProvider client={queryClient}>
+		<LastDocProvider>
+			<UserProvider>
+				<BrowserRouter>
+					<div className="flex flex-col min-h-screen">
+						<Header />
+						<AppWrapper />
+						<ScrollTopButton />
+						<Footer />
+					</div>
+				</BrowserRouter>
+			</UserProvider>
+		</LastDocProvider>
+	</QueryClientProvider>,
 );
