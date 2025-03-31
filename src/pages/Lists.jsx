@@ -10,8 +10,7 @@ import {
 
 const Lists = () => {
 	const [selCateg, setSelCateg] = useState([]);
-	const [categoriesSelectionIsOpen, setCategoriesSelectionIsOpen] =
-		useState(false);
+	const [categoriesSelectionIsOpen, setCategoriesSelectionIsOpen] = useState(false);
 	const [gameQuery, setGameQuery] = useState("");
 	const [triggerSearch, setTriggerSearch] = useState(false);
 	const [selectedCategories, setSelectedCategories] = useState([]);
@@ -36,7 +35,7 @@ const Lists = () => {
 		isError,
 	} = useInfiniteQuery({
 		queryKey: ["topLists", selCateg],
-		queryFn: ({ pageParam = null }) => fetchLists(5, selCateg, pageParam),
+		queryFn: ({ pageParam = null }) => fetchLists(8, selCateg, pageParam),
 
 		getNextPageParam: (lastPage) => {
 			if (!lastPage?.lastDoc) return undefined;
@@ -106,7 +105,7 @@ const Lists = () => {
 	}, [tags]);
 
 	return (
-		<div className="mt-32 mx-8 pb-6">
+		<div className="mt-32 mb-6 px-6 container flex flex-col justify-center mx-auto">
 			<div className="mb-8">
 				<div className="flex flex-wrap gap-4 items-end">
 					{/* Search Input */}
@@ -196,7 +195,7 @@ const Lists = () => {
 				</p>
 			)}
 
-			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-8">
+			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-8">
 				{searchedGames ? (
 					searchedGames.length === 0 ? (
 						<div className="col-span-full text-center">
