@@ -45,7 +45,7 @@ const EventPage = () => {
 	const remainingLists = sortedLists?.slice(3);
 
 	return (
-		<div className="mt-28 font-mono">
+		<div className="mt-32 font-mono flex flex-col justify-center items-center">
 			{data?.length > 0 ? (
 				<div className="text-center mb-20">
 					<h1 className="text-4xl font-semibold text-rose-500 mb-5">
@@ -63,7 +63,7 @@ const EventPage = () => {
 			)}
 
 			{topLists?.length > 0 && (
-				<div className="mx-8 pb-6">
+				<div className="container flex flex-col justify-center mx-8 pb-6">
 					<h2 className="text-2xl font-semibold text-center mb-6">
 						Top 3 Most Liked Lists
 					</h2>
@@ -82,11 +82,11 @@ const EventPage = () => {
 							</div>
 						))}
 					</div>
-					<hr className="h-6" />
+					<hr className="h-6 mt-12" />
 				</div>
 			)}
 
-			<div className="mx-8 pb-6">
+			<div className="container mx-8 pb-6">
 				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
 					{remainingLists?.map((game) => (
 						<div key={game.listId}>
