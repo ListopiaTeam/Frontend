@@ -47,7 +47,7 @@ const CreateList = () => {
 	const [prevPageUrl, setPrevPageUrl] = useState(null);
 	const [loading, setLoading] = useState(false);
 	const [submitted, setSubmitted] = useState(false);
-	const [list, setList] = useState([]);
+	const [list, setList] = useState("");
 	const [activeEvent, setActiveEvent] = useState([]);
 
 	useEffect(() => {
