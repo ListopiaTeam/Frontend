@@ -10,7 +10,8 @@ import {
 
 const Lists = () => {
 	const [selCateg, setSelCateg] = useState([]);
-	const [categoriesSelectionIsOpen, setCategoriesSelectionIsOpen] = useState(false);
+	const [categoriesSelectionIsOpen, setCategoriesSelectionIsOpen] =
+		useState(false);
 	const [gameQuery, setGameQuery] = useState("");
 	const [triggerSearch, setTriggerSearch] = useState(false);
 	const [selectedCategories, setSelectedCategories] = useState([]);

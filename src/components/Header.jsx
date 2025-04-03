@@ -125,7 +125,7 @@ const Header = () => {
 							) : (
 								<div className="flex items-center space-x-4">
 									<NavLink
-										to="/profile"
+										to="/profile/profilesettings"
 										className="flex items-center space-x-2 text-white hover:text-rose-500 transition-colors"
 									>
 										<div className="h-8 w-8 rounded-full bg-gray-700 flex items-center justify-center">
@@ -295,7 +295,7 @@ const Header = () => {
 								) : (
 									<>
 										<NavLink
-											to="/profile"
+											to="/profile/profilesettings"
 											onClick={() => setShow(false)}
 											className={({ isActive }) =>
 												`block px-3 py-2 rounded-md transition-colors relative ${
