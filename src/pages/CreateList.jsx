@@ -74,7 +74,7 @@ const CreateList = () => {
 		);
 		setLoading(false);
 	};
-
+	
 	const {
 		data: tags,
 		isLoading,
@@ -128,7 +128,7 @@ const CreateList = () => {
 
 		try {
 			if (e.target[0].value.length <= 35 && e.target[1].value.length <= 200) {
-				await addList(formData, setList);
+				await addList(formData, setList, user?.uid);
 				setMsg("List successfully created!");
 				setTimeout(() => setMsg(""), 4000);
 				setSelectedGames([]);
