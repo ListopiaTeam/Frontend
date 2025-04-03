@@ -20,7 +20,7 @@ export const uploadFile = async (file) => {
 	}
 };
 
-const url = import.meta.env.VITE_RENDER_URL;
+const url = import.meta.env.VITE_BACKEND_URL;
 
 export const deletePhoto = async (id) => {
 	try {

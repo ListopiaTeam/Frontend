@@ -74,7 +74,7 @@ const CreateList = () => {
 		);
 		setLoading(false);
 	};
-	
+
 	const {
 		data: tags,
 		isLoading,

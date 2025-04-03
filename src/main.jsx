@@ -23,6 +23,9 @@ import EventPage from "./pages/EventPage.jsx";
 import Users from "./components/admin/Users.jsx";
 import ReportedPosts from "./components/admin/ReportedPosts.jsx";
 import CreateEvent from "./components/admin/CreateEvent.jsx";
+import ProfileSettings from "./pages/ProfileSettings.jsx";
+import LikedLists from "./pages/LikedLists.jsx";
+import MyLists from "./pages/MyLists.jsx";
 
 const queryClient = new QueryClient();
 
@@ -157,7 +160,11 @@ const AppWrapper = () => {
 							<Profile />
 						)
 					}
-				/>
+				>
+					<Route path="profilesettings" element={<ProfileSettings />} />
+					<Route path="likedlists" element={<LikedLists />} />
+					<Route path="mylists" element={<MyLists />} />
+				</Route>
 
 				<Route
 					path="/details/:id"

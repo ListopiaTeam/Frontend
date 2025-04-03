@@ -3,7 +3,7 @@ import { badWords } from "./badwords";
 import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "./firebaseApp";
 
-const URL = import.meta.env.VITE_RENDER_URL;
+const URL = import.meta.env.VITE_BACKEND_URL;
 
 export const searchGamesByName = async (
 	setGames,
