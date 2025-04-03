@@ -9,6 +9,7 @@ import {
 } from "../utility/crudUtility";
 
 const Lists = () => {
+	const orderOptions = ["Timestamp", "LikeCount", "Alphabetical"];
 	const [selCateg, setSelCateg] = useState([]);
 	const [categoriesSelectionIsOpen, setCategoriesSelectionIsOpen] =
 		useState(false);
@@ -16,6 +17,8 @@ const Lists = () => {
 	const [triggerSearch, setTriggerSearch] = useState(false);
 	const [selectedCategories, setSelectedCategories] = useState([]);
 	const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+	const [orderBy, setOrderBy] = useState("Timestamp");
+	const [isOrderOpen, setIsOrderOpen] = useState(false);
 
 	const {
 		data: tags,
@@ -77,7 +80,7 @@ const Lists = () => {
 		setSelCateg((prev) =>
 			prev.includes(category)
 				? prev.filter((c) => c !== category)
-				: [...prev, category],
+				: [...prev, category]
 		);
 	};
 
@@ -148,7 +151,9 @@ const Lists = () => {
 										: "All Categories"}
 								</span>
 								<span
-									className={`ml-2 transition-transform ${isCategoryOpen ? "rotate-180" : ""}`}
+									className={`ml-2 transition-transform ${
+										isCategoryOpen ? "rotate-180" : ""
+									}`}
 								>
 									▼
 								</span>
@@ -163,7 +168,11 @@ const Lists = () => {
 										{tags?.map((category, index) => (
 											<label
 												key={category}
-												className={`flex items-center p-3 space-x-3 cursor-pointer hover:bg-rose-300 ${selectedCategories.includes(category) ? "bg-rose-50" : ""} ${index % 2 == 0 ? "bg-rose-100" : ""}`}
+												className={`flex items-center p-3 space-x-3 cursor-pointer hover:bg-rose-300 ${
+													selectedCategories.includes(category)
+														? "bg-rose-50"
+														: ""
+												} ${index % 2 == 0 ? "bg-rose-100" : ""}`}
 											>
 												<input
 													type="checkbox"
@@ -172,6 +181,47 @@ const Lists = () => {
 													className="w-4 h-4 text-rose-600 rounded focus:ring-rose-500"
 												/>
 												<span className="flex-1 text-gray-700">{category}</span>
+											</label>
+										))}
+									</div>
+								</div>
+							)}
+						</div>
+					</div>
+
+					<div className="flex-1 min-w-[300px]">
+						<label className="block text-gray-700 text-sm font-bold mb-2">
+							Set Order:
+						</label>
+						<div className="relative">
+							<button
+								onClick={() => setIsOrderOpen(!isOrderOpen)}
+								className="w-full p-3 bg-white border border-gray-300 rounded-lg flex items-center justify-between hover:border-gray-400"
+							>
+								<span className="truncate">{orderBy}</span>
+								<span
+									className={`ml-2 transition-transform ${
+										isOrderOpen ? "rotate-180" : ""
+									}`}
+								>
+									▼
+								</span>
+							</button>
+							{isOrderOpen && (
+								<div className="absolute z-10 w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-xl">
+									<div className="divide-y">
+										{orderOptions.map((option) => (
+											<label
+												key={option}
+												onClick={() => {
+													setOrderBy(option);
+													setIsOrderOpen(false);
+												}}
+												className={`flex items-center p-3 space-x-3 cursor-pointer hover:bg-rose-300 ${
+													orderBy === option ? "bg-rose-50" : ""
+												}`}
+											>
+												<span className="flex-1 text-gray-700">{option}</span>
 											</label>
 										))}
 									</div>
@@ -240,7 +290,7 @@ const Lists = () => {
 									username={list?.username}
 								/>
 							</div>
-						)),
+						))
 					)
 				)}
 			</div>

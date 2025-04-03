@@ -117,10 +117,12 @@ const CreateList = () => {
 
 		const formData = {
 			title: e.target[0].value,
+			title_lowercase:e.target[0].value.toLowerCase(),
 			desc: e.target[1].value,
 			categories: selectedTags,
 			games: selectedGames,
 			likes: [],
+			likes_num:0,
 			userID: user.uid,
 			username: user.displayName,
 			reports: [],
