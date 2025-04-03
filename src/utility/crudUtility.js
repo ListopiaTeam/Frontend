@@ -16,10 +16,11 @@ import {
 	where,
 	limit,
 	startAfter,
+	arrayRemove,
 } from "firebase/firestore";
 import { db } from "./firebaseApp";
 
-export const addList = async (formData, setList) => {
+export const addList = async (formData, setList, user) => {
 	const collectionRef = collection(db, "Lists");
 	const newItem = { ...formData, timestamp: serverTimestamp() };
 
@@ -30,6 +31,15 @@ export const addList = async (formData, setList) => {
 	console.log(docRef.id);
 
 	setList(docRef.id);
+
+	const userRef = doc(db, "Users", user);
+	await setDoc(
+		userRef,
+		{
+			createdLists: arrayUnion(docRef.id),
+		},
+		{ merge: true }
+	);
 };
 
 //dump file creation
@@ -46,8 +56,8 @@ export const generateSchema = async (collectionName) => {
 			const type = Array.isArray(value)
 				? "array"
 				: value === null
-					? "null"
-					: typeof value;
+				? "null"
+				: typeof value;
 			schema[key] = type; // Egyedi mezőnév és típus tárolása
 		});
 	});
@@ -65,7 +75,7 @@ export const readList = (setList, selCateg) => {
 		q = query(
 			collectionRef,
 			where("categories", "array-contains-any", selCateg),
-			orderBy("timestamp", "desc"),
+			orderBy("timestamp", "desc")
 		);
 	}
 	const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -120,10 +130,22 @@ export const toggleLike = async (id, uid) => {
 	const docRef = doc(db, "Lists", id);
 	const docSnap = await getDoc(docRef);
 	const likesArr = docSnap.data().likes || [];
+
+	const userRef = doc(db, "Users", uid);
+	await setDoc(
+		userRef,
+		{
+			createdLists: arrayUnion(id),
+		},
+		{ merge: true }
+	);
+
 	if (likesArr.includes(uid)) {
-		await updateDoc(docRef, { likes: likesArr.filter((p_id) => p_id != uid) });
+		await updateDoc(docRef, { likes: likesArr.filter((p_id) => p_id !== uid) });
+		await updateDoc(userRef, { likedLists: arrayRemove(id) });
 	} else {
 		await updateDoc(docRef, { likes: [...likesArr, uid] });
+		await updateDoc(userRef, { likedLists: arrayUnion(id) });
 	}
 };
 
@@ -187,7 +209,7 @@ export const deleteList = async (id) => {
 
 		if (updatedSubmittedLists.includes(id)) {
 			updatedSubmittedLists = updatedSubmittedLists.filter(
-				(listId) => listId !== id,
+				(listId) => listId !== id
 			);
 
 			await updateDoc(eventDocRef, { submitedLists: updatedSubmittedLists });
@@ -208,7 +230,7 @@ export const deleteList = async (id) => {
 		await deleteDoc(docRef);
 
 		console.log(
-			`Document with ID ${id} and its subcollections deleted successfully.`,
+			`Document with ID ${id} and its subcollections deleted successfully.`
 		);
 	} catch (error) {
 		console.error("Error deleting document and subcollections:", error);
@@ -223,7 +245,7 @@ export const deleteComment = async (listId, commentId) => {
 
 		// Delete all replies
 		const deleteRepliesPromises = repliesSnapshot.docs.map((docSnap) =>
-			deleteDoc(doc(db, `Lists/${listId}/comments`, docSnap.id)),
+			deleteDoc(doc(db, `Lists/${listId}/comments`, docSnap.id))
 		);
 		await Promise.all(deleteRepliesPromises);
 		// Delete the main comment
@@ -260,14 +282,14 @@ export const fetchLists = async (listCount, selCateg, lastDoc) => {
 			listsQuery = query(
 				collection(db, "Lists"),
 				orderBy("timestamp", "desc"),
-				limit(listCount),
+				limit(listCount)
 			);
 		} else {
 			listsQuery = query(
 				collection(db, "Lists"),
 				where("categories", "array-contains-any", selCateg),
 				orderBy("timestamp", "desc"),
-				limit(listCount),
+				limit(listCount)
 			);
 		}
 
@@ -308,7 +330,7 @@ export const getReportedLists = async () => {
 	try {
 		const listsQuery = query(
 			collection(db, "Lists"),
-			orderBy("timestamp", "desc"),
+			orderBy("timestamp", "desc")
 		);
 
 		const querySnapshot = await getDocs(listsQuery);
@@ -350,7 +372,7 @@ export const fetchUsers = async () => {
 	try {
 		const usersQuery = query(
 			collection(db, "Users"),
-			orderBy("createdAt", "desc"),
+			orderBy("createdAt", "desc")
 		);
 
 		const querySnapshot = await getDocs(usersQuery);
@@ -445,7 +467,7 @@ export const searchListsByPrefix = async (prefix) => {
 				titleLowercase: doc.data().title.toLowerCase(),
 			}))
 			.filter(
-				(doc) => doc.titleLowercase.includes(prefix.toLowerCase()), // Changed from startsWith to includes
+				(doc) => doc.titleLowercase.includes(prefix.toLowerCase()) // Changed from startsWith to includes
 			);
 
 		return filteredLists;
