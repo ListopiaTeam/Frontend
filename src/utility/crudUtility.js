@@ -94,7 +94,6 @@ export const readLists = async (id) => {
 		return unsubscribe;
 	});
 };
-
 export const readEventLists = async (ids) => {
 	if (!ids || ids.length === 0) {
 		console.log("No submitted lists to fetch.");
@@ -108,7 +107,7 @@ export const readEventLists = async (ids) => {
 		const lists = listsDocs
 			.map((docSnapshot) => {
 				if (docSnapshot.exists()) {
-					return docSnapshot.data();
+					return { ...docSnapshot.data(), listId: docSnapshot.id }; // Attach the document ID
 				} else {
 					console.log(`No document found for ID: ${docSnapshot.id}`);
 					return null;
