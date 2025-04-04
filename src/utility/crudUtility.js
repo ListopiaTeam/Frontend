@@ -286,23 +286,24 @@ export const getUser = async (userId) => {
 	}
 };
 
-export const fetchLists = async (listCount, selCateg, selOrder, lastDoc) => {
-	console.log(selOrder);
-	
+export const fetchLists = async (listCount, selCateg, selOrderType, lastDoc) => {
 	try {
 		let listsQuery;
+		let order;
+		
+		selOrderType == "title_lowercase" ? order = "asc" : order = "desc";
 
 		if (selCateg.length === 0) {
 			listsQuery = query(
 				collection(db, "Lists"),
-				orderBy(selOrder, "desc"),
+				orderBy(selOrderType, order),
 				limit(listCount),
 			);
 		} else {
 			listsQuery = query(
 				collection(db, "Lists"),
 				where("categories", "array-contains-any", selCateg),
-				orderBy(selOrder, "desc"),
+				orderBy(selOrderType, order),
 				limit(listCount),
 			);
 		}
