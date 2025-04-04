@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery, useQueryClient } from "@tanstack/react-query";
 import ListCard from "../components/ListCard";
 import { getTags } from "../utility/rawgAPI";
 import {
@@ -9,17 +9,24 @@ import {
 } from "../utility/crudUtility";
 
 const Lists = () => {
-	const orderOptions = ["Timestamp", "LikeCount", "Alphabetical"];
 	const [selCateg, setSelCateg] = useState([]);
 	const [categoriesSelectionIsOpen, setCategoriesSelectionIsOpen] =
-		useState(false);
+	useState(false);
 	const [gameQuery, setGameQuery] = useState("");
 	const [triggerSearch, setTriggerSearch] = useState(false);
 	const [selectedCategories, setSelectedCategories] = useState([]);
 	const [isCategoryOpen, setIsCategoryOpen] = useState(false);
-	const [orderBy, setOrderBy] = useState("Timestamp");
-	const [isOrderOpen, setIsOrderOpen] = useState(false);
+	
+	// Key is what user is shown - Value is used for sorting logic, by default should be timestamp
+	const orderOptions = {
+		"Creation Date" : "timestamp",
+		"Like Amount" : "likes_num",
+		"Alphabetically" : "title_lowercase"
+	};
 
+	const [orderBy, setOrderBy] = useState(Object.keys(orderOptions)[0]);
+	const [isOrderOpen, setIsOrderOpen] = useState(false);
+	
 	const {
 		data: tags,
 		isLoading: loadingTags,
@@ -39,7 +46,7 @@ const Lists = () => {
 		isError,
 	} = useInfiniteQuery({
 		queryKey: ["topLists", selCateg],
-		queryFn: ({ pageParam = null }) => fetchLists(8, selCateg, pageParam),
+		queryFn: ({ pageParam = null }) => fetchLists(8, selCateg, orderOptions[orderBy], pageParam),
 
 		getNextPageParam: (lastPage) => {
 			if (!lastPage?.lastDoc) return undefined;
@@ -107,6 +114,12 @@ const Lists = () => {
 	useEffect(() => {
 		console.log("Tags data updated:", tags);
 	}, [tags]);
+
+	const queryClient = useQueryClient();
+	
+	useEffect(() => {
+		queryClient.invalidateQueries(["topLists", selCateg]); // Invalidate to refetch with new order
+	}, [orderBy, queryClient]);
 
 	return (
 		<div className="mt-32 mb-6 px-6 container flex flex-col justify-center mx-auto">
@@ -210,7 +223,7 @@ const Lists = () => {
 							{isOrderOpen && (
 								<div className="absolute z-10 w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-xl">
 									<div className="divide-y">
-										{orderOptions.map((option) => (
+										{Object.keys(orderOptions).map((option) => (
 											<label
 												key={option}
 												onClick={() => {

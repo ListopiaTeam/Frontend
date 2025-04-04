@@ -148,14 +148,14 @@ export const toggleLike = async (id, uid) => {
 	  // User is unliking: remove uid from likes array and decrement likes_num
 	  await updateDoc(docRef, { 
 		likes: likesArr.filter((p_id) => p_id !== uid),
-		likes_num: increment(1)
+		likes_num: increment(-1)
 	});
 	await updateDoc(userRef, { likedLists: arrayRemove(id) });
 } else {
 	// User is liking: add uid to likes array and increment likes_num
 	await updateDoc(docRef, { 
 		likes: [...likesArr, uid],
-		likes_num: increment(-1)
+		likes_num: increment(1)
 	  });
 	  await updateDoc(userRef, { likedLists: arrayUnion(id) });
 	}
@@ -286,21 +286,23 @@ export const getUser = async (userId) => {
 	}
 };
 
-export const fetchLists = async (listCount, selCateg, lastDoc) => {
+export const fetchLists = async (listCount, selCateg, selOrder, lastDoc) => {
+	console.log(selOrder);
+	
 	try {
 		let listsQuery;
 
 		if (selCateg.length === 0) {
 			listsQuery = query(
 				collection(db, "Lists"),
-				orderBy("timestamp", "desc"),
+				orderBy(selOrder, "desc"),
 				limit(listCount),
 			);
 		} else {
 			listsQuery = query(
 				collection(db, "Lists"),
 				where("categories", "array-contains-any", selCateg),
-				orderBy("timestamp", "desc"),
+				orderBy(selOrder, "desc"),
 				limit(listCount),
 			);
 		}
