@@ -26,6 +26,8 @@ import CreateEvent from "./components/admin/CreateEvent.jsx";
 import ProfileSettings from "./pages/ProfileSettings.jsx";
 import LikedLists from "./pages/LikedLists.jsx";
 import MyLists from "./pages/MyLists.jsx";
+import ArchivedEventsPage from "./pages/ArchivedEventsPage.jsx";
+import ArchivedEventDetails from "./pages/ArchivedEventDetails.jsx";
 
 const queryClient = new QueryClient();
 
@@ -220,6 +222,41 @@ const AppWrapper = () => {
 					}
 				/>
 				<Route
+					path="/archivedEvents"
+					element={
+						location.pathname !== prevLocation.current ? (
+							<motion.div
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								exit={{ opacity: 0 }}
+								transition={{ duration: 0.1 }}
+							>
+								<ArchivedEventsPage />
+							</motion.div>
+						) : (
+							<ArchivedEventsPage />
+						)
+					}
+				/>
+
+				<Route
+					path="/archivedEvents/:eventId"
+					element={
+						location.pathname !== prevLocation.current ? (
+							<motion.div
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								exit={{ opacity: 0 }}
+								transition={{ duration: 0.1 }}
+							>
+								<ArchivedEventDetails />
+							</motion.div>
+						) : (
+							<ArchivedEventDetails />
+						)
+					}
+				/>
+				<Route
 					path="/adminpanel"
 					element={
 						location.pathname !== prevLocation.current ? (
@@ -259,5 +296,5 @@ createRoot(document.getElementById("root")).render(
 				</BrowserRouter>
 			</UserProvider>
 		</LastDocProvider>
-	</QueryClientProvider>,
+	</QueryClientProvider>
 );

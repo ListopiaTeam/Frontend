@@ -79,6 +79,26 @@ const Event = () => {
 							</svg>
 							<span>Event Details</span>
 						</NavLink>
+
+						<NavLink
+							to="/archivedEvents"
+							className="flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 text-sm font-semibold text-gray-200 bg-white/10 rounded-lg backdrop-blur-sm hover:bg-white/20 transition-all border border-white/20 hover:border-white/30"
+						>
+							<svg
+								className="w-4 h-4"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									strokeWidth={2}
+									d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+								/>
+							</svg>
+							<span>Archived Events</span>
+						</NavLink>
 					</div>
 					{data?.[0].endDate && (
 						<div className="mt-12 flex items-center justify-center sm:justify-start gap-4 text-gray-300 text-sm">
