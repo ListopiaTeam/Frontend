@@ -42,10 +42,13 @@ const LikedLists = () => {
 		return <div>Error loading lists: {error.message}</div>;
 	}
 
+	// Sort by like amounts in descending order
+	const sortedData = data ? [...data].sort((a, b) => (b.likes_num || 0) - (a.likes_num || 0)) : [];
+
 	return (
 		<div>
 			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-8">
-				{data?.map((game, index) => (
+				{sortedData.map((game, index) => (
 					<div key={index}>
 						<ListCard
 							description={game.desc}
@@ -61,6 +64,7 @@ const LikedLists = () => {
 			</div>
 		</div>
 	);
+
 };
 
 export default LikedLists;
