@@ -1,6 +1,5 @@
-# Listopia Frontend
-
-## This project is still work in progress
+# Listopia Documentation
+- *Please note that this project is still work in progress*
 
 ## Requirements
 - Modern Web Browser
@@ -10,24 +9,34 @@
     - Account and content made by users can be deleted by the user themselves or by moderators
 
 ## Features & Usage Guide
+
 - ### Lists
+
 - ### Events
+
 - ### Social Features
     - #### Commenting & Replying
     - #### Liking Content
+
 - ### Moderation
     - #### Reporting Content
     - #### Moderator Tools
+
 - ### User Profile
     - #### Profile Settings
     - #### Own Lists
     - #### Liked Lists
 
 ## How It Works
+- ### Services Used
+    - Firebase (Database & Auth)
+    - RAWG API (Game Data)
+    - Cloudinary (Image Hosting)
+
 - ### Frontend
-    - Hosting: Netlify (Free Tier)
+    - #### Hosting: Netlify (Free Tier)
         - Automatically updates when changes are made to this repository
-    - Technologies:
+    - #### Technologies:
         - Frameworks:
             - React
             - TailwindCSS + HyperUI
@@ -35,11 +44,8 @@
         - Vite (Build Tool & Dev Server)
         - Bun (Package Management)
         - Prettier (Code Formatting)
-    - Services Used
-        - Firebase (Database & Auth)
-        - RAWG API (Game Data)
-        - Cloudinary (Image Hosting)
+
 - ### Backend
-    - Hosting: Self-hosting at home (Linux Server with Docker Containers)
+    - #### Hosting: Self-hosting at home (Linux Server with Docker Containers)
         - Automatically updates when changes are made to the backend repository
         - Has custom domain
