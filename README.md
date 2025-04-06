@@ -25,4 +25,21 @@
 
 ## How It Works
 - ### Frontend
+    - Hosting: Netlify (Free Tier)
+        - Automatically updates when changes are made to this repository
+    - Technologies:
+        - Frameworks:
+            - React
+            - TailwindCSS + HyperUI
+        - Other packages (React Query, Axios etc...)
+        - Vite (Build Tool & Dev Server)
+        - Bun (Package Management)
+        - Prettier (Code Formatting)
+    - Services Used
+        - Firebase (Database & Auth)
+        - RAWG API (Game Data)
+        - Cloudinary (Image Hosting)
 - ### Backend
+    - Hosting: Self-hosting at home (Linux Server with Docker Containers)
+        - Automatically updates when changes are made to the backend repository
+        - Has custom domain
