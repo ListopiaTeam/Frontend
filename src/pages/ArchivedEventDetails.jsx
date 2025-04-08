@@ -6,8 +6,7 @@ import ListCard from "../components/ListCard";
 
 const ArchivedEventDetails = () => {
 	const { state: eventData } = useLocation();
-    console.log(eventData);
-    
+	console.log(eventData);
 
 	const {
 		data: submittedLists,
@@ -29,16 +28,19 @@ const ArchivedEventDetails = () => {
 	if (error) return <div>Error loading submitted lists.</div>;
 
 	const eventEndDate = new Date(eventData.endDate.seconds * 1000);
-	const listsWithIds = submittedLists?.map((list, index) => ({
-		...list,
-		listId: eventData.submitedLists[index],
-	}));
+	const listsWithIds = submittedLists?.length
+		? submittedLists.map((list, index) => ({
+				...list,
+				listId: eventData.submitedLists[index],
+		  }))
+		: [];
 
-	const sortedLists = listsWithIds?.sort(
-		(a, b) => b.likes.length - a.likes.length,
+	const sortedLists = [...listsWithIds].sort(
+		(a, b) => b.likes.length - a.likes.length
 	);
-	const topLists = sortedLists?.slice(0, 3);
-	const remainingLists = sortedLists?.slice(3);
+
+	const topLists = sortedLists.slice(0, 3);
+	const remainingLists = sortedLists.slice(3);
 
 	return (
 		<div className="mt-32 font-mono flex flex-col justify-center items-center">
@@ -73,22 +75,28 @@ const ArchivedEventDetails = () => {
 				</div>
 			)}
 
-			<div className="container mx-8 pb-6">
-				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-					{remainingLists.map((game) => (
-						<ListCard
-							key={game.listId}
-							description={game.desc}
-							title={game.title}
-							likes={game.likes}
-							categories={game.categories}
-							url={game.games[0]?.background_image}
-							id={game.listId}
-							username={game.username}
-						/>
-					))}
+			{remainingLists.length > 0 ? (
+				<div className="container mx-8 pb-6">
+					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+						{remainingLists.map((game) => (
+							<ListCard
+								key={game.listId}
+								description={game.desc}
+								title={game.title}
+								likes={game.likes}
+								categories={game.categories}
+								url={game.games[0]?.background_image}
+								id={game.listId}
+								username={game.username}
+							/>
+						))}
+					</div>
 				</div>
-			</div>
+			) : (
+				<p className="text-center text-gray-500 italic pb-12">
+					No lists were submited to this event.
+				</p>
+			)}
 		</div>
 	);
 };
