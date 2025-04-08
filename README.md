@@ -24,8 +24,16 @@
 
 - ### Social Features
     - #### Commenting & Replying
-
+        - Users are able to comment under lists and are even able to reply under them
+            - Comments and replies have the commenter's username, profile picture and the comment's creation date attached
+        - Replies are limited to one level only to keep the comment section simple
+            - Replies are hidden by default and can be viewed by clicking the "**View *```amount of replies```* reply / replies**" button
     - #### Liking Content
+        - Lists can be liked by users
+            - Some example reasons why a user would use liking:
+                - Show appreciation to / agreement with the creator
+                - Help ranking lists in events
+                - Add the list to liked lists page as a "save for later feature" / "reminder"
 
 - ### Moderation
     - #### How To Become A Moderator / Admin
