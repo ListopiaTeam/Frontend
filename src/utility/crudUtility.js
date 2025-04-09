@@ -125,41 +125,44 @@ export const readEventLists = async (ids) => {
 		return [];
 	}
 };
-
 export const toggleLike = async (id, uid) => {
 	const docRef = doc(db, "Lists", id);
 	const docSnap = await getDoc(docRef);
 	const likesArr = docSnap.data().likes || [];
-	// likes_num holds the current number of likes (default to 0 if undefined)
 	const likesNum = docSnap.data().likes_num || 0;
-	
+  
 	console.log("Current likes:", likesNum);
   
 	const userRef = doc(db, "Users", uid);
 	await setDoc(
-		userRef,
-		{
-			createdLists: arrayUnion(id),
-		},
-		{ merge: true },
+	  userRef,
+	  {
+		createdLists: arrayUnion(id),
+	  },
+	  { merge: true }
 	);
   
 	if (likesArr.includes(uid)) {
-	  // User is unliking: remove uid from likes array and decrement likes_num
-	  await updateDoc(docRef, { 
-		likes: likesArr.filter((p_id) => p_id !== uid),
-		likes_num: increment(-1)
-	});
-	await updateDoc(userRef, { likedLists: arrayRemove(id) });
-} else {
-	// User is liking: add uid to likes array and increment likes_num
-	await updateDoc(docRef, { 
-		likes: [...likesArr, uid],
-		likes_num: increment(1)
+	  const updatedLikesArr = likesArr.filter((p_id) => p_id !== uid);
+	  const updatedLikesNum = Math.max(likesNum - 1, 0);
+  
+	  await updateDoc(docRef, {
+		likes: updatedLikesArr,
+		likes_num: updatedLikesNum,
+	  });
+	  await updateDoc(userRef, { likedLists: arrayRemove(id) });
+	} else {
+	  const updatedLikesArr = [...likesArr, uid];
+	  const updatedLikesNum = likesNum + 1;
+  
+	  await updateDoc(docRef, {
+		likes: updatedLikesArr,
+		likes_num: updatedLikesNum,
 	  });
 	  await updateDoc(userRef, { likedLists: arrayUnion(id) });
 	}
   };
+  
 
 export const addReport = async (listId, currentReport) => {
 	const reportsRef = collection(db, `Lists/${listId}/reports`);
