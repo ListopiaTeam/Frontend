@@ -9,5 +9,7 @@ export default defineConfig({
 		css: true,
 		environment: "jsdom",
 		setupFiles: "./src/tests/setup.js",
+		include:["./src/tests/*.test.js","./src/tests/*.test.jsx"],
+		outputFile: "test-results.json",
 	},
 });

@@ -491,3 +491,18 @@ export const searchListsByPrefix = async (prefix) => {
 		return [];
 	}
 };
+
+//resolve reports based on listID
+
+export const resolveReports = async (listId) => {
+	const reportsRef = collection(db, `Lists/${listId}/reports`);
+	const snapshot = await getDocs(reportsRef);
+
+	const deletePromises = snapshot.docs.map((docSnap) =>
+		deleteDoc(doc(db, `Lists/${listId}/reports`, docSnap.id))
+	);
+
+	await Promise.all(deletePromises);
+
+	return false;
+};

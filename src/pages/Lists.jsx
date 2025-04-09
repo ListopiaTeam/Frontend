@@ -1,32 +1,37 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useInfiniteQuery, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+	useInfiniteQuery,
+	useQuery,
+	useQueryClient,
+} from "@tanstack/react-query";
 import ListCard from "../components/ListCard";
 import { getTags } from "../utility/rawgAPI";
 import {
 	fetchLists,
 	getActiveEvent,
+	resolveReports,
 	searchListsByPrefix,
 } from "../utility/crudUtility";
 
 const Lists = () => {
 	const [selCateg, setSelCateg] = useState([]);
 	const [categoriesSelectionIsOpen, setCategoriesSelectionIsOpen] =
-	useState(false);
+		useState(false);
 	const [gameQuery, setGameQuery] = useState("");
 	const [triggerSearch, setTriggerSearch] = useState(false);
 	const [selectedCategories, setSelectedCategories] = useState([]);
 	const [isCategoryOpen, setIsCategoryOpen] = useState(false);
-	
+
 	// Key is what user is shown - Value is used for sorting logic, by default should be timestamp
 	const orderOptions = {
-		"Creation Date" : "timestamp",
-		"Like Amount" : "likes_num",
-		"Alphabetically" : "title_lowercase"
+		"Creation Date": "timestamp",
+		"Like Amount": "likes_num",
+		Alphabetically: "title_lowercase",
 	};
 
 	const [orderBy, setOrderBy] = useState(Object.keys(orderOptions)[0]);
 	const [isOrderOpen, setIsOrderOpen] = useState(false);
-	
+
 	const {
 		data: tags,
 		isLoading: loadingTags,
@@ -46,7 +51,8 @@ const Lists = () => {
 		isError,
 	} = useInfiniteQuery({
 		queryKey: ["topLists", selCateg],
-		queryFn: ({ pageParam = null }) => fetchLists(8, selCateg, orderOptions[orderBy], pageParam),
+		queryFn: ({ pageParam = null }) =>
+			fetchLists(8, selCateg, orderOptions[orderBy], pageParam),
 
 		getNextPageParam: (lastPage) => {
 			if (!lastPage?.lastDoc) return undefined;
@@ -116,7 +122,7 @@ const Lists = () => {
 	}, [tags]);
 
 	const queryClient = useQueryClient();
-	
+
 	useEffect(() => {
 		queryClient.invalidateQueries(["topLists", selCateg]); // Invalidate to refetch with new order
 	}, [orderBy, queryClient]);
