@@ -4,6 +4,7 @@ import {
 	deleteList,
 	fetchLists,
 	getReportedLists,
+	resolveReports,
 } from "../../utility/crudUtility";
 import { NavLink } from "react-router-dom";
 import Alert from "../Alert";
@@ -57,6 +58,18 @@ const ReportedPosts = () => {
 			}
 		}
 	};
+	
+	const resolveReportedList = async (id) => {
+		try {
+			await resolveReports(id)
+			queryClient.invalidateQueries(["reportedLists"]);
+			setAlertMsg("Resolved reports successfully.");
+			setTimeout(() => setAlertMsg(""), 3000);
+		} catch (error) {
+			setAlertErr("Error resolving list.");
+			setTimeout(() => setAlertErr(""), 3000);
+		}
+	}
 
 	return (
 		<div>
@@ -79,7 +92,7 @@ const ReportedPosts = () => {
 							<th className="px-6 py-3 text-sm font-medium text-gray-900">
 								Reported List
 							</th>
-							<th className="px-6 py-3 text-sm font-medium text-gray-900">
+							<th className="px-6 py-3 text-sm font-medium text-gray-900 text-center" colSpan={2}>
 								Actions
 							</th>
 						</tr>
@@ -115,6 +128,14 @@ const ReportedPosts = () => {
 										className="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 transition-all"
 									>
 										Delete
+									</button>
+								</td>
+								<td className="px-6 py-4 text-sm">
+									<button
+										onClick={() => resolveReportedList(post.id)}
+										className="px-4 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition-all"
+									>
+										Approve
 									</button>
 								</td>
 							</tr>
