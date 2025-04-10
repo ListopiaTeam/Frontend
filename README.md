@@ -5,12 +5,20 @@
 - *Please note that this project is still work in progress*
 - The website is available at: [https://listopia-frontend.netlify.app](https://listopia-frontend.netlify.app)
 
+## Short Explanation Of The Software
+
+- ### What Is Listopia?
+    - Listopia is a social website for creating recommendation lists
+
+- ### Target Audience
+    - Currently we're focusing on gaming so our users would most likely be gamers
+
 ## Requirements
 - Modern Web Browser
     - Currently the website works best on larger screens but most of it is usable on mobile as well
 - Active Internet Connection
 - Registration To Access All Features (Email, Username, Password & Optional Profile Picture)
-    - Account and content made by users can be deleted by the user themselves or by moderators
+    - Account and content made by users can be deleted by the user themselves or by admins
 
 ## Features & Usage Guide
 
@@ -25,10 +33,14 @@
         - Option To Submit To Current Event
 
 - ### Events
-    - These are made so users can collectively submit to one current theme
-    - Top 3 liked lists are separated from the rest
-    - There is a deadline for submission and only newly created lists can participate
-        - After the deadline is over, events get archived
+    - #### User-side
+        - These are made so users can collectively submit to one current theme
+        - Top 3 liked lists are separated from the rest
+        - There is a deadline for submission and only newly created lists can participate
+            - After the deadline is over, events get archived
+    - #### Admin-side
+        - Admins can create events inside the Admin panel
+            - Events require: name, description, deadline, and an image
 
 - ### Social Features
 
@@ -47,12 +59,20 @@
 
 - ### Moderation
 
-    - #### How To Become A Moderator / Admin
+    - #### How To Become An Admin
         - Add ```isAdmin``` boolean to the user with ```true``` value
 
     - #### Reporting Content
+        - Users have the option to report lists for various reasons if they see the content doesn't fit the site
+        - Reports can only be sent once per list
+            - Some reasons for reporting include: "Hate Speech", "Spam", "Misinformation" etc...
 
-    - #### Moderator Tools
+    - #### Admin Tools
+        - Reported content goes into a moderation queue
+            - Admins here can decide if the content fits the site or not
+                - If it doesn't fit the site, the content can be removed
+                - If it's a false report, the content gets "approved" and gets cleared from the queue
+        - Problematic users can be deleted from the admin panel
 
 - ### User Profile
 
