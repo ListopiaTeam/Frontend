@@ -54,10 +54,10 @@ describe("UserContext", () => {
 		vi.clearAllMocks();
 	});
 
-	it("should initialize with user as null", async () => {
+	it("should initialize with user as undefinied", async () => {
 		const { onAuthStateChanged } = await import("firebase/auth");
 		onAuthStateChanged.mockImplementationOnce((auth, callback) => {
-			callback(null);
+			callback(undefined);
 			return vi.fn();
 		});
 
@@ -65,8 +65,8 @@ describe("UserContext", () => {
 			<UserProvider>
 				<UserContext.Consumer>
 					{(value) => {
-						expect(value.user).toBeNull();
-						return null;
+						expect(value.user).toBeUndefined();
+						return undefined;
 					}}
 				</UserContext.Consumer>
 			</UserProvider>,
