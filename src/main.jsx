@@ -6,6 +6,7 @@ import App from "./App.jsx";
 import "./index.css";
 import { UserProvider } from "./UserContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import ShowTestResults from "./components/admin/ShowTestResults.jsx";
 
 const Login = lazy(()=> import("./pages/Login.jsx"));
 const Register = lazy(()=> import("./pages/Register.jsx"));
@@ -28,7 +29,7 @@ const LikedLists = lazy(()=> import("./pages/LikedLists.jsx"));
 const MyLists = lazy(()=> import("./pages/MyLists.jsx"));
 const ArchivedEventsPage = lazy(()=> import("./pages/ArchivedEventsPage.jsx"));
 const ArchivedEventDetails = lazy(()=> import("./pages/ArchivedEventDetails.jsx"));
-const SchemaViewer = lazy(()=> import("./pages/Schema_temp.jsx"));
+const SchemaViewer = lazy(()=> import("./components/admin/Schema_temp.jsx"));
 
 const queryClient = new QueryClient();
 
@@ -112,6 +113,7 @@ const AppWrapper = () => {
 						)
 					}
 				/>
+				
 				<Route
 					path="/lists"
 					element={
@@ -292,6 +294,23 @@ const AppWrapper = () => {
 							</motion.div>
 						) : (
 							<SchemaViewer />
+						)
+					}
+				/>
+				<Route
+					path="tests"
+					element={
+						location.pathname !== prevLocation.current ? (
+							<motion.div
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								exit={{ opacity: 0 }}
+								transition={{ duration: 0.1 }}
+							>
+								<ShowTestResults />
+							</motion.div>
+						) : (
+							<ShowTestResults />
 						)
 					}
 				/>
