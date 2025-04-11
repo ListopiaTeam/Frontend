@@ -1,9 +1,13 @@
 # Listopia Documentation
 
-![Listopia](./public/Listopia_Icon_v2_big.png)
-
-- *Please note that this project is still work in progress*
-- The website is available at: [https://listopia-frontend.netlify.app](https://listopia-frontend.netlify.app)
+<center>
+    <img src="./public/Listopia_Icon_v2_big.png" alt="Listopia Logo">
+    <p>
+        <i>Please note that this project is still work in progress</i>
+        <br>
+        The website is available at: <a href="https://listopia-frontend.netlify.app">https://listopia-frontend.netlify.app</a>
+    </p>
+</center>
 
 ## Short Explanation Of The Software
 
@@ -24,15 +28,22 @@
 
 - ### Lists
     - ***The Main Feature & Purpose Of The Site***
-    - Creating A List:
+    
+    - #### Creating A List:
         - Automatically Selected Image From The First Game Contained In The List
         - Tags
         - Title
         - Description
         - Games
         - Option To Submit To Current Event
+    
+    - #### Browsing Lists:
+        - Search by title
+        - Filter by categories
+        - Order by creation date, like count and alphabetically
 
 - ### Events
+
     - #### User-side
         - These are made so users can collectively submit to one current theme
         - Top 3 liked lists are separated from the rest
