@@ -9,7 +9,7 @@ const Home = () => {
 
 	const { data, isLoading, isError, error } = useQuery({
 		queryKey: ["infiniteLists"],
-		queryFn: () => fetchLists(Infinity, selCateg, "likes_num", null),
+		queryFn: () => fetchLists(3, selCateg, "likes_num", null),
 		select: (data) =>
 			data?.docs?.sort((a, b) => b.likes.length - a.likes.length) || [],
 	});

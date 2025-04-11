@@ -31,7 +31,7 @@ const ListCard = ({ categories, title, description, likes, url, id }) => {
 		<article className="group relative h-full w-[90%] m-auto overflow-hidden rounded-2xl bg-slate-100 shadow-lg shadow-gray-100/40 transition-all duration-300 hover:shadow-xl hover:shadow-gray-200/50 flex flex-col">
 			<div className="relative aspect-[5/3] overflow-hidden">
 				{url ? (
-					<img
+					<img loading="lazy"
 						src={url}
 						alt={description}
 						className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"

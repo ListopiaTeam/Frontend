@@ -48,7 +48,7 @@ const Header = () => {
 				<div className="flex items-center justify-between h-16">
 					{/* Logo */}
 					<NavLink to="/" className="flex items-center space-x-2">
-						<img
+						<img loading="lazy"
 							src="/Listopia_Icon_v2_big.png"
 							alt="Listopia"
 							className="h-8 w-8 transition-transform hover:scale-105"
@@ -130,7 +130,7 @@ const Header = () => {
 									>
 										<div className="h-8 w-8 rounded-full bg-gray-700 flex items-center justify-center">
 											{avatar ? (
-												<img
+												<img loading="lazy"
 													className="h-8 w-8 rounded-full"
 													src={avatar}
 													alt="Profile picture"
