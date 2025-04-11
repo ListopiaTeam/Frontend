@@ -89,8 +89,6 @@ const CommentSection = ({ currentComment, listId, userUid, isAdmin }) => {
 
 		if (!replyText) return;
 
-		console.log(`Reply to comment ${commentId}:`, replyText);
-
 		const newReply = {
 			content: replyText,
 

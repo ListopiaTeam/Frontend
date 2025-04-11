@@ -14,7 +14,6 @@ const Event = () => {
 	const daysRemaining = Math.ceil(
 		(eventEndDate - currentDate) / (1000 * 3600 * 24),
 	);
-	console.log(data?.[0]?.eventImage);
 
 	return (
 		<section

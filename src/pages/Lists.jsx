@@ -10,12 +10,11 @@ import {
 } from "../utility/crudUtility";
 
 const Lists = () => {
-  const [selCateg, setSelCateg] = useState([]);
-  const [categoriesSelectionIsOpen, setCategoriesSelectionIsOpen] = useState(false);
-  const [gameQuery, setGameQuery] = useState("");
-  const [triggerSearch, setTriggerSearch] = useState(false);
-  const [selectedCategories, setSelectedCategories] = useState([]);
-  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+	const [selCateg, setSelCateg] = useState([]);
+	const [gameQuery, setGameQuery] = useState("");
+	const [triggerSearch, setTriggerSearch] = useState(false);
+	const [selectedCategories, setSelectedCategories] = useState([]);
+	const [isCategoryOpen, setIsCategoryOpen] = useState(false);
 
   // Key is what user is shown - Value is used for sorting logic, by default should be timestamp
   const orderOptions = {
@@ -111,10 +110,6 @@ const Lists = () => {
   useEffect(() => {
     setTriggerSearch(false);
   }, [searchedGames]);
-
-  useEffect(() => {
-    console.log("Tags data updated:", tags);
-  }, [tags]);
 
   const queryClient = useQueryClient();
 

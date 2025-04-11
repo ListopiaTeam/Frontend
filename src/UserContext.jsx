@@ -55,7 +55,6 @@ export const UserProvider = ({ children }) => {
 			const user = userCredential.user;
 
 			await sendEmailVerification(user);
-			console.log("Verification email sent!");
 			await updateProfile(user, { displayName });
 			await setDoc(doc(db, "Users", user.uid), {
 				uid: user.uid,
@@ -107,7 +106,6 @@ export const UserProvider = ({ children }) => {
 		try {
 			await deleteDoc(userDocRef);
 			await deleteUser(auth.currentUser);
-			console.log("sikeres torles!");
 		} catch (error) {
 			console.log(error);
 		}

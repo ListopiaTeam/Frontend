@@ -6,7 +6,6 @@ import ListCard from "../components/ListCard";
 
 const ArchivedEventDetails = () => {
 	const { state: eventData } = useLocation();
-	console.log(eventData);
 
 	const {
 		data: submittedLists,
