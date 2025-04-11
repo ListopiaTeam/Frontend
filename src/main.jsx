@@ -17,7 +17,6 @@ import Profile from "./pages/Profile.jsx";
 import Lists from "./pages/Lists.jsx";
 import PasswordReset from "./pages/PasswordReset.jsx";
 import Details from "./pages/Details.jsx";
-import { LastDocProvider } from "./context/LastDocContext.jsx";
 import AdminPanel from "./pages/AdminPanel.jsx";
 import EventPage from "./pages/EventPage.jsx";
 import Users from "./components/admin/Users.jsx";
@@ -302,7 +301,6 @@ const AppWrapper = () => {
 
 createRoot(document.getElementById("root")).render(
 	<QueryClientProvider client={queryClient}>
-		<LastDocProvider>
 			<UserProvider>
 				<BrowserRouter>
 					<div className="flex flex-col min-h-screen">
@@ -313,6 +311,5 @@ createRoot(document.getElementById("root")).render(
 					</div>
 				</BrowserRouter>
 			</UserProvider>
-		</LastDocProvider>
 	</QueryClientProvider>
 );
