@@ -17,7 +17,7 @@ const Event = () => {
 
 	return (
 		<section
-			style={{ backgroundImage: `url(${data?.[0]?.eventImage})` }}
+			style={{ backgroundImage: `url(${data?.[0]?.eventImage || "Banner.jpg"})` }}
 			className={`relative min-h-[80vh] bg-cover bg-center bg-no-repeat bg-fixed`}
 		>
 			<div className="absolute inset-0 bg-gradient-to-t sm:bg-gradient-to-tr from-gray-900/95 via-gray-900/70 to-transparent"></div>
