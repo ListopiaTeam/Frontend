@@ -17,6 +17,13 @@
 - ### Target Audience
     - Currently we're focusing on gaming so our users would most likely be gamers
 
+## Development
+- We're using GitHub Projects To Track Issues & Our To-Do List
+    - [Frontend](https://github.com/orgs/ListopiaTeam/projects/2)
+    - [Backend](https://github.com/orgs/ListopiaTeam/projects/3)
+- Code is formatted using Prettier - ```bunx prettier --write .```
+- There are some tests available as well
+
 ## Requirements
 - Modern Web Browser
     - Currently the website works best on larger screens but most of it is usable on mobile as well
