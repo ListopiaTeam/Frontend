@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { generateSchema } from '../utility/generateFirebaseScema';
+import { generateSchema } from '../../utility/generateFirebaseScema';
 
 export default function SchemaInspector() {
   const [mainSchema, setMainSchema] = useState(null);
@@ -17,7 +17,7 @@ export default function SchemaInspector() {
     setSubSchema(null);
 
     try {
-      const main = await generateSchema(collectionName, null, includeSubcollections, depth);
+      const main = await generateSchema(collectionName);
       setMainSchema(main);
 
       if (subCollectionName) {
@@ -53,8 +53,8 @@ export default function SchemaInspector() {
     if (value?.type === 'object' && value.schema) {
       return (
         <div className={`${indent} mt-1`}>
-          <span className="font-bold text-blue-600">{key}:</span>
-          <span className="ml-2 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">object</span>
+          <span className="font-bold text-red-600">{key}:</span>
+          <span className="ml-2 px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs">object</span>
           <div className={`${indent} ml-4 border-l-2 border-blue-200 pl-4`}>
             {Object.entries(value.schema).map(([subKey, subValue]) => 
               renderField(subKey, subValue, level + 1)
@@ -121,7 +121,7 @@ export default function SchemaInspector() {
               type="text"
               value={collectionName}
               onChange={(e) => setCollectionName(e.target.value)}
-              className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500"
               placeholder="e.g., posts, users"
             />
           </div>
@@ -132,47 +132,19 @@ export default function SchemaInspector() {
               type="text"
               value={subCollectionName}
               onChange={(e) => setSubCollectionName(e.target.value)}
-              className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500"
               placeholder="e.g., comments, items"
             />
           </div>
 
-          <div className="flex space-x-4">
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                id="includeSubcollections"
-                checked={includeSubcollections}
-                onChange={(e) => setIncludeSubcollections(e.target.checked)}
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <label htmlFor="includeSubcollections" className="ml-2 text-sm text-gray-700">
-                Include Subcollections
-              </label>
-            </div>
-
-            {includeSubcollections && (
-              <div className="flex items-center">
-                <label htmlFor="depth" className="mr-2 text-sm text-gray-700">Depth:</label>
-                <select
-                  id="depth"
-                  value={depth}
-                  onChange={(e) => setDepth(parseInt(e.target.value))}
-                  className="px-2 py-1 border rounded-md"
-                >
-                  {[1, 2, 3].map((n) => (
-                    <option key={n} value={n}>{n}</option>
-                  ))}
-                </select>
-              </div>
-            )}
-          </div>
+         
+          
 
           <button
             onClick={handleSchemaGeneration}
             disabled={isLoading}
             className={`px-4 py-2 rounded-md text-white font-medium ${
-              isLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
+              isLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-500 hover:bg-red-500'
             }`}
           >
             {isLoading ? 'Analyzing...' : 'Analyze Collection'}

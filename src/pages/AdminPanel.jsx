@@ -70,6 +70,13 @@ export default function AdminPanel() {
 						>
 							View Schemas
 						</NavLink>
+						<NavLink
+							to={"/adminpanel/tests"}
+							className={`w-full sm:w-auto px-6 py-2 text-lg font-semibold ${activeTab === "tests" ? "border-b-2 border-rose-600 text-rose-600" : "text-gray-500"}`}
+							onClick={() => setActiveTab("tests")}
+						>
+							View Tests
+						</NavLink>
 					</div>
 					<Outlet/>
 				</div>
