@@ -1,13 +1,23 @@
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import React, { useEffect } from "react";
 import { getActiveEvent, readEventLists } from "../utility/crudUtility";
 import ListCard from "../components/ListCard";
+import { useQueryClient } from '@tanstack/react-query';
 
 const EventPage = () => {
   const { data, error, isLoading } = useQuery({
     queryKey: ["activeEvent"],
     queryFn: () => getActiveEvent(),
   });
+
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+
+      queryClient.removeQueries(["submittedLists", data?.[0]?.id]);
+    
+    
+  }, []);
 
   const {
     data: submittedLists,
@@ -33,14 +43,20 @@ const EventPage = () => {
     (eventEndDate - currentDate) / (1000 * 3600 * 24),
   );
 
-  const listsWithIds = submittedLists?.map((list, index) => ({
-    ...list,
-    listId: data[0].submitedLists[index],
-  }));
+ 
+  let listsWithIds
+  if( submittedLists?.length > 0){
+    listsWithIds = submittedLists?.map((list, index) => ({
+      ...list,
+      listId: data[0].submitedLists[index],
+    }));
+  }
 
   const sortedLists = listsWithIds?.sort(
     (a, b) => b.likes.length - a.likes.length,
   );
+
+  
   const topLists = sortedLists?.slice(0, 3);
   const remainingLists = sortedLists?.slice(3);
 

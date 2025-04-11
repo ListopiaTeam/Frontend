@@ -113,14 +113,7 @@ export const toggleLike = async (id, uid) => {
 	console.log("Current likes:", likesNum);
   
 	const userRef = doc(db, "Users", uid);
-	await setDoc(
-	  userRef,
-	  {
-		createdLists: arrayUnion(id),
-	  },
-	  { merge: true }
-	);
-  
+
 	if (likesArr.includes(uid)) {
 	  const updatedLikesArr = likesArr.filter((p_id) => p_id !== uid);
 	  const updatedLikesNum = Math.max(likesNum - 1, 0);
@@ -177,58 +170,55 @@ export const listenToComments = (listId, setComments) => {
 		setComments(comments);
 	});
 };
-
 export const deleteList = async (id) => {
-	try {
-		const eventIds = await getActiveEventIds();
+    try {
+        try {
+            const eventIds = await getActiveEventIds();
+            if (eventIds?.length > 0) {
+                const eventId = eventIds[0];
+                const eventDocRef = doc(db, "Events", eventId);
+                const eventSnapshot = await getDoc(eventDocRef);
 
-		if (!eventIds || eventIds.length === 0) {
-			console.error("No active event found.");
-			return;
-		}
+                if (eventSnapshot.exists()) {
+                    const eventData = eventSnapshot.data() || {};
+                    const submittedLists = Array.isArray(eventData.submitedLists) 
+                        ? eventData.submitedLists 
+                        : [];
+                    
+                    if (submittedLists.includes(id)) {
+                        await updateDoc(eventDocRef, {
+                            submitedLists: submittedLists.filter(listId => listId !== id)
+                        });
+                        console.log(`Removed list ${id} from event ${eventId}`);
+                    }
+                }
+            }
+        } catch (eventError) {
+            console.warn("Couldn't update event (proceeding with deletion):", eventError);
+        }
 
-		const eventId = eventIds[0];
+   
+        const listRef = doc(db, "Lists", id);
+        
 
-		const eventDocRef = doc(db, "Events", eventId);
+        await Promise.allSettled(["comments", "reports"].map(async (subcol) => {
+            try {
+                const subColRef = collection(db, "Lists", id, subcol);
+                const snapshot = await getDocs(subColRef);
+                await Promise.all(snapshot.docs.map(d => deleteDoc(d.ref)));
+            } catch (subColError) {
+                console.warn(`Couldn't delete ${subcol} subcollection:`, subColError);
+            }
+        }));
 
-		const eventSnapshot = await getDoc(eventDocRef);
+        
+        await deleteDoc(listRef);
+        console.log(`List ${id} fully deleted`);
 
-		if (!eventSnapshot.exists()) {
-			console.error(`Active event document with ID ${eventId} not found.`);
-			return;
-		}
-
-		const eventData = eventSnapshot.data();
-		let updatedSubmittedLists = eventData.submitedLists || [];
-
-		if (updatedSubmittedLists.includes(id)) {
-			updatedSubmittedLists = updatedSubmittedLists.filter(
-				(listId) => listId !== id,
-			);
-
-			await updateDoc(eventDocRef, { submitedLists: updatedSubmittedLists });
-			console.log(`Removed ID ${id} from submitedLists`);
-		}
-
-		const docRef = doc(db, "Lists", id);
-
-		const subcollections = ["comments", "reports"];
-		for (const subcollection of subcollections) {
-			const subCollectionRef = collection(db, "Lists", id, subcollection);
-			const snapshot = await getDocs(subCollectionRef);
-
-			const deletePromises = snapshot.docs.map((doc) => deleteDoc(doc.ref));
-			await Promise.all(deletePromises);
-		}
-
-		await deleteDoc(docRef);
-
-		console.log(
-			`Document with ID ${id} and its subcollections deleted successfully.`,
-		);
-	} catch (error) {
-		console.error("Error deleting document and subcollections:", error);
-	}
+    } catch (mainError) {
+        console.error("Critical deletion error:", mainError);
+        throw mainError; 
+    }
 };
 
 export const deleteComment = async (listId, commentId) => {
