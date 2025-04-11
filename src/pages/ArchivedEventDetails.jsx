@@ -43,24 +43,26 @@ const ArchivedEventDetails = () => {
 	const remainingLists = sortedLists.slice(3);
 
 	return (
-		<div className="mt-32 font-mono flex flex-col justify-center items-center">
-			<div className="text-center mb-20">
+		<main className="mt-32 font-mono flex flex-col justify-center items-center">
+		<section className="text-center mb-20">
+			<header>
 				<h1 className="text-4xl font-semibold text-rose-500 mb-5">
 					<span className="text-black">Archived Event:</span> {eventData.title}
 				</h1>
-				<p className="italic mb-3">Description: {eventData.desc}</p>
-				<p className="text-gray-600">Ended: {eventEndDate.toDateString()}</p>
-			</div>
+			</header>
+			<p className="italic mb-3">Description: {eventData.desc}</p>
+			<p className="text-gray-600">Ended: {eventEndDate.toDateString()}</p>
+		</section>
 
-			{topLists?.length > 0 && (
-				<div className="container flex flex-col justify-center mx-8 pb-6">
-					<h2 className="text-2xl font-semibold text-center mb-6">
-						Top 3 Most Liked Lists
-					</h2>
-					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-						{topLists.map((game) => (
+		{topLists?.length > 0 && (
+			<section className="container flex flex-col justify-center mx-8 pb-6">
+				<h2 className="text-2xl font-semibold text-center mb-6">
+					Top 3 Most Liked Lists
+				</h2>
+				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+					{topLists.map((game) => (
+						<article key={game.listId}>
 							<ListCard
-								key={game.listId}
 								description={game.desc}
 								title={game.title}
 								likes={game.likes}
@@ -69,18 +71,19 @@ const ArchivedEventDetails = () => {
 								id={game.listId}
 								username={game.username}
 							/>
-						))}
-					</div>
-					<hr className="h-6 mt-12" />
+						</article>
+					))}
 				</div>
-			)}
+				<hr className="h-6 mt-12" />
+			</section>
+		)}
 
-			{remainingLists.length > 0 ? (
-				<div className="container mx-8 pb-6">
-					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-						{remainingLists.map((game) => (
+		{remainingLists.length > 0 ? (
+			<section className="container mx-8 pb-6">
+				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+					{remainingLists.map((game) => (
+						<article key={game.listId}>
 							<ListCard
-								key={game.listId}
 								description={game.desc}
 								title={game.title}
 								likes={game.likes}
@@ -89,15 +92,19 @@ const ArchivedEventDetails = () => {
 								id={game.listId}
 								username={game.username}
 							/>
-						))}
-					</div>
+						</article>
+					))}
 				</div>
-			) : (
+			</section>
+		) : (
+			<footer>
 				<p className="text-center text-gray-500 italic pb-12">
-					No lists were submited to this event.
+					No lists were submitted to this event.
 				</p>
-			)}
-		</div>
+			</footer>
+		)}
+	</main>
+
 	);
 };
 

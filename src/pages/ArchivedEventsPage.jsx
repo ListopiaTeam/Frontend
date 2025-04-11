@@ -15,8 +15,11 @@ const ArchivedEventsPage = () => {
   }, []);
 
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-6">Archived Events</h2>
+    <main className="p-6">
+    <section>
+      <header>
+        <h2 className="text-2xl font-bold mb-6">Archived Events</h2>
+      </header>
 
       {archivedEvents.length === 0 ? (
         <p className="text-gray-500">No archived events yet.</p>
@@ -24,34 +27,35 @@ const ArchivedEventsPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {archivedEvents.map((event) => (
             <NavLink
-            to={`/archivedEvents/${event.id}`}
-            key={event.id}
-            state={event}
-          >
-            {/* Event Card */}
-            <div
+              to={`/archivedEvents/${event.id}`}
               key={event.id}
-              className="relative rounded-2xl overflow-hidden shadow-lg h-64 group"
-              style={{
-                backgroundImage: `url(${event.eventImage})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
+              state={event}
+            >
+              <article
+                className="relative rounded-2xl overflow-hidden shadow-lg h-64 group"
+                style={{
+                  backgroundImage: `url(${event.eventImage})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }}
               >
-              <div className="absolute inset-0 bg-black bg-opacity-50 group-hover:bg-opacity-60 transition" />
+                <div className="absolute inset-0 bg-black bg-opacity-50 group-hover:bg-opacity-60 transition" />
 
-              <div className="absolute bottom-0 p-4 text-white z-10">
-                <h3 className="text-xl font-semibold">{event.title}</h3>
-                <p className="text-sm">
-                  Ended: {event.endDate.toDate().toLocaleDateString()}
-                </p>
-              </div>
-            </div>
-              </NavLink>
+                <div className="absolute bottom-0 p-4 text-white z-10">
+                  <header>
+                    <h3 className="text-xl font-semibold">{event.title}</h3>
+                    <p className="text-sm">
+                      Ended: {event.endDate.toDate().toLocaleDateString()}
+                    </p>
+                  </header>
+                </div>
+              </article>
+            </NavLink>
           ))}
         </div>
       )}
-    </div>
+    </section>
+  </main>
   );
 };
 

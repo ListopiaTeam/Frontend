@@ -28,6 +28,7 @@ import LikedLists from "./pages/LikedLists.jsx";
 import MyLists from "./pages/MyLists.jsx";
 import ArchivedEventsPage from "./pages/ArchivedEventsPage.jsx";
 import ArchivedEventDetails from "./pages/ArchivedEventDetails.jsx";
+import SchemaViewer from "./pages/Schema_temp.jsx";
 
 const queryClient = new QueryClient();
 
@@ -253,6 +254,23 @@ const AppWrapper = () => {
 							</motion.div>
 						) : (
 							<ArchivedEventDetails />
+						)
+					}
+				/>
+				<Route
+					path="/Schema"
+					element={
+						location.pathname !== prevLocation.current ? (
+							<motion.div
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								exit={{ opacity: 0 }}
+								transition={{ duration: 0.1 }}
+							>
+								<SchemaViewer />
+							</motion.div>
+						) : (
+							<SchemaViewer />
 						)
 					}
 				/>

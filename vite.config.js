@@ -10,6 +10,8 @@ export default defineConfig({
 		environment: "jsdom",
 		setupFiles: "./src/tests/setup.js",
 		include:["./src/tests/*.test.js","./src/tests/*.test.jsx"],
-		outputFile: "test-results.json",
+
+		reporters:["default",['json',{outputFile: "test-results.json"}]]
+		
 	},
 });
