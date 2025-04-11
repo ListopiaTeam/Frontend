@@ -77,7 +77,7 @@ const ProfileSettings = () => {
 			>
 				{avatar && (
 					<div className="w-24 h-24 mx-auto mb-5 border-2 border-rose-600 rounded-lg overflow-hidden flex items-center justify-center bg-gray-700">
-						<img
+						<img loading="lazy"
 							src={avatar}
 							alt="Profile"
 							className="w-full h-full object-cover"

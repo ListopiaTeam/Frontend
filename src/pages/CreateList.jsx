@@ -408,7 +408,7 @@ const CreateList = () => {
 									key={item.id}
 									className="group flex items-center gap-4 p-3 border border-gray-200 rounded-lg hover:border-rose-200 hover:bg-rose-50 transition-colors"
 								>
-									<img
+									<img loading="lazy"
 										src={item.background_image}
 										className="w-16 h-16 flex-shrink-0 rounded-lg object-cover"
 										alt={item.name}

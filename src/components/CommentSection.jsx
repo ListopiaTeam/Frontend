@@ -139,7 +139,7 @@ const CommentSection = ({ currentComment, listId, userUid, isAdmin }) => {
 								<div className="flex items-start gap-3">
 									<div className="flex-shrink-0 w-8 h-8 rounded-full bg-rose-100 flex items-center justify-center">
 										{userData[comment.userId]?.photoURL ? (
-											<img
+											<img loading="lazy"
 												className="h-8 w-8 rounded-full bg-gray-700 flex items-center justify-center"
 												src={userData[comment.userId]?.photoURL.substring(
 													0,
@@ -255,7 +255,7 @@ const CommentSection = ({ currentComment, listId, userUid, isAdmin }) => {
 											<div className="flex items-start gap-3">
 												<div className="flex-shrink-0 w-6 h-6 rounded-full bg-rose-100 flex items-center justify-center">
 													{userData[comment.userId]?.photoURL ? (
-														<img
+														<img loading="lazy"
 															className="h-8 w-8 rounded-full bg-gray-700 flex items-center justify-center"
 															src={avatar}
 															alt="Profile picture"

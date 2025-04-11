@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, lazy } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
@@ -6,28 +6,29 @@ import App from "./App.jsx";
 import "./index.css";
 import { UserProvider } from "./UserContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import Login from "./pages/Login.jsx";
-import Register from "./pages/Register.jsx";
-import CreateList from "./pages/CreateList.jsx";
-import Error from "./pages/Error.jsx";
-import Header from "./components/Header.jsx";
-import Footer from "./components/Footer.jsx";
-import ScrollTopButton from "./components/ScrollTopButton.jsx";
-import Profile from "./pages/Profile.jsx";
-import Lists from "./pages/Lists.jsx";
-import PasswordReset from "./pages/PasswordReset.jsx";
-import Details from "./pages/Details.jsx";
-import AdminPanel from "./pages/AdminPanel.jsx";
-import EventPage from "./pages/EventPage.jsx";
-import Users from "./components/admin/Users.jsx";
-import ReportedPosts from "./components/admin/ReportedPosts.jsx";
-import CreateEvent from "./components/admin/CreateEvent.jsx";
-import ProfileSettings from "./pages/ProfileSettings.jsx";
-import LikedLists from "./pages/LikedLists.jsx";
-import MyLists from "./pages/MyLists.jsx";
-import ArchivedEventsPage from "./pages/ArchivedEventsPage.jsx";
-import ArchivedEventDetails from "./pages/ArchivedEventDetails.jsx";
-import SchemaViewer from "./pages/Schema_temp.jsx";
+
+const Login = lazy(()=> import("./pages/Login.jsx"));
+const Register = lazy(()=> import("./pages/Register.jsx"));
+const CreateList = lazy(()=> import("./pages/CreateList.jsx"));
+const Error = lazy(()=> import("./pages/Error.jsx"));
+const Header = lazy(()=> import("./components/Header.jsx"));
+const Footer = lazy(()=> import("./components/Footer.jsx"));
+const ScrollTopButton = lazy(()=> import("./components/ScrollTopButton.jsx"));
+const Profile = lazy(()=> import("./pages/Profile.jsx"));
+const Lists = lazy(()=> import("./pages/Lists.jsx"));
+const PasswordReset = lazy(()=> import("./pages/PasswordReset.jsx"));
+const Details = lazy(()=> import("./pages/Details.jsx"));
+const AdminPanel = lazy(()=> import("./pages/AdminPanel.jsx"));
+const EventPage = lazy(()=> import("./pages/EventPage.jsx"));
+const Users = lazy(()=> import("./components/admin/Users.jsx"));
+const ReportedPosts = lazy(()=> import("./components/admin/ReportedPosts.jsx"));
+const CreateEvent = lazy(()=> import("./components/admin/CreateEvent.jsx"));
+const ProfileSettings = lazy(()=> import("./pages/ProfileSettings.jsx"));
+const LikedLists = lazy(()=> import("./pages/LikedLists.jsx"));
+const MyLists = lazy(()=> import("./pages/MyLists.jsx"));
+const ArchivedEventsPage = lazy(()=> import("./pages/ArchivedEventsPage.jsx"));
+const ArchivedEventDetails = lazy(()=> import("./pages/ArchivedEventDetails.jsx"));
+const SchemaViewer = lazy(()=> import("./pages/Schema_temp.jsx"));
 
 const queryClient = new QueryClient();
 
@@ -256,23 +257,7 @@ const AppWrapper = () => {
 						)
 					}
 				/>
-				<Route
-					path="/Schema"
-					element={
-						location.pathname !== prevLocation.current ? (
-							<motion.div
-								initial={{ opacity: 0 }}
-								animate={{ opacity: 1 }}
-								exit={{ opacity: 0 }}
-								transition={{ duration: 0.1 }}
-							>
-								<SchemaViewer />
-							</motion.div>
-						) : (
-							<SchemaViewer />
-						)
-					}
-				/>
+		
 				<Route
 					path="/adminpanel"
 					element={
@@ -293,6 +278,23 @@ const AppWrapper = () => {
 					<Route path="users" element={<Users />} />
 					<Route path="reportedposts" element={<ReportedPosts />} />
 					<Route path="createevent" element={<CreateEvent />} />
+					<Route
+					path="schema"
+					element={
+						location.pathname !== prevLocation.current ? (
+							<motion.div
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								exit={{ opacity: 0 }}
+								transition={{ duration: 0.1 }}
+							>
+								<SchemaViewer />
+							</motion.div>
+						) : (
+							<SchemaViewer />
+						)
+					}
+				/>
 				</Route>
 			</Routes>
 		</AnimatePresence>
