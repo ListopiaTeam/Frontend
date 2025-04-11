@@ -144,6 +144,7 @@ const ListDetail = () => {
 				setTimeout(() => setAlertErr(""), 3000);
 			});
 	};
+	
 
 	return (
 		<main className="min-h-screen py-16 mt-16">

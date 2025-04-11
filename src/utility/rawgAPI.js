@@ -44,7 +44,6 @@ export const searchGamesByName = async (
 
 export const getTags = async () => {
 	try {
-		console.log("Fetching tags from:", URL + "getGenres");
 
 		const response = await axios.get(URL + "getGenres", {
 			headers: {
@@ -52,8 +51,6 @@ export const getTags = async () => {
 				"Content-Type": "application/json",
 			},
 		});
-
-		console.log("Full API Response:", response.data);
 
 		if (!response.data || !response.data.results) {
 			throw new Error("Invalid API response: Missing 'results' field");
