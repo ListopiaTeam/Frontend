@@ -3,7 +3,7 @@
 <center>
     <img src="./public/Listopia_Icon_v2_big.png" alt="Listopia Logo">
     <p>
-        <i>Please note that this project is still work in progress</i>
+        <i>Please note that this project is still work in progress and some features may change</i>
         <br>
         The website is available at: <a href="https://listopia-frontend.netlify.app">https://listopia-frontend.netlify.app</a>
     </p>
@@ -16,6 +16,12 @@
 
 - ### Target Audience
     - Currently we're focusing on gaming so our users would most likely be gamers
+        - The site could be about other topics as well but we wanted to make something all of us are familiar with and with what services are available to us
+    
+- ### Design
+    - Most of the website is designed to be responsive and usable on both desktop and mobile devices
+    - The Admin Panel is designed for desktop use as it contains lots of information that would be hard to display on smaller screens
+    - We're trying to use semantic HTML to improve accessibility
 
 ## Development
 - We're using GitHub Projects To Track Issues & Our To-Do List
@@ -107,6 +113,14 @@
         - Shows liked lists of the current user logged in
         - Ordered by like count (From most liked to least likes)
 
+- ### Extras
+
+    - #### Admin Panel
+        - View Schemas
+            - Firestore Inspector
+        - View Latest Test Result Summary
+            - Displays the ```test-results.json``` file's contents
+
 ## How It Works
 
 - ### Services Used
@@ -133,3 +147,11 @@
     - #### Hosting: Self-hosting at home (Linux Server with Docker Containers)
         - Automatically updates when changes are made to the backend repository
         - Has custom domain
+    
+    - #### Technologies:
+        - Bun (Package Management & Javascript Runtime)
+        - Packages:
+            - Express
+            - Cors
+            - Firebase-admin
+            - Cloudinary
