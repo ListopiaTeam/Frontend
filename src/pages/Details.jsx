@@ -76,7 +76,6 @@ const ListDetail = () => {
 	const fetchAdminStatus = async () => {
 		if (user?.uid) {
 			const userData = await getUser(user.uid);
-			// console.log(userData.isAdmin);
 			if (userData && userData.isAdmin) {
 				setIsAdmin(true);
 			} else {
@@ -85,8 +84,6 @@ const ListDetail = () => {
 		}
 	};
 	fetchAdminStatus();
-
-	// console.log(isAdmin);
 
 	const handleComment = () => {
 		const commentText = document.querySelector("textarea").value.trim();
@@ -99,7 +96,6 @@ const ListDetail = () => {
 			timestamp: serverTimestamp(),
 			userId: user?.uid,
 			username: user?.displayName,
-			reports: [],
 		};
 		setCurrentComment((prevComments) => [...prevComments, newComment]);
 
@@ -118,7 +114,6 @@ const ListDetail = () => {
 	const getPostUser = async () => {
 		try {
 			const user = await getUser(list?.userID);
-
 			setCurrentPostUser(user);
 		} catch (error) {
 			console.error("Error fetching user:", error);
@@ -131,9 +126,9 @@ const ListDetail = () => {
 
 	if (!list?.games) {
 		return (
-			<div className="min-h-screen mt-32 max-w-4xl mx-auto text-rose-600 text-4xl font-semibold!">
-				List is not available!
-			</div>
+			<section className="min-h-screen mt-32 max-w-4xl mx-auto text-rose-600 text-4xl font-semibold!">
+				<p>List is not available!</p>
+			</section>
 		);
 	}
 
@@ -151,20 +146,17 @@ const ListDetail = () => {
 	};
 
 	return (
-		<div className="min-h-screen py-16 mt-16">
+		<main className="min-h-screen py-16 mt-16">
 			<GoBackButton />
 			{list && (
-				<div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-					<div className="bg-white rounded-2xl shadow-lg p-8 sm:p-12">
-						<div className="flex flex-wrap justify-between gap-4">
+				<article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+					<section className="bg-white rounded-2xl shadow-lg p-8 sm:p-12">
+						<header className="flex flex-wrap justify-between gap-4">
 							<div className="flex gap-2">
-								{list.userID !== user?.uid ? (
+								{list.userID !== user?.uid && (
 									<ReportModal id={id} user={user} />
-								) : (
-									""
 								)}
 								{(list.userID === user?.uid || isAdmin) && (
-									// Delete List
 									<button
 										onClick={() => {
 											deleteList(id);
@@ -210,7 +202,11 @@ const ListDetail = () => {
 								>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
-										className={`h-6 w-6 transition-all ${isLiked ? "text-rose-500 fill-rose-500 hover:text-rose-600 hover:fill-rose-600" : "text-gray-900 hover:fill-rose-300 fill-transparent"} stroke-current stroke-[2px]`}
+										className={`h-6 w-6 transition-all ${
+											isLiked
+												? "text-rose-500 fill-rose-500 hover:text-rose-600 hover:fill-rose-600"
+												: "text-gray-900 hover:fill-rose-300 fill-transparent"
+										} stroke-current stroke-[2px]`}
 										viewBox="0 0 24 24"
 									>
 										<path
@@ -220,14 +216,19 @@ const ListDetail = () => {
 										/>
 									</svg>
 									<span
-										className={`text-sm font-medium ${isLiked ? "text-rose-500 hover:text-rose-600" : "text-gray-500 hover:-text-gray-600"}`}
+										className={`text-sm font-medium ${
+											isLiked
+												? "text-rose-500 hover:text-rose-600"
+												: "text-gray-500 hover:-text-gray-600"
+										}`}
 									>
 										{currentLikes.length}
 									</span>
 								</button>
 							</div>
-						</div>
-						<div className="mb-4 mt-4 md:mt-0">
+						</header>
+
+						<section className="mb-4 mt-4 md:mt-0">
 							<p className="font-bold mb-10 text-lg">
 								Created by:{" "}
 								<span className="text-rose-600">
@@ -240,10 +241,10 @@ const ListDetail = () => {
 							<p className="text-base sm:text-lg text-gray-600 leading-relaxed break-words max-w-prose">
 								{list.desc}
 							</p>
-						</div>
+						</section>
 
 						{list?.categories.length > 0 && (
-							<div className="mb-10">
+							<section className="mb-10">
 								<h2 className="text-xl font-semibold text-gray-800 mb-3">
 									Categories
 								</h2>
@@ -257,10 +258,10 @@ const ListDetail = () => {
 										</span>
 									))}
 								</div>
-							</div>
+							</section>
 						)}
 
-						<div>
+						<section>
 							<h2 className="text-2xl font-bold text-gray-900 mb-6">
 								Games in this List
 							</h2>
@@ -269,21 +270,26 @@ const ListDetail = () => {
 									<GameDetailModal key={game.id} user={user} game={game} />
 								))}
 							</div>
-						</div>
-						<div className="mt-6">
+						</section>
+
+						<section className="mt-6">
 							<h2 className="text-2xl font-bold text-gray-900 mb-6">
 								Comments
 							</h2>
 							<div className="bg-gray-100 p-6 rounded-xl">
 								<textarea
-									className={`${!user && "hidden"} w-full p-3 rounded-lg border border-gray-300 focus:ring-rose-500 focus:border-rose-500`}
+									className={`${
+										!user && "hidden"
+									} w-full p-3 rounded-lg border border-gray-300 focus:ring-rose-500 focus:border-rose-500`}
 									rows="4"
 									maxLength="120"
 									placeholder="Add a comment..."
 								/>
 								<button
 									onClick={handleComment}
-									className={`${!user && "hidden"} mt-3 px-6 py-2 bg-rose-500 text-white font-semibold rounded-lg shadow-md hover:bg-rose-600 transition-all`}
+									className={`${
+										!user && "hidden"
+									} mt-3 px-6 py-2 bg-rose-500 text-white font-semibold rounded-lg shadow-md hover:bg-rose-600 transition-all`}
 								>
 									Post Comment
 								</button>
@@ -294,12 +300,12 @@ const ListDetail = () => {
 									isAdmin={isAdmin}
 								/>
 							</div>
-						</div>
-					</div>
-				</div>
+						</section>
+					</section>
+				</article>
 			)}
 			<Alert msg={alertMsg} err={alertErr} />
-		</div>
+		</main>
 	);
 };
 

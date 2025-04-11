@@ -10,24 +10,30 @@ export const searchGamesByName = async (
 	query,
 	url,
 	setNextPageUrl,
-	setPrevPageUrl,
+	setPrevPageUrl
 ) => {
 	try {
 		const response = await axios.get(
-			url || URL + "searchGame/" + query + "?ordering=relevance",
+			url || URL + "searchGame/" + query + "?ordering=relevance"
 		);
+		console.log(response.data.results);
 
 		const filteredGames = response.data.results.filter((game) => {
 			const hasBadTitle = badWords.some((word) =>
-				game.name.toLowerCase().includes(word.toLowerCase()),
+				game.name.toLowerCase().includes(word.toLowerCase())
 			);
 			const hasBadTag = game.tags.some((tag) =>
 				badWords.some((word) =>
-					tag.name.toLowerCase().includes(word.toLowerCase()),
-				),
+					tag.name.toLowerCase().includes(word.toLowerCase())
+				)
 			);
-			return !hasBadTag && !hasBadTitle;
+
+			console.log(game.rating)
+			const hasBadRating = game.rating === 0 && game.ratings_count < 100
+
+			return !hasBadTitle && !hasBadTag && !hasBadRating;
 		});
+
 		setNextPageUrl(response.data.next || null);
 		setPrevPageUrl(response.data.previous || null);
 		setGames(filteredGames);

@@ -1,0 +1,121 @@
+{
+	"numTotalTestSuites": 4,
+	"numPassedTestSuites": 4,
+	"numFailedTestSuites": 0,
+	"numPendingTestSuites": 0,
+	"numTotalTests": 8,
+	"numPassedTests": 8,
+	"numFailedTests": 0,
+	"numPendingTests": 0,
+	"numTodoTests": 0,
+	"snapshot": {
+		"added": 0,
+		"failure": false,
+		"filesAdded": 0,
+		"filesRemoved": 0,
+		"filesRemovedList": [],
+		"filesUnmatched": 0,
+		"filesUpdated": 0,
+		"matched": 0,
+		"total": 0,
+		"unchecked": 0,
+		"uncheckedKeysByFile": [],
+		"unmatched": 0,
+		"updated": 0,
+		"didUpdate": false
+	},
+	"startTime": 1744287602502,
+	"success": true,
+	"testResults": [
+		{
+			"assertionResults": [
+				{
+					"ancestorTitles": ["Login panel"],
+					"fullName": "Login panel should render login",
+					"status": "passed",
+					"title": "should render login",
+					"duration": 68.97599999999966,
+					"failureMessages": [],
+					"meta": {}
+				}
+			],
+			"startTime": 1744287606745,
+			"endTime": 1744287606813.976,
+			"status": "passed",
+			"message": "",
+			"name": "C:/Users/Sprite/Desktop/project munka/Frontend/src/tests/Login.test.jsx"
+		},
+		{
+			"assertionResults": [
+				{
+					"ancestorTitles": ["UserContext"],
+					"fullName": "UserContext should initialize with user as null",
+					"status": "passed",
+					"title": "should initialize with user as null",
+					"duration": 24.701800000000276,
+					"failureMessages": [],
+					"meta": {}
+				},
+				{
+					"ancestorTitles": ["UserContext"],
+					"fullName": "UserContext should sign in a user successfully",
+					"status": "passed",
+					"title": "should sign in a user successfully",
+					"duration": 29.70589999999993,
+					"failureMessages": [],
+					"meta": {}
+				},
+				{
+					"ancestorTitles": ["UserContext"],
+					"fullName": "UserContext should sign up a user successfully",
+					"status": "passed",
+					"title": "should sign up a user successfully",
+					"duration": 33.623999999999796,
+					"failureMessages": [],
+					"meta": {}
+				},
+				{
+					"ancestorTitles": ["UserContext"],
+					"fullName": "UserContext should send password reset email successfully",
+					"status": "passed",
+					"title": "should send password reset email successfully",
+					"duration": 15.14870000000019,
+					"failureMessages": [],
+					"meta": {}
+				},
+				{
+					"ancestorTitles": ["UserContext"],
+					"fullName": "UserContext should update user profile successfully",
+					"status": "passed",
+					"title": "should update user profile successfully",
+					"duration": 23.621599999999944,
+					"failureMessages": [],
+					"meta": {}
+				},
+				{
+					"ancestorTitles": ["UserContext"],
+					"fullName": "UserContext should log out a user successfully",
+					"status": "passed",
+					"title": "should log out a user successfully",
+					"duration": 17.421000000000276,
+					"failureMessages": [],
+					"meta": {}
+				},
+				{
+					"ancestorTitles": ["UserContext"],
+					"fullName": "UserContext should delete user account successfully",
+					"status": "passed",
+					"title": "should delete user account successfully",
+					"duration": 17.528600000000097,
+					"failureMessages": [],
+					"meta": {}
+				}
+			],
+			"startTime": 1744287605894,
+			"endTime": 1744287606055.5286,
+			"status": "passed",
+			"message": "",
+			"name": "C:/Users/Sprite/Desktop/project munka/Frontend/src/tests/UserContext.test.jsx"
+		}
+	]
+}

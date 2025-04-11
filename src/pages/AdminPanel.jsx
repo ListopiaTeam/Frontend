@@ -30,17 +30,18 @@ export default function AdminPanel() {
 		if (user === undefined) return;
 		fetchAdminStatus();
 	}, [user]);
-
 	return (
-		<div className="min-h-screen py-16 mt-16">
-			<div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-				<div className="bg-white rounded-2xl shadow-lg p-8 sm:p-12">
-					<h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4">
-						Admin Dashboard
-					</h1>
+		<main className="min-h-screen py-16 mt-16">
+			<section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+				<article className="bg-white rounded-2xl shadow-lg p-8 sm:p-12">
+					<header>
+						<h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4">
+							Admin Dashboard
+						</h1>
+					</header>
 
-					{/* Tabs */}
-					<div className="flex flex-wrap border-b-2 border-gray-300 mb-6">
+					{/* Navigation (Tabs) */}
+					<nav className="flex flex-wrap border-b-2 border-gray-300 mb-6">
 						<NavLink
 							to={"/adminpanel/users"}
 							className={`w-full sm:w-auto px-6 py-2 text-lg font-semibold ${activeTab === "users" ? "border-b-2 border-rose-600 text-rose-600" : "text-gray-500"}`}
@@ -62,10 +63,11 @@ export default function AdminPanel() {
 						>
 							Create Event
 						</NavLink>
-					</div>
+					</nav>
+					
 					<Outlet />
-				</div>
-			</div>
-		</div>
+				</article>
+			</section>
+		</main>
 	);
 }
