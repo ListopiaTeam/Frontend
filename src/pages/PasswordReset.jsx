@@ -9,8 +9,6 @@ export default function PasswordReset() {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		const data = new FormData(e.currentTarget);
-		console.log(data.get("email"));
-		console.log(message);
 
 		resetPassword(data.get("email"));
 		setTimeout(() => setMessage(""), 5000);
