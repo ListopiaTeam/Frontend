@@ -43,7 +43,9 @@ const MyLists = () => {
 	}
 
 	// Sort by newer lists first
-	const sortedData = data ? [...data].sort((a, b) => b.timestamp - a.timestamp) : [];
+	const sortedData = data
+		? [...data].sort((a, b) => b.timestamp - a.timestamp)
+		: [];
 
 	return (
 		<div>
@@ -63,7 +65,7 @@ const MyLists = () => {
 				))}
 			</div>
 		</div>
-	);		
+	);
 };
 
 export default MyLists;
