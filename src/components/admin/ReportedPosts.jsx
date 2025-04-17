@@ -58,10 +58,10 @@ const ReportedPosts = () => {
 			}
 		}
 	};
-	
+
 	const resolveReportedList = async (id) => {
 		try {
-			await resolveReports(id)
+			await resolveReports(id);
 			queryClient.invalidateQueries(["reportedLists"]);
 			setAlertMsg("Resolved reports successfully.");
 			setTimeout(() => setAlertMsg(""), 3000);
@@ -69,7 +69,7 @@ const ReportedPosts = () => {
 			setAlertErr("Error resolving list.");
 			setTimeout(() => setAlertErr(""), 3000);
 		}
-	}
+	};
 
 	return (
 		<div>
@@ -92,7 +92,10 @@ const ReportedPosts = () => {
 							<th className="px-6 py-3 text-sm font-medium text-gray-900">
 								Reported List
 							</th>
-							<th className="px-6 py-3 text-sm font-medium text-gray-900 text-center" colSpan={2}>
+							<th
+								className="px-6 py-3 text-sm font-medium text-gray-900 text-center"
+								colSpan={2}
+							>
 								Actions
 							</th>
 						</tr>

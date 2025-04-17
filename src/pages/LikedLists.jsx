@@ -43,7 +43,9 @@ const LikedLists = () => {
 	}
 
 	// Sort by like amounts in descending order
-	const sortedData = data ? [...data].sort((a, b) => (b.likes_num || 0) - (a.likes_num || 0)) : [];
+	const sortedData = data
+		? [...data].sort((a, b) => (b.likes_num || 0) - (a.likes_num || 0))
+		: [];
 
 	return (
 		<div>
@@ -64,7 +66,6 @@ const LikedLists = () => {
 			</div>
 		</div>
 	);
-
 };
 
 export default LikedLists;

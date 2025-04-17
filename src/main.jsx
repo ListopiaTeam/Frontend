@@ -8,28 +8,32 @@ import { UserProvider } from "./UserContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ShowTestResults from "./components/admin/ShowTestResults.jsx";
 
-const Login = lazy(()=> import("./pages/Login.jsx"));
-const Register = lazy(()=> import("./pages/Register.jsx"));
-const CreateList = lazy(()=> import("./pages/CreateList.jsx"));
-const Error = lazy(()=> import("./pages/Error.jsx"));
-const Header = lazy(()=> import("./components/Header.jsx"));
-const Footer = lazy(()=> import("./components/Footer.jsx"));
-const ScrollTopButton = lazy(()=> import("./components/ScrollTopButton.jsx"));
-const Profile = lazy(()=> import("./pages/Profile.jsx"));
-const Lists = lazy(()=> import("./pages/Lists.jsx"));
-const PasswordReset = lazy(()=> import("./pages/PasswordReset.jsx"));
-const Details = lazy(()=> import("./pages/Details.jsx"));
-const AdminPanel = lazy(()=> import("./pages/AdminPanel.jsx"));
-const EventPage = lazy(()=> import("./pages/EventPage.jsx"));
-const Users = lazy(()=> import("./components/admin/Users.jsx"));
-const ReportedPosts = lazy(()=> import("./components/admin/ReportedPosts.jsx"));
-const CreateEvent = lazy(()=> import("./components/admin/CreateEvent.jsx"));
-const ProfileSettings = lazy(()=> import("./pages/ProfileSettings.jsx"));
-const LikedLists = lazy(()=> import("./pages/LikedLists.jsx"));
-const MyLists = lazy(()=> import("./pages/MyLists.jsx"));
-const ArchivedEventsPage = lazy(()=> import("./pages/ArchivedEventsPage.jsx"));
-const ArchivedEventDetails = lazy(()=> import("./pages/ArchivedEventDetails.jsx"));
-const SchemaViewer = lazy(()=> import("./components/admin/Schema_temp.jsx"));
+const Login = lazy(() => import("./pages/Login.jsx"));
+const Register = lazy(() => import("./pages/Register.jsx"));
+const CreateList = lazy(() => import("./pages/CreateList.jsx"));
+const Error = lazy(() => import("./pages/Error.jsx"));
+const Header = lazy(() => import("./components/Header.jsx"));
+const Footer = lazy(() => import("./components/Footer.jsx"));
+const ScrollTopButton = lazy(() => import("./components/ScrollTopButton.jsx"));
+const Profile = lazy(() => import("./pages/Profile.jsx"));
+const Lists = lazy(() => import("./pages/Lists.jsx"));
+const PasswordReset = lazy(() => import("./pages/PasswordReset.jsx"));
+const Details = lazy(() => import("./pages/Details.jsx"));
+const AdminPanel = lazy(() => import("./pages/AdminPanel.jsx"));
+const EventPage = lazy(() => import("./pages/EventPage.jsx"));
+const Users = lazy(() => import("./components/admin/Users.jsx"));
+const ReportedPosts = lazy(
+	() => import("./components/admin/ReportedPosts.jsx"),
+);
+const CreateEvent = lazy(() => import("./components/admin/CreateEvent.jsx"));
+const ProfileSettings = lazy(() => import("./pages/ProfileSettings.jsx"));
+const LikedLists = lazy(() => import("./pages/LikedLists.jsx"));
+const MyLists = lazy(() => import("./pages/MyLists.jsx"));
+const ArchivedEventsPage = lazy(() => import("./pages/ArchivedEventsPage.jsx"));
+const ArchivedEventDetails = lazy(
+	() => import("./pages/ArchivedEventDetails.jsx"),
+);
+const SchemaViewer = lazy(() => import("./components/admin/Schema_temp.jsx"));
 
 const queryClient = new QueryClient();
 
@@ -113,7 +117,7 @@ const AppWrapper = () => {
 						)
 					}
 				/>
-				
+
 				<Route
 					path="/lists"
 					element={
@@ -259,7 +263,7 @@ const AppWrapper = () => {
 						)
 					}
 				/>
-		
+
 				<Route
 					path="/adminpanel"
 					element={
@@ -281,39 +285,39 @@ const AppWrapper = () => {
 					<Route path="reportedposts" element={<ReportedPosts />} />
 					<Route path="createevent" element={<CreateEvent />} />
 					<Route
-					path="schema"
-					element={
-						location.pathname !== prevLocation.current ? (
-							<motion.div
-								initial={{ opacity: 0 }}
-								animate={{ opacity: 1 }}
-								exit={{ opacity: 0 }}
-								transition={{ duration: 0.1 }}
-							>
+						path="schema"
+						element={
+							location.pathname !== prevLocation.current ? (
+								<motion.div
+									initial={{ opacity: 0 }}
+									animate={{ opacity: 1 }}
+									exit={{ opacity: 0 }}
+									transition={{ duration: 0.1 }}
+								>
+									<SchemaViewer />
+								</motion.div>
+							) : (
 								<SchemaViewer />
-							</motion.div>
-						) : (
-							<SchemaViewer />
-						)
-					}
-				/>
-				<Route
-					path="tests"
-					element={
-						location.pathname !== prevLocation.current ? (
-							<motion.div
-								initial={{ opacity: 0 }}
-								animate={{ opacity: 1 }}
-								exit={{ opacity: 0 }}
-								transition={{ duration: 0.1 }}
-							>
+							)
+						}
+					/>
+					<Route
+						path="tests"
+						element={
+							location.pathname !== prevLocation.current ? (
+								<motion.div
+									initial={{ opacity: 0 }}
+									animate={{ opacity: 1 }}
+									exit={{ opacity: 0 }}
+									transition={{ duration: 0.1 }}
+								>
+									<ShowTestResults />
+								</motion.div>
+							) : (
 								<ShowTestResults />
-							</motion.div>
-						) : (
-							<ShowTestResults />
-						)
-					}
-				/>
+							)
+						}
+					/>
 				</Route>
 			</Routes>
 		</AnimatePresence>
@@ -322,15 +326,15 @@ const AppWrapper = () => {
 
 createRoot(document.getElementById("root")).render(
 	<QueryClientProvider client={queryClient}>
-			<UserProvider>
-				<BrowserRouter>
-					<div className="flex flex-col min-h-screen">
-						<Header />
-						<AppWrapper />
-						<ScrollTopButton />
-						<Footer />
-					</div>
-				</BrowserRouter>
-			</UserProvider>
-	</QueryClientProvider>
+		<UserProvider>
+			<BrowserRouter>
+				<div className="flex flex-col min-h-screen">
+					<Header />
+					<AppWrapper />
+					<ScrollTopButton />
+					<Footer />
+				</div>
+			</BrowserRouter>
+		</UserProvider>
+	</QueryClientProvider>,
 );

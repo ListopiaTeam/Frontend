@@ -117,12 +117,12 @@ const CreateList = () => {
 
 		const formData = {
 			title: e.target[0].value,
-			title_lowercase:e.target[0].value.toLowerCase(),
+			title_lowercase: e.target[0].value.toLowerCase(),
 			desc: e.target[1].value,
 			categories: selectedTags,
 			games: selectedGames,
 			likes: [],
-			likes_num:0,
+			likes_num: 0,
 			userID: user.uid,
 			username: user.displayName,
 			reports: [],
@@ -408,7 +408,8 @@ const CreateList = () => {
 									key={item.id}
 									className="group flex items-center gap-4 p-3 border border-gray-200 rounded-lg hover:border-rose-200 hover:bg-rose-50 transition-colors"
 								>
-									<img loading="lazy"
+									<img
+										loading="lazy"
 										src={item.background_image}
 										className="w-16 h-16 flex-shrink-0 rounded-lg object-cover"
 										alt={item.name}

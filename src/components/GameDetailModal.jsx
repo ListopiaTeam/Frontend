@@ -23,7 +23,8 @@ const GameDetailModal = ({ id, user, game }) => {
 				onClick={() => document.getElementById(modalId).showModal()}
 			>
 				<div className="flex flex-col sm:flex-row items-start gap-6">
-					<img loading="lazy"
+					<img
+						loading="lazy"
 						src={game.background_image}
 						alt={game.name}
 						className="w-full sm:w-32 h-32 object-cover rounded-lg"
@@ -100,7 +101,8 @@ const GameDetailModal = ({ id, user, game }) => {
 						<h3 className="font-bold text-lg mb-2 text-center">Screenshots</h3>
 
 						{screenshots.map((screenshot) => (
-							<img loading="lazy"
+							<img
+								loading="lazy"
 								key={screenshot.image}
 								className="hidden"
 								src={screenshot.image}
@@ -110,7 +112,8 @@ const GameDetailModal = ({ id, user, game }) => {
 						<div className=" w-full h-48 overflow-hidden rounded-lg">
 							{screenshots.length > 0 ? (
 								screenshots.map((screenshot) => (
-									<motion.img loading="lazy"
+									<motion.img
+										loading="lazy"
 										key={screenshot.id}
 										src={screenshots[currentIndex]?.image}
 										alt="screenshot"

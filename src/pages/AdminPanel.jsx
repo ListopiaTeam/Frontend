@@ -23,7 +23,7 @@ export default function AdminPanel() {
 		const userData = await getUser(user.uid);
 		if (!userData || !userData.isAdmin) {
 			navigate("/");
-			return
+			return;
 		}
 	};
 
@@ -78,7 +78,7 @@ export default function AdminPanel() {
 							View Tests
 						</NavLink>
 					</div>
-					<Outlet/>
+					<Outlet />
 				</div>
 			</div>
 		</div>

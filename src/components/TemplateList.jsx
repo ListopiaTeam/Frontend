@@ -3,7 +3,12 @@ const TemplateList = ({ src, selectedTags, onTagRemove, onTagModalOpen }) => {
 		<div className="group relative block overflow-hidden shadow-xl border border-black max-w-md mx-auto w-full">
 			<div className="relative w-full h-48 bg-gray-300 flex items-center justify-center select-none">
 				{src ? (
-					<img loading="lazy" src={src} alt="" className="w-full h-full object-cover" />
+					<img
+						loading="lazy"
+						src={src}
+						alt=""
+						className="w-full h-full object-cover"
+					/>
 				) : (
 					<span className="absolute text-white text-3xl font-bold text-center px-4">
 						Image Is Made After Games Are Selected

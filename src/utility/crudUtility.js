@@ -43,8 +43,6 @@ export const addList = async (formData, setList, user) => {
 	);
 };
 
-
-
 export const readList = (setList, selCateg) => {
 	const collectionRef = collection(db, "Lists");
 	console.log("Selected Categories:", selCateg);
@@ -109,32 +107,31 @@ export const toggleLike = async (id, uid) => {
 	const docSnap = await getDoc(docRef);
 	const likesArr = docSnap.data().likes || [];
 	const likesNum = docSnap.data().likes_num || 0;
-  
+
 	console.log("Current likes:", likesNum);
-  
+
 	const userRef = doc(db, "Users", uid);
 
 	if (likesArr.includes(uid)) {
-	  const updatedLikesArr = likesArr.filter((p_id) => p_id !== uid);
-	  const updatedLikesNum = Math.max(likesNum - 1, 0);
-  
-	  await updateDoc(docRef, {
-		likes: updatedLikesArr,
-		likes_num: updatedLikesNum,
-	  });
-	  await updateDoc(userRef, { likedLists: arrayRemove(id) });
+		const updatedLikesArr = likesArr.filter((p_id) => p_id !== uid);
+		const updatedLikesNum = Math.max(likesNum - 1, 0);
+
+		await updateDoc(docRef, {
+			likes: updatedLikesArr,
+			likes_num: updatedLikesNum,
+		});
+		await updateDoc(userRef, { likedLists: arrayRemove(id) });
 	} else {
-	  const updatedLikesArr = [...likesArr, uid];
-	  const updatedLikesNum = likesNum + 1;
-  
-	  await updateDoc(docRef, {
-		likes: updatedLikesArr,
-		likes_num: updatedLikesNum,
-	  });
-	  await updateDoc(userRef, { likedLists: arrayUnion(id) });
+		const updatedLikesArr = [...likesArr, uid];
+		const updatedLikesNum = likesNum + 1;
+
+		await updateDoc(docRef, {
+			likes: updatedLikesArr,
+			likes_num: updatedLikesNum,
+		});
+		await updateDoc(userRef, { likedLists: arrayUnion(id) });
 	}
-  };
-  
+};
 
 export const addReport = async (listId, currentReport) => {
 	const reportsRef = collection(db, `Lists/${listId}/reports`);
@@ -171,54 +168,55 @@ export const listenToComments = (listId, setComments) => {
 	});
 };
 export const deleteList = async (id) => {
-    try {
-        try {
-            const eventIds = await getActiveEventIds();
-            if (eventIds?.length > 0) {
-                const eventId = eventIds[0];
-                const eventDocRef = doc(db, "Events", eventId);
-                const eventSnapshot = await getDoc(eventDocRef);
+	try {
+		try {
+			const eventIds = await getActiveEventIds();
+			if (eventIds?.length > 0) {
+				const eventId = eventIds[0];
+				const eventDocRef = doc(db, "Events", eventId);
+				const eventSnapshot = await getDoc(eventDocRef);
 
-                if (eventSnapshot.exists()) {
-                    const eventData = eventSnapshot.data() || {};
-                    const submittedLists = Array.isArray(eventData.submitedLists) 
-                        ? eventData.submitedLists 
-                        : [];
-                    
-                    if (submittedLists.includes(id)) {
-                        await updateDoc(eventDocRef, {
-                            submitedLists: submittedLists.filter(listId => listId !== id)
-                        });
-                        console.log(`Removed list ${id} from event ${eventId}`);
-                    }
-                }
-            }
-        } catch (eventError) {
-            console.warn("Couldn't update event (proceeding with deletion):", eventError);
-        }
+				if (eventSnapshot.exists()) {
+					const eventData = eventSnapshot.data() || {};
+					const submittedLists = Array.isArray(eventData.submitedLists)
+						? eventData.submitedLists
+						: [];
 
-   
-        const listRef = doc(db, "Lists", id);
-        
+					if (submittedLists.includes(id)) {
+						await updateDoc(eventDocRef, {
+							submitedLists: submittedLists.filter((listId) => listId !== id),
+						});
+						console.log(`Removed list ${id} from event ${eventId}`);
+					}
+				}
+			}
+		} catch (eventError) {
+			console.warn(
+				"Couldn't update event (proceeding with deletion):",
+				eventError,
+			);
+		}
 
-        await Promise.allSettled(["comments", "reports"].map(async (subcol) => {
-            try {
-                const subColRef = collection(db, "Lists", id, subcol);
-                const snapshot = await getDocs(subColRef);
-                await Promise.all(snapshot.docs.map(d => deleteDoc(d.ref)));
-            } catch (subColError) {
-                console.warn(`Couldn't delete ${subcol} subcollection:`, subColError);
-            }
-        }));
+		const listRef = doc(db, "Lists", id);
 
-        
-        await deleteDoc(listRef);
-        console.log(`List ${id} fully deleted`);
+		await Promise.allSettled(
+			["comments", "reports"].map(async (subcol) => {
+				try {
+					const subColRef = collection(db, "Lists", id, subcol);
+					const snapshot = await getDocs(subColRef);
+					await Promise.all(snapshot.docs.map((d) => deleteDoc(d.ref)));
+				} catch (subColError) {
+					console.warn(`Couldn't delete ${subcol} subcollection:`, subColError);
+				}
+			}),
+		);
 
-    } catch (mainError) {
-        console.error("Critical deletion error:", mainError);
-        throw mainError; 
-    }
+		await deleteDoc(listRef);
+		console.log(`List ${id} fully deleted`);
+	} catch (mainError) {
+		console.error("Critical deletion error:", mainError);
+		throw mainError;
+	}
 };
 
 export const deleteComment = async (listId, commentId) => {
@@ -258,12 +256,17 @@ export const getUser = async (userId) => {
 	}
 };
 
-export const fetchLists = async (listCount, selCateg, selOrderType, lastDoc) => {
+export const fetchLists = async (
+	listCount,
+	selCateg,
+	selOrderType,
+	lastDoc,
+) => {
 	try {
 		let listsQuery;
 		let order;
-		
-		selOrderType == "title_lowercase" ? order = "asc" : order = "desc";
+
+		selOrderType == "title_lowercase" ? (order = "asc") : (order = "desc");
 
 		if (selCateg.length === 0) {
 			listsQuery = query(
@@ -471,7 +474,7 @@ export const resolveReports = async (listId) => {
 	const snapshot = await getDocs(reportsRef);
 
 	const deletePromises = snapshot.docs.map((docSnap) =>
-		deleteDoc(doc(db, `Lists/${listId}/reports`, docSnap.id))
+		deleteDoc(doc(db, `Lists/${listId}/reports`, docSnap.id)),
 	);
 
 	await Promise.all(deletePromises);
