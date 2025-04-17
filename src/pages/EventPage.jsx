@@ -13,8 +13,14 @@ const EventPage = () => {
 	const queryClient = useQueryClient();
 
 	useEffect(() => {
-		queryClient.removeQueries(["submittedLists", data?.[0]?.id]);
-	}, []);
+		const id = data?.[0]?.id;
+		if (id) {
+			queryClient.removeQueries({
+				queryKey: ["submittedLists", id],
+				exact: true,
+			});
+		}
+	}, [data?.[0]?.id, queryClient]);
 
 	const {
 		data: submittedLists,
