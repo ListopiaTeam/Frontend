@@ -144,7 +144,7 @@ const CommentSection = ({ currentComment, listId, userUid, isAdmin }) => {
 												className="h-8 w-8 rounded-full bg-gray-700 flex items-center justify-center"
 												src={userData[comment.userId]?.photoURL.substring(
 													0,
-													userData[comment.userId]?.photoURL.lastIndexOf("/"),
+													userData[comment.userId]?.photoURL.lastIndexOf("/")
 												)}
 												alt="Profile picture"
 											/>
@@ -164,8 +164,8 @@ const CommentSection = ({ currentComment, listId, userUid, isAdmin }) => {
 											<span className="text-xs text-gray-500">
 												{comment.timestamp?.seconds
 													? new Date(
-															comment.timestamp.seconds * 1000,
-														).toLocaleString()
+															comment.timestamp.seconds * 1000
+													  ).toLocaleString()
 													: "Just now"}
 											</span>
 										</div>
@@ -208,7 +208,7 @@ const CommentSection = ({ currentComment, listId, userUid, isAdmin }) => {
 																commentTree[comment.id].length === 1
 																	? "reply"
 																	: "replies"
-															}`}
+														  }`}
 												</button>
 											)}
 										</div>
@@ -278,8 +278,8 @@ const CommentSection = ({ currentComment, listId, userUid, isAdmin }) => {
 														<span className="text-xs text-gray-500">
 															{reply.timestamp?.seconds
 																? new Date(
-																		reply.timestamp.seconds * 1000,
-																	).toLocaleString()
+																		reply.timestamp.seconds * 1000
+																  ).toLocaleString()
 																: "Just now"}
 														</span>
 													</div>
@@ -330,9 +330,9 @@ const CommentSection = ({ currentComment, listId, userUid, isAdmin }) => {
 					</p>
 				</div>
 			)}
+			<Alert msg={alertMsg} err={alertErr} />;
 		</div>
 	);
-	<Alert msg={alertMsg} err={alertErr} />;
 };
 
 export default CommentSection;
