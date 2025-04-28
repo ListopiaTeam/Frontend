@@ -44,35 +44,35 @@ export default function AdminPanel() {
 					<div className="flex flex-wrap border-b-2 border-gray-300 mb-6">
 						<NavLink
 							to={"/adminpanel/users"}
-							className={`w-full sm:w-auto px-6 py-2 text-lg font-semibold ${activeTab === "users" ? "border-b-2 border-rose-600 text-rose-600" : "text-gray-500"}`}
+							className={`w-full sm:w-auto px-4 py-2 text-lg font-semibold ${activeTab === "users" ? "border-b-2 border-rose-600 text-rose-600" : "text-gray-500"}`}
 							onClick={() => setActiveTab("users")}
 						>
 							Users
 						</NavLink>
 						<NavLink
 							to={"/adminpanel/reportedposts"}
-							className={`w-full sm:w-auto px-6 py-2 text-lg font-semibold ${activeTab === "reportedposts" ? "border-b-2 border-rose-600 text-rose-600" : "text-gray-500"}`}
+							className={`w-full sm:w-auto px-4 py-2 text-lg font-semibold ${activeTab === "reportedposts" ? "border-b-2 border-rose-600 text-rose-600" : "text-gray-500"}`}
 							onClick={() => setActiveTab("reportedPosts")}
 						>
 							Reported Posts
 						</NavLink>
 						<NavLink
 							to={"/adminpanel/createevent"}
-							className={`w-full sm:w-auto px-6 py-2 text-lg font-semibold ${activeTab === "createevent" ? "border-b-2 border-rose-600 text-rose-600" : "text-gray-500"}`}
+							className={`w-full sm:w-auto px-4 py-2 text-lg font-semibold ${activeTab === "createevent" ? "border-b-2 border-rose-600 text-rose-600" : "text-gray-500"}`}
 							onClick={() => setActiveTab("createEvent")}
 						>
 							Create Event
 						</NavLink>
 						<NavLink
 							to={"/adminpanel/schema"}
-							className={`w-full sm:w-auto px-6 py-2 text-lg font-semibold ${activeTab === "schema" ? "border-b-2 border-rose-600 text-rose-600" : "text-gray-500"}`}
+							className={`w-full sm:w-auto px-4 py-2 text-lg font-semibold ${activeTab === "schema" ? "border-b-2 border-rose-600 text-rose-600" : "text-gray-500"}`}
 							onClick={() => setActiveTab("schema")}
 						>
 							View Schemas
 						</NavLink>
 						<NavLink
 							to={"/adminpanel/tests"}
-							className={`w-full sm:w-auto px-6 py-2 text-lg font-semibold ${activeTab === "tests" ? "border-b-2 border-rose-600 text-rose-600" : "text-gray-500"}`}
+							className={`w-full sm:w-auto px-4 py-2 text-lg font-semibold ${activeTab === "tests" ? "border-b-2 border-rose-600 text-rose-600" : "text-gray-500"}`}
 							onClick={() => setActiveTab("tests")}
 						>
 							View Tests

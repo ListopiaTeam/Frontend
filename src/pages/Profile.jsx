@@ -31,21 +31,21 @@ export default function Profile() {
 					<div className="flex flex-wrap border-b-2 border-gray-300 mb-6">
 						<NavLink
 							to={"/profile/profilesettings"}
-							className={`w-full sm:w-auto px-6 py-2 text-lg font-semibold ${activeTab === "profilesettings" ? "border-b-2 border-rose-600 text-rose-600" : "text-gray-500"}`}
+							className={`w-full sm:w-auto px-4 py-2 text-lg font-semibold ${activeTab === "profilesettings" ? "border-b-2 border-rose-600 text-rose-600" : "text-gray-500"}`}
 							onClick={() => setActiveTab("users")}
 						>
 							Profile Settings
 						</NavLink>
 						<NavLink
 							to={"/profile/likedlists"}
-							className={`w-full sm:w-auto px-6 py-2 text-lg font-semibold ${activeTab === "likedlists" ? "border-b-2 border-rose-600 text-rose-600" : "text-gray-500"}`}
+							className={`w-full sm:w-auto px-4 py-2 text-lg font-semibold ${activeTab === "likedlists" ? "border-b-2 border-rose-600 text-rose-600" : "text-gray-500"}`}
 							onClick={() => setActiveTab("likedlists")}
 						>
 							Liked Lists
 						</NavLink>
 						<NavLink
 							to={"/profile/mylists"}
-							className={`w-full sm:w-auto px-6 py-2 text-lg font-semibold ${activeTab === "mylists" ? "border-b-2 border-rose-600 text-rose-600" : "text-gray-500"}`}
+							className={`w-full sm:w-auto px-4 py-2 text-lg font-semibold ${activeTab === "mylists" ? "border-b-2 border-rose-600 text-rose-600" : "text-gray-500"}`}
 							onClick={() => setActiveTab("createdlists")}
 						>
 							My Lists
