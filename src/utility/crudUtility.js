@@ -71,6 +71,7 @@ export const readLists = async (id) => {
 		return unsubscribe;
 	});
 };
+
 export const readEventLists = async (ids) => {
 	if (!ids || ids.length === 0) {
 		console.log("No submitted lists to fetch.");
@@ -102,6 +103,7 @@ export const readEventLists = async (ids) => {
 		return [];
 	}
 };
+
 export const toggleLike = async (id, uid) => {
 	const docRef = doc(db, "Lists", id);
 	const docSnap = await getDoc(docRef);
@@ -164,10 +166,11 @@ export const listenToComments = (listId, setComments) => {
 			id: doc.id,
 			...doc.data(),
 		}));
-		setComments(comments);
+		setComments(comments);  
 	});
 };
-export const deleteList = async (id) => {
+
+export const deleteList = async (id,userId) => {
 	try {
 		try {
 			const eventIds = await getActiveEventIds();
@@ -236,6 +239,54 @@ export const deleteComment = async (listId, commentId) => {
 		console.log(`Deleted comment ${commentId} and its replies`);
 	} catch (error) {
 		console.error("Error deleting comment and replies: ", error);
+	}
+};
+
+export const validateAndCleanListRef = async (userId, listId) => {
+	try {
+		const listRef = doc(db, "Lists", listId);
+		const listSnap = await getDoc(listRef);
+
+		if (!listSnap.exists()) {
+			console.log(`List ${listId} not found. Removing reference for user ${userId}.`);
+			const userRef = doc(db, "Users", userId);
+
+			await updateDoc(userRef, {
+				createdLists: arrayRemove(listId),
+			});
+
+			console.log("deletion success");
+			return false;
+		}
+
+		return true;
+	} catch (error) {
+		console.log(`Error validating list ${listId} for user ${userId}:`, error);
+		return false;
+	}
+};
+
+export const validateAndCleanLikedListRef = async (userId, listId) => {
+	try {
+		const listRef = doc(db, "Lists", listId);
+		const listSnap = await getDoc(listRef);
+
+		if (!listSnap.exists()) {
+			console.log(`List ${listId} not found. Removing reference for user ${userId}.`);
+			const userRef = doc(db, "Users", userId);
+
+			await updateDoc(userRef, {
+				likedLists: arrayRemove(listId),
+			});
+
+			console.log("deletion success");
+			return false;
+		}
+
+		return true;
+	} catch (error) {
+		console.log(`Error validating list ${listId} for user ${userId}:`, error);
+		return false;
 	}
 };
 

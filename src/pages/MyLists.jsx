@@ -1,18 +1,35 @@
 import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../UserContext";
-import { getUser, readEventLists } from "../utility/crudUtility";
+import { getUser, readEventLists,validateAndCleanListRef } from "../utility/crudUtility";
 import { useQuery } from "@tanstack/react-query";
 import ListCard from "../components/ListCard";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../utility/firebaseApp";
 
 const MyLists = () => {
 	const { user } = useContext(UserContext);
 	const [userData, setUserData] = useState(null);
 
 	const { data, error, isLoading } = useQuery({
-		queryKey: ["myLists"],
+		queryKey: ["myLists", user?.uid],
 		queryFn: async () => {
 			if (userData?.createdLists?.length) {
-				return await readEventLists(userData?.createdLists);
+				const validLists = [];
+
+				// Manually validate each list
+				for (const listId of userData.createdLists) {
+					const listRef = doc(db, "Lists", listId);
+					const listSnap = await getDoc(listRef);
+
+					if (listSnap.exists()) {
+						validLists.push({ ...listSnap.data(), listId: listSnap.id });
+					} else {
+						// Clean up invalid reference
+						await validateAndCleanListRef(user.uid, listId);
+					}
+				}
+
+				return validLists;
 			}
 			return [];
 		},
@@ -42,7 +59,6 @@ const MyLists = () => {
 		return <div>Error loading lists: {error.message}</div>;
 	}
 
-	// Sort by newer lists first
 	const sortedData = data
 		? [...data].sort((a, b) => b.timestamp - a.timestamp)
 		: [];

@@ -1,18 +1,33 @@
 import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../UserContext";
-import { getUser, readEventLists } from "../utility/crudUtility";
+import { getUser, readEventLists,validateAndCleanLikedListRef } from "../utility/crudUtility";
 import { useQuery } from "@tanstack/react-query";
 import ListCard from "../components/ListCard";
+import { db } from "../utility/firebaseApp";
+import { doc, getDoc } from "firebase/firestore";
 
 const LikedLists = () => {
 	const { user } = useContext(UserContext);
 	const [userData, setUserData] = useState(null);
 
 	const { data, error, isLoading } = useQuery({
-		queryKey: ["likedLists"],
+		queryKey: ["likedLists", user?.uid],
 		queryFn: async () => {
 			if (userData?.likedLists?.length) {
-				return await readEventLists(userData?.likedLists);
+				const validLists = [];
+
+				for (const listId of userData.likedLists) {
+					const listRef = doc(db, "Lists", listId);
+					const listSnap = await getDoc(listRef);
+
+					if (listSnap.exists()) {
+						validLists.push({ ...listSnap.data(), listId: listSnap.id });
+					} else {
+						await validateAndCleanLikedListRef(user.uid, listId, "likedLists");
+					}
+				}
+
+				return validLists;
 			}
 			return [];
 		},
@@ -42,7 +57,6 @@ const LikedLists = () => {
 		return <div>Error loading lists: {error.message}</div>;
 	}
 
-	// Sort by like amounts in descending order
 	const sortedData = data
 		? [...data].sort((a, b) => (b.likes_num || 0) - (a.likes_num || 0))
 		: [];
