@@ -1,11 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 const GameDetailModal = ({ id, user, game }) => {
   const modalId = `details_modal_${game.id}`;
   const [currentIndex, setCurrentIndex] = useState(0);
-
+  const [preloadedImages, setPreloadedImages] = useState([]);
+  
   const screenshots = game.short_screenshots?.slice(1) || [];
+
+  // Preload all screenshots
+  useEffect(() => {
+    const preloadImages = () => {
+      const imagePromises = screenshots.map((screenshot) => {
+        const img = new Image();
+        img.src = screenshot.image;
+        return new Promise((resolve) => {
+          img.onload = resolve;
+        });
+      });
+
+      Promise.all(imagePromises).then(() => {
+        setPreloadedImages(screenshots);
+      });
+    };
+
+    preloadImages();
+  }, [screenshots]);
 
   const prevSlide = () => {
     setCurrentIndex((prev) =>
@@ -115,29 +135,31 @@ const GameDetailModal = ({ id, user, game }) => {
                   <div className="flex justify-center items-stretch rounded-lg overflow-hidden">
                     <button
                       onClick={prevSlide}
-                      className="w-10 bg-white flex items-center justify-center rounded-l-lg hover:bg-rose-500 transition-all"
+                      className="px-2 bg-white flex items-center justify-center rounded-l-lg hover:bg-rose-500 transition-all"
                     >
                       ❮
                     </button>
 
-                    <div className="bg-white">
-                      <motion.img
-                        drag="x"
-                        dragConstraints={{ left: 0, right: 0 }}
-                        onDragEnd={handleSwipe}
-                        key={currentIndex}
-                        src={screenshots[currentIndex]?.image}
-                        alt={`Screenshot ${currentIndex + 1}`}
-                        className="max-h-full object-contain h-48"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.3 }}
-                      />
+                    <div className="bg-white flex items-center justify-center">
+                      {preloadedImages.length > 0 && (
+                        <motion.img
+                          drag="x"
+                          dragConstraints={{ left: 0, right: 0 }}
+                          onDragEnd={handleSwipe}
+                          key={currentIndex}
+                          src={preloadedImages[currentIndex]?.image}
+                          alt={`Screenshot ${currentIndex + 1}`}
+                          className="h-full object-cover"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ duration: 0.3 }}
+                        />
+                      )}
                     </div>
 
                     <button
                       onClick={nextSlide}
-                      className="w-10 bg-white flex items-center justify-center rounded-r-lg hover:bg-rose-500 transition-all"
+                      className="px-2 bg-white flex items-center justify-center rounded-r-lg hover:bg-rose-500 transition-all"
                     >
                       ❯
                     </button>
