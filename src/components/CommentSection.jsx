@@ -107,7 +107,7 @@ const CommentSection = ({ currentComment, listId, userUid, isAdmin }) => {
 			addComment(listId, newReply);
 			setAlertMsg("Comment successfully posted.");
 			setTimeout(() => setAlertMsg(""), 3000);
-		}
+		}else
 		{
 			setAlertErr("Comment is too long (200 max)");
 			setTimeout(() => setAlertErr(""), 3000);
