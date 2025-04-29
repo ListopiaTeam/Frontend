@@ -66,9 +66,9 @@ const EventPage = () => {
 			{data?.length > 0 ? (
 				<section className="text-center mb-20">
 					<h1 className="text-4xl font-semibold text-rose-500 mb-5">
-						<span className="text-black">Event title:</span> {data?.[0]?.title}
+						{data?.[0]?.title}
 					</h1>
-					<p className="italic mb-3">Description: {data?.[0]?.desc}</p>
+					<h2 className="italic mb-3">{data?.[0]?.desc}</h2>
 					<div className="flex items-center justify-center gap-2">
 						<span>{daysRemaining} Day(s) Remaining</span>
 					</div>
