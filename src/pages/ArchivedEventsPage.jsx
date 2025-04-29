@@ -15,11 +15,11 @@ const ArchivedEventsPage = () => {
 	}, []);
 
 	return (
-		<main className="p-6">
+		<main className="mt-24 p-6">
+			<header>
+				<h2 className="text-2xl text-center font-bold font-mono mb-6">Archived Events</h2>
+			</header>
 			<section>
-				<header>
-					<h2 className="text-2xl font-bold mb-6">Archived Events</h2>
-				</header>
 
 				{archivedEvents.length === 0 ? (
 					<p className="text-gray-500">No archived events yet.</p>
