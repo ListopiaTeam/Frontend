@@ -109,7 +109,14 @@ const CreateList = () => {
 			return;
 		}
 
-		if (!(e.target[0].value && e.target[1].value && 0 < selectedGames.length && 0 < selectedTags.length)) {
+		if (
+			!(
+				e.target[0].value &&
+				e.target[1].value &&
+				0 < selectedGames.length &&
+				0 < selectedTags.length
+			)
+		) {
 			setErr("Give all details to create a list!");
 			setTimeout(() => setErr(""), 4000);
 			return;
@@ -129,7 +136,11 @@ const CreateList = () => {
 		};
 
 		try {
-			if (e.target[0].value.length <= 35 && e.target[1].value.length <= 200 && 0 < selectedTags.length) {
+			if (
+				e.target[0].value.length <= 35 &&
+				e.target[1].value.length <= 200 &&
+				0 < selectedTags.length
+			) {
 				await addList(formData, setList, user?.uid);
 				setMsg("List successfully created!");
 				setTimeout(() => setMsg(""), 4000);

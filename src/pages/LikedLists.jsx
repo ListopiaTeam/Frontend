@@ -1,6 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../UserContext";
-import { getUser, readEventLists,validateAndCleanLikedListRef } from "../utility/crudUtility";
+import {
+	getUser,
+	readEventLists,
+	validateAndCleanLikedListRef,
+} from "../utility/crudUtility";
 import { useQuery } from "@tanstack/react-query";
 import ListCard from "../components/ListCard";
 import { db } from "../utility/firebaseApp";

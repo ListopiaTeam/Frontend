@@ -166,11 +166,11 @@ export const listenToComments = (listId, setComments) => {
 			id: doc.id,
 			...doc.data(),
 		}));
-		setComments(comments);  
+		setComments(comments);
 	});
 };
 
-export const deleteList = async (id,userId) => {
+export const deleteList = async (id, userId) => {
 	try {
 		try {
 			const eventIds = await getActiveEventIds();
@@ -248,7 +248,9 @@ export const validateAndCleanListRef = async (userId, listId) => {
 		const listSnap = await getDoc(listRef);
 
 		if (!listSnap.exists()) {
-			console.log(`List ${listId} not found. Removing reference for user ${userId}.`);
+			console.log(
+				`List ${listId} not found. Removing reference for user ${userId}.`,
+			);
 			const userRef = doc(db, "Users", userId);
 
 			await updateDoc(userRef, {
@@ -272,7 +274,9 @@ export const validateAndCleanLikedListRef = async (userId, listId) => {
 		const listSnap = await getDoc(listRef);
 
 		if (!listSnap.exists()) {
-			console.log(`List ${listId} not found. Removing reference for user ${userId}.`);
+			console.log(
+				`List ${listId} not found. Removing reference for user ${userId}.`,
+			);
 			const userRef = doc(db, "Users", userId);
 
 			await updateDoc(userRef, {

@@ -131,10 +131,8 @@
       - Firestore Inspector
     - View Latest Test Result Summary
       - Displays the `test-results.json` file's contents
-  
   - #### Security
     - Users can request to reset their password on the login page
-  
   - #### Filtering
     - "Unknown", "non-rated" and other games not fitting the site (eg. pornographic content) are hidden from search results
 
