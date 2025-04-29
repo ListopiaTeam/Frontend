@@ -55,6 +55,8 @@
     - Search by title
     - Filter by categories
     - Order by creation date, like count and alphabetically
+  - #### List Details:
+    - Clicking on the games included in a created list shows a modal with the games' details
   - #### Sharing Lists:
     - On the lists' details page there is a share button which copies the lists' URL for easy sharing
     - There is metadata containing basic information about Listopia for better embeds
