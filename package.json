@@ -8,7 +8,7 @@
 		"build": "vite build",
 		"lint": "eslint .",
 		"preview": "vite preview",
-		"testx": "vitest"
+		"test": "vitest"
 	},
 	"dependencies": {
 		"@tanstack/react-query": "^5.71.1",
