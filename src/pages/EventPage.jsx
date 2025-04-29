@@ -70,7 +70,7 @@ const EventPage = () => {
 					</h1>
 					<p className="italic mb-3">Description: {data?.[0]?.desc}</p>
 					<div className="flex items-center justify-center gap-2">
-						<span>{daysRemaining} Days Remaining</span>
+						<span>{daysRemaining} Day(s) Remaining</span>
 					</div>
 				</section>
 			) : (
