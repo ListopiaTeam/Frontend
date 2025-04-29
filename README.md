@@ -17,10 +17,10 @@
 
 - ### Target Audience
   - Currently we're focusing on gaming so our users would most likely be gamers
-    - The site could be about other topics as well but we wanted to make something all of us are familiar with and with what services are available to us
+    - The site could contain other topics as well but we wanted to make something all of us are familiar with (and with what services are available to us)
 - ### Design
   - Most of the website is designed to be responsive and usable on both desktop and mobile devices
-  - The Admin Panel is designed for desktop use as it contains lots of information that would be hard to display on smaller screens
+  - The Admin Panel is designed for desktop use as it contains a lot of information that would be hard to display on smaller screens
   - We're trying to use semantic HTML to improve accessibility
 
 ## Development
@@ -29,7 +29,7 @@
   - [Frontend](https://github.com/orgs/ListopiaTeam/projects/2)
   - [Backend](https://github.com/orgs/ListopiaTeam/projects/3)
 - Code is formatted using Prettier - `bunx prettier --write .`
-- There are some tests available as well
+- There are some tests available as well - `bunx vitest`
 
 ## Requirements
 
@@ -55,6 +55,9 @@
     - Search by title
     - Filter by categories
     - Order by creation date, like count and alphabetically
+  - #### Sharing Lists:
+    - On the lists' details page there is a share button which copies the lists' URL for easy sharing
+    - There is metadata containing basic information about Listopia for better embeds
 
 - ### Events
 
@@ -78,16 +81,16 @@
 
   - #### Liking Content
     - Lists can be liked by users
-      - Some example reasons why a user would use liking:
+      - Example reasons why a user would use liking:
         - Show appreciation to / agreement with the creator
         - Help ranking lists in events
-        - Add the list to liked lists page as a "save for later feature" / "reminder"
+        - Add the list to liked lists page "to save it for later"
 
 - ### Moderation
 
   - #### How To Become An Admin
 
-    - Add `isAdmin` boolean to the user with `true` value
+    - Add `isAdmin` boolean to an user with `true` value in Firebase (Users collection)
 
   - #### Reporting Content
 
@@ -100,7 +103,7 @@
       - Admins here can decide if the content fits the site or not
         - If it doesn't fit the site, the content can be removed
         - If it's a false report, the content gets "approved" and gets cleared from the queue
-    - Problematic users can be deleted from the admin panel
+    - Problematic users can be deleted inside the Admin Panel
 
 - ### User Profile
 
@@ -126,6 +129,12 @@
       - Firestore Inspector
     - View Latest Test Result Summary
       - Displays the `test-results.json` file's contents
+  
+  - #### Security
+    - Users can request to reset their password on the login page
+  
+  - #### Filtering
+    - "Unknown", "non-rated" and other games not fitting the site (eg. pornographic content) are hidden from search results
 
 ## How It Works
 
