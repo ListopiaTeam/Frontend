@@ -330,7 +330,7 @@ const CommentSection = ({ currentComment, listId, userUid, isAdmin }) => {
 					</p>
 				</div>
 			)}
-			<Alert msg={alertMsg} err={alertErr} />;
+			<Alert msg={alertMsg} err={alertErr} />
 		</div>
 	);
 };
