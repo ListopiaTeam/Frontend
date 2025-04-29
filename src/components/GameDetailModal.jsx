@@ -36,37 +36,51 @@ const GameDetailModal = ({ id, user, game }) => {
         onClick={() => document.getElementById(modalId).showModal()}
       >
         <div className="flex flex-col sm:flex-row items-start gap-6">
-          <img
-            loading="lazy"
-            src={game.background_image}
-            alt={game.name}
-            className="sm:w-32 h-32 object-cover rounded-lg"
-          />
+          {game.background_image && (
+            <img
+              loading="lazy"
+              src={game.background_image}
+              alt={game.name}
+              className="sm:w-32 h-32 object-cover rounded-lg"
+            />
+          )}
           <div className="flex-1">
             <h3 className="text-xl font-semibold text-gray-900 group-hover:text-rose-600 transition-colors">
               {game.name}
             </h3>
             <div className="mt-2 flex items-center flex-wrap gap-4 text-gray-600">
-              <p className="flex items-center gap-1">
-                ⭐
-                <span className="font-medium">
-                  {game.rating}
-                  <span className="text-gray-400 ml-1">/5</span>
-                </span>
-              </p>
+              {typeof game.rating === "number" && (
+                <p className="flex items-center gap-1">
+                  ⭐
+                  <span className="font-medium">
+                    {game.rating}
+                    <span className="text-gray-400 ml-1">/5</span>
+                  </span>
+                </p>
+              )}
               {game.released && (
                 <p className="flex items-center gap-1">
-                  <span className="text-gray-400">Released:</span>
-                  <span className="font-medium">
-                    {new Date(game.released).toLocaleDateString()}
+                  <span className="text-gray-500">
+                    Released: {new Date(game.released).toLocaleDateString()}
                   </span>
                 </p>
               )}
             </div>
-            <p>
-              <span className="font-bold">Available at:</span>{" "}
-              {game.stores?.map((store) => store.store.name).join(", ")}
-            </p>
+            {game.stores?.length > 0 && (
+              <>
+                <span className="font-bold">Available at:</span>
+                <ul className="flex flex-wrap gap-2 list-none text-gray-700">
+                  {game.stores.map((s) => (
+                    <li
+                      key={s.store.id}
+                      className="px-3 py-1 bg-gray-200 rounded-full text-sm transition-transform hover:scale-105"
+                    >
+                      {s.store.name}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -84,15 +98,16 @@ const GameDetailModal = ({ id, user, game }) => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
             {/* Left Column - Visuals */}
             <div className="bg-gray-100 p-6">
-              <div className="relative aspect-video rounded-lg overflow-hidden bg-black">
-                <img
-                  src={game.background_image}
-                  alt={game.name}
-                  className="h-full object-cover"
-                />
-              </div>
+              {game.background_image && (
+                <div className="relative aspect-video rounded-lg bg-black">
+                  <img
+                    src={game.background_image}
+                    alt={game.name}
+                    className="h-full w-full"
+                  />
+                </div>
+              )}
 
-              {/* Screenshot Viewer */}
               {screenshots.length > 0 && (
                 <div className="mt-6 bg-gray-200 p-2 rounded-lg flex flex-col items-center">
                   <h3 className="font-semibold text-lg mb-3">Screenshots</h3>
@@ -170,39 +185,45 @@ const GameDetailModal = ({ id, user, game }) => {
                     Metacritic: {game.metacritic}
                   </span>
                 )}
-                <span className="badge badge-lg bg-amber-500 text-black p-2 rounded-full">
-                  Rating: {game.rating?.toFixed(2)}/5
-                </span>
+                {typeof game.rating === "number" && (
+                  <span className="badge badge-lg bg-amber-500 text-black p-2 rounded-full">
+                    Rating: {game.rating.toFixed(2)}/5
+                  </span>
+                )}
               </div>
 
               <div className="space-y-4">
-                <div>
-                  <h3 className="font-semibold text-lg mb-2">Platforms</h3>
-                  <ul className="flex flex-wrap gap-2 list-none text-gray-700">
-                    {game.platforms?.map((p) => (
-                      <li
-                        key={p.platform.id}
-                        className="px-3 py-1 bg-gray-200 rounded-full text-sm transition-transform hover:scale-105"
-                      >
-                        {p.platform.name}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                {game.platforms?.length > 0 && (
+                  <div>
+                    <h3 className="font-semibold text-lg mb-2">Platforms</h3>
+                    <ul className="flex flex-wrap gap-2 list-none text-gray-700">
+                      {game.platforms.map((p) => (
+                        <li
+                          key={p.platform.id}
+                          className="px-3 py-1 bg-gray-200 rounded-full text-sm transition-transform hover:scale-105"
+                        >
+                          {p.platform.name}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
 
-                <div>
-                  <h3 className="font-semibold text-lg mb-2">Stores</h3>
-                  <ul className="flex flex-wrap gap-2 list-none text-gray-700">
-                    {game.stores?.map((s) => (
-                      <li
-                        key={s.store.id}
-                        className="px-3 py-1 bg-gray-200 rounded-full text-sm transition-transform hover:scale-105"
-                      >
-                        {s.store.name}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                {game.stores?.length > 0 && (
+                  <div>
+                    <h3 className="font-semibold text-lg mb-2">Stores</h3>
+                    <ul className="flex flex-wrap gap-2 list-none text-gray-700">
+                      {game.stores.map((s) => (
+                        <li
+                          key={s.store.id}
+                          className="px-3 py-1 bg-gray-200 rounded-full text-sm transition-transform hover:scale-105"
+                        >
+                          {s.store.name}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
 
                 {game.genres?.length > 0 && (
                   <div>
