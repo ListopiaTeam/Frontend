@@ -10,8 +10,8 @@ const TemplateList = ({ src, selectedTags, onTagRemove, onTagModalOpen }) => {
 						className="w-full h-full object-cover"
 					/>
 				) : (
-					<span className="absolute text-white text-3xl font-bold text-center px-4">
-						Image Is Made After Games Are Selected
+					<span className="absolute text-black text-3xl font-bold text-center px-4">
+						Image Gets Selected From First Game In The List
 					</span>
 				)}
 			</div>
