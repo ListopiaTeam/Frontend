@@ -139,9 +139,10 @@ The website is available at: [https://listopia-frontend.netlify.app](https://lis
   - #### Filtering
     - "Unknown", "non-rated" and other games not fitting the site (eg. pornographic content) are hidden from search results
   - #### Navigation
-    - Back button when the user clicks on a list for more details to go back to browsing
+    - There is a "go back" button when the user clicks on a list for more details to go back to browsing
       - For admins this can also go back to the admin panel instead if they visit the list from a report
-    - Go to top button when the user isn't at the top of the page
+    - There is a "scroll top" button when the user isn't at the top of the page
+    - There is an error page with a back button if a requested page cannot be found
 
 ## How It Works
 
