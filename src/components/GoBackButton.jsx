@@ -7,7 +7,7 @@ const GoBackButton = () => {
 	return (
 		<AnimatePresence>
 			<motion.div
-				className="fixed bottom-6 z-50 left-4 sm:right-6 md:bottom-12 lg:right-8"
+				className="fixed w-fit h-fit bottom-6 z-50 left-4 sm:right-6 md:bottom-12 lg:right-8"
 				initial={{ opacity: 0, y: 50 }}
 				animate={{ opacity: 1, y: 0 }}
 				exit={{ opacity: 0, y: 50 }}
