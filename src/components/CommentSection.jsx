@@ -219,9 +219,11 @@ const CommentSection = ({ currentComment, listId, userUid, isAdmin }) => {
 													onChange={(e) =>
 														handleReplyChange(comment.id, e.target.value)
 													}
+													style={{ minHeight: "5rem", height: "10rem", maxHeight: "15rem" }}
 													className="w-full p-2 text-sm border border-gray-200 rounded-lg focus:ring-1 focus:ring-rose-500 focus:border-rose-500"
 													placeholder="Write your reply..."
 													rows="2"
+													maxLength={120}
 												/>
 
 												<div className="mt-2 flex gap-2">
