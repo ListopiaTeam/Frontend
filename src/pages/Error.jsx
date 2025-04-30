@@ -32,7 +32,7 @@ const Error = () => {
 					We can't find that page.
 				</p>
 
-				<GoBackButton/>
+				<GoBackButton />
 			</div>
 		</div>
 	);
