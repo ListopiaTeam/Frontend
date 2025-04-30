@@ -1,13 +1,15 @@
 # Listopia Documentation
 
-<center>
-    <img src="./public/Listopia_Icon_v2_big.png" alt="Listopia Logo">
-    <p>
-        <i>Please note that this project is still work in progress and some features may change</i>
-        <br>
-        The website is available at: <a href="https://listopia-frontend.netlify.app">https://listopia-frontend.netlify.app</a>
-    </p>
-</center>
+![Listopia Icon](./public/Listopia_Icon_v2_big.png)
+
+The website is available at: [https://listopia-frontend.netlify.app](https://listopia-frontend.netlify.app)
+
+### List Of Contents
+- [Short Explanation Of The Software](#short-explanation-of-the-software)
+- [Development](#development)
+- [Requirements](#requirements)
+- [Features & Usage Guide](#features--usage-guide)
+- [How It Works](#how-it-works)
 
 ## Short Explanation Of The Software
 
@@ -135,6 +137,10 @@
     - Users can request to reset their password on the login page
   - #### Filtering
     - "Unknown", "non-rated" and other games not fitting the site (eg. pornographic content) are hidden from search results
+  - #### Navigation
+    - Back button when the user clicks on a list for more details to go back to browsing
+      - For admins this can also go back to the admin panel instead if they visit the list from a report
+    - Go to top button when the user isn't at the top of the page
 
 ## How It Works
 
