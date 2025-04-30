@@ -5,6 +5,7 @@
 The website is available at: [https://listopia-frontend.netlify.app](https://listopia-frontend.netlify.app)
 
 ### List Of Contents
+
 - [Short Explanation Of The Software](#short-explanation-of-the-software)
 - [Development](#development)
 - [Requirements](#requirements)

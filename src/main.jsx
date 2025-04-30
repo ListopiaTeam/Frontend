@@ -22,11 +22,11 @@ const Details = lazy(() => import("./pages/Details.jsx"));
 const AdminPanel = lazy(() => import("./pages/AdminPanel.jsx"));
 const EventPage = lazy(() => import("./pages/EventPage.jsx"));
 const Users = lazy(() => import("./pages/admin/Users.jsx"));
-const ReportedPosts = lazy(
-	() => import("./pages/admin/ReportedPosts.jsx"),
-);
+const ReportedPosts = lazy(() => import("./pages/admin/ReportedPosts.jsx"));
 const CreateEvent = lazy(() => import("./pages/admin/CreateEvent.jsx"));
-const ProfileSettings = lazy(() => import("./pages/profile/ProfileSettings.jsx"));
+const ProfileSettings = lazy(
+	() => import("./pages/profile/ProfileSettings.jsx"),
+);
 const LikedLists = lazy(() => import("./pages/profile/LikedLists.jsx"));
 const MyLists = lazy(() => import("./pages/profile/MyLists.jsx"));
 const ArchivedEventsPage = lazy(() => import("./pages/ArchivedEventsPage.jsx"));

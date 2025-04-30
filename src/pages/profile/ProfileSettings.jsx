@@ -32,7 +32,7 @@ const ProfileSettings = () => {
 		if (user) {
 			reset({ displayName: user.displayName || "" });
 		}
-	}, [user, reset]);	
+	}, [user, reset]);
 
 	const onSubmit = async (data) => {
 		try {
