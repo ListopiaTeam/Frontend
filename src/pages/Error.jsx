@@ -1,4 +1,5 @@
 import React from "react";
+import GoBackButton from "../components/GoBackButton";
 
 const Error = () => {
 	return (
@@ -30,6 +31,8 @@ const Error = () => {
 				<p className="mt-4 text-gray-500 dark:text-gray-400">
 					We can't find that page.
 				</p>
+
+				<GoBackButton/>
 			</div>
 		</div>
 	);
