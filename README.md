@@ -4,13 +4,14 @@
 
 The website is available at: [https://listopia-frontend.netlify.app](https://listopia-frontend.netlify.app)
 
-### List Of Contents
+## List Of Contents
 
 - [Short Explanation Of The Software](#short-explanation-of-the-software)
 - [Development](#development)
 - [Requirements](#requirements)
 - [Features & Usage Guide](#features--usage-guide)
 - [How It Works](#how-it-works)
+- Screenshots in the repository for pages that aren't accessible if the user isn't logged in or isn't an admin
 
 ## Short Explanation Of The Software
 
