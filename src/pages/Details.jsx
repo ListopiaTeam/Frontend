@@ -278,7 +278,11 @@ const ListDetail = () => {
 							</h2>
 							<div className="bg-gray-100 p-6 rounded-xl">
 								<textarea
-									style={{ minHeight: "5rem", height: "10rem", maxHeight: "15rem" }}
+									style={{
+										minHeight: "5rem",
+										height: "10rem",
+										maxHeight: "15rem",
+									}}
 									className={`${
 										!user && "hidden"
 									} w-full p-3 rounded-lg border border-gray-300 focus:ring-rose-500 focus:border-rose-500`}
