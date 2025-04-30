@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import Alert from "../Alert.jsx";
+import Alert from "../../components/Alert";
 import { uploadFile } from "../../utility/uploadFile";
 import { addEvent } from "../../utility/crudUtility";
 

@@ -3,7 +3,7 @@ import React, { useContext, useState } from "react";
 import { deleteUser } from "../../utility/rawgAPI";
 import { fetchUsers } from "../../utility/crudUtility";
 import { UserContext } from "../../UserContext";
-import Alert from "../Alert";
+import Alert from "../../components/Alert";
 
 const Users = () => {
 	const queryClient = useQueryClient();

@@ -6,7 +6,7 @@ import App from "./App.jsx";
 import "./index.css";
 import { UserProvider } from "./UserContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import ShowTestResults from "./components/admin/ShowTestResults.jsx";
+import ShowTestResults from "./pages/admin/ShowTestResults.jsx";
 
 const Login = lazy(() => import("./pages/Login.jsx"));
 const Register = lazy(() => import("./pages/Register.jsx"));
@@ -21,11 +21,11 @@ const PasswordReset = lazy(() => import("./pages/PasswordReset.jsx"));
 const Details = lazy(() => import("./pages/Details.jsx"));
 const AdminPanel = lazy(() => import("./pages/AdminPanel.jsx"));
 const EventPage = lazy(() => import("./pages/EventPage.jsx"));
-const Users = lazy(() => import("./components/admin/Users.jsx"));
+const Users = lazy(() => import("./pages/admin/Users.jsx"));
 const ReportedPosts = lazy(
-	() => import("./components/admin/ReportedPosts.jsx"),
+	() => import("./pages/admin/ReportedPosts.jsx"),
 );
-const CreateEvent = lazy(() => import("./components/admin/CreateEvent.jsx"));
+const CreateEvent = lazy(() => import("./pages/admin/CreateEvent.jsx"));
 const ProfileSettings = lazy(() => import("./pages/ProfileSettings.jsx"));
 const LikedLists = lazy(() => import("./pages/LikedLists.jsx"));
 const MyLists = lazy(() => import("./pages/MyLists.jsx"));
@@ -33,7 +33,7 @@ const ArchivedEventsPage = lazy(() => import("./pages/ArchivedEventsPage.jsx"));
 const ArchivedEventDetails = lazy(
 	() => import("./pages/ArchivedEventDetails.jsx"),
 );
-const SchemaViewer = lazy(() => import("./components/admin/Schema_temp.jsx"));
+const SchemaViewer = lazy(() => import("./pages/admin/Schema_temp.jsx"));
 
 const queryClient = new QueryClient();
 

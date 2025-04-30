@@ -7,7 +7,7 @@ import {
 	resolveReports,
 } from "../../utility/crudUtility";
 import { NavLink } from "react-router-dom";
-import Alert from "../Alert";
+import Alert from "../../components/Alert";
 
 const ReportedPosts = () => {
 	const [selCateg, setSelCateg] = useState([]);
@@ -63,10 +63,10 @@ const ReportedPosts = () => {
 		try {
 			await resolveReports(id);
 			queryClient.invalidateQueries(["reportedLists"]);
-			setAlertMsg("Resolved reports successfully.");
+			setAlertMsg("Approved post successfully.");
 			setTimeout(() => setAlertMsg(""), 3000);
 		} catch (error) {
-			setAlertErr("Error resolving list.");
+			setAlertErr("Error approving list.");
 			setTimeout(() => setAlertErr(""), 3000);
 		}
 	};
