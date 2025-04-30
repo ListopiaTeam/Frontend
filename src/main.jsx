@@ -26,9 +26,9 @@ const ReportedPosts = lazy(
 	() => import("./pages/admin/ReportedPosts.jsx"),
 );
 const CreateEvent = lazy(() => import("./pages/admin/CreateEvent.jsx"));
-const ProfileSettings = lazy(() => import("./pages/ProfileSettings.jsx"));
-const LikedLists = lazy(() => import("./pages/LikedLists.jsx"));
-const MyLists = lazy(() => import("./pages/MyLists.jsx"));
+const ProfileSettings = lazy(() => import("./pages/profile/ProfileSettings.jsx"));
+const LikedLists = lazy(() => import("./pages/profile/LikedLists.jsx"));
+const MyLists = lazy(() => import("./pages/profile/MyLists.jsx"));
 const ArchivedEventsPage = lazy(() => import("./pages/ArchivedEventsPage.jsx"));
 const ArchivedEventDetails = lazy(
 	() => import("./pages/ArchivedEventDetails.jsx"),

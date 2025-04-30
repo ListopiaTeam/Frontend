@@ -1,33 +1,35 @@
 import React, { useContext, useEffect, useState } from "react";
-import { UserContext } from "../UserContext";
+import { UserContext } from "../../UserContext";
 import {
 	getUser,
 	readEventLists,
-	validateAndCleanLikedListRef,
-} from "../utility/crudUtility";
+	validateAndCleanListRef,
+} from "../../utility/crudUtility";
 import { useQuery } from "@tanstack/react-query";
-import ListCard from "../components/ListCard";
-import { db } from "../utility/firebaseApp";
+import ListCard from "../../components/ListCard";
 import { doc, getDoc } from "firebase/firestore";
+import { db } from "../../utility/firebaseApp";
 
-const LikedLists = () => {
+const MyLists = () => {
 	const { user } = useContext(UserContext);
 	const [userData, setUserData] = useState(null);
 
 	const { data, error, isLoading } = useQuery({
-		queryKey: ["likedLists", user?.uid],
+		queryKey: ["myLists", user?.uid],
 		queryFn: async () => {
-			if (userData?.likedLists?.length) {
+			if (userData?.createdLists?.length) {
 				const validLists = [];
 
-				for (const listId of userData.likedLists) {
+				// Manually validate each list
+				for (const listId of userData.createdLists) {
 					const listRef = doc(db, "Lists", listId);
 					const listSnap = await getDoc(listRef);
 
 					if (listSnap.exists()) {
 						validLists.push({ ...listSnap.data(), listId: listSnap.id });
 					} else {
-						await validateAndCleanLikedListRef(user.uid, listId, "likedLists");
+						// Clean up invalid reference
+						await validateAndCleanListRef(user.uid, listId);
 					}
 				}
 
@@ -35,7 +37,7 @@ const LikedLists = () => {
 			}
 			return [];
 		},
-		enabled: !!userData?.likedLists,
+		enabled: !!userData?.createdLists,
 	});
 
 	useEffect(() => {
@@ -62,7 +64,7 @@ const LikedLists = () => {
 	}
 
 	const sortedData = data
-		? [...data].sort((a, b) => (b.likes_num || 0) - (a.likes_num || 0))
+		? [...data].sort((a, b) => b.timestamp - a.timestamp)
 		: [];
 
 	return (
@@ -86,4 +88,4 @@ const LikedLists = () => {
 	);
 };
 
-export default LikedLists;
+export default MyLists;

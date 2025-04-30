@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { UserContext } from "../UserContext";
-import { extractUrlAndId } from "../utility/utils";
-import { deletePhoto, uploadFile } from "../utility/uploadFile.js";
-import Alert from "../components/Alert.jsx";
-import "../index.css";
+import { UserContext } from "../../UserContext";
+import { extractUrlAndId } from "../../utility/utils.js";
+import { deletePhoto, uploadFile } from "../../utility/uploadFile.js";
+import Alert from "../../components/Alert.jsx";
 
 const ProfileSettings = () => {
 	const { user, updateCredentials, deleteAccount, logoutUser } =
@@ -26,11 +25,14 @@ const ProfileSettings = () => {
 		register,
 		handleSubmit,
 		formState: { errors },
-	} = useForm({
-		defaultValues: {
-			displayName: user?.displayName || "",
-		},
-	});
+		reset,
+	} = useForm();
+
+	useEffect(() => {
+		if (user) {
+			reset({ displayName: user.displayName || "" });
+		}
+	}, [user, reset]);	
 
 	const onSubmit = async (data) => {
 		try {
