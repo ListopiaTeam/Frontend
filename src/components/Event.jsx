@@ -1,13 +1,17 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getActiveEvent } from "../utility/crudUtility";
 import { NavLink } from "react-router-dom";
+import { UserContext } from "../UserContext";
 
 const Event = () => {
+	const { user } = useContext(UserContext);
 	const { data, error, isLoading } = useQuery({
 		queryKey: ["activeEvent"],
 		queryFn: () => getActiveEvent(),
 	});
+
+
 
 	const eventEndDate = new Date(data?.[0]?.endDate.seconds * 1000);
 	const currentDate = new Date();
@@ -42,8 +46,8 @@ const Event = () => {
 
 					<div className="flex flex-col sm:flex-row gap-6 items-center sm:items-start">
 						<NavLink
-							to="/create"
-							className="group relative flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 text-sm font-semibold text-white bg-rose-600 rounded-lg shadow-lg hover:bg-rose-700 transition-all transform hover:scale-105"
+							to={`${user ? "/create" : "/"}`}
+							className={`${!user && "cursor-not-allowed hover:scale-100"} group relative flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 text-sm font-semibold text-white bg-rose-600 rounded-lg shadow-lg hover:bg-rose-700 transition-all transform hover:scale-105`}
 						>
 							<span>Join the Event</span>
 							<svg

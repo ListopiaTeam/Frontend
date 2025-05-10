@@ -16,6 +16,24 @@ const CommentSection = ({ currentComment, listId, userUid, isAdmin }) => {
 
 	const [showReplies, setShowReplies] = useState({});
 
+	const [showPopup, setShowPopup] = useState(false)
+	const [commentToDelete, setCommentToDelete] = useState(null)
+
+	const handleDeleteComment = async () => {
+			if (!commentToDelete) return;
+			try {
+				await deleteComment(commentToDelete.listId, commentToDelete.id);
+				setShowPopup(false);
+				setCommentToDelete(null);
+				setAlertMsg("Comment deleted successfully.");
+				setTimeout(() => setAlertMsg(""), 3000);
+			} catch (error) {
+				console.error(error);
+				setAlertErr("Error deleting comment.");
+				setTimeout(() => setAlertErr(""), 3000);
+			}
+		};
+
 	const [avatar, setAvatar] = useState(null);
 
 	const { user } = useContext(UserContext);
@@ -185,8 +203,11 @@ const CommentSection = ({ currentComment, listId, userUid, isAdmin }) => {
 
 											{(userUid === comment.userId || isAdmin) && (
 												<button
-													onClick={() =>
-														deleteComment(comment.listId, comment.id)
+													onClick={() => {
+														setShowPopup(true)
+														setCommentToDelete(comment)
+													}
+														
 													}
 													className="flex items-center gap-1 text-xs font-medium text-rose-600 hover:text-rose-700"
 												>
@@ -295,8 +316,10 @@ const CommentSection = ({ currentComment, listId, userUid, isAdmin }) => {
 
 													{(reply.userId === userUid || isAdmin) && (
 														<button
-															onClick={() =>
-																deleteComment(reply.listId, reply.id)
+															onClick={() =>{
+																setShowPopup(true)
+																setCommentToDelete(comment)
+															}
 															}
 															className="flex items-center gap-1 text-xs font-medium text-rose-600 hover:text-rose-700"
 														>
@@ -333,6 +356,50 @@ const CommentSection = ({ currentComment, listId, userUid, isAdmin }) => {
 					<p className="text-gray-500 text-sm font-medium">
 						No comments yet. Be the first to share your thoughts!
 					</p>
+				</div>
+			)}
+			{showPopup && (
+				<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+					<div className="bg-white rounded-xl p-6 sm:p-8 w-full max-w-xs sm:max-w-md shadow-xl">
+						<div className="text-center">
+							<div className="mx-auto flex items-center justify-center h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-red-100 mb-4">
+								<svg
+									className="h-5 w-5 sm:h-6 sm:w-6 text-red-600"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										strokeWidth={2}
+										d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+									/>
+								</svg>
+							</div>
+							<h3 className="text-lg sm:text-xl font-medium text-gray-900 mb-2">
+								Delete Comment
+							</h3>
+							<p className="text-gray-500 mb-4 sm:mb-6 text-sm sm:text-base">
+								Are you sure you want to delete this comment? This action cannot be
+								undone.
+							</p>
+							<div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center">
+								<button
+									onClick={() => setShowPopup(false)}
+									className="px-4 py-2 sm:px-5 sm:py-2.5 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-sm sm:text-base"
+								>
+									Cancel
+								</button>
+								<button
+									onClick={handleDeleteComment}
+									className="px-4 py-2 sm:px-5 sm:py-2.5 text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors text-sm sm:text-base"
+								>
+									Confirm Delete
+								</button>
+							</div>
+						</div>
+					</div>
 				</div>
 			)}
 			<Alert msg={alertMsg} err={alertErr} />
