@@ -159,7 +159,7 @@ export default function SchemaInspector() {
 						className={`px-4 py-2 rounded-md text-white font-medium ${
 							isLoading
 								? "bg-gray-400 cursor-not-allowed"
-								: "bg-red-500 hover:bg-red-500"
+								: "bg-rose-500 hover:bg-rose-600"
 						}`}
 					>
 						{isLoading ? "Analyzing..." : "Analyze Collection"}
