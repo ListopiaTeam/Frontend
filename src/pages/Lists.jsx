@@ -17,7 +17,6 @@ const Lists = () => {
 	const [selCateg, setSelCateg] = useState([]);
 	const [gameQuery, setGameQuery] = useState("");
 	const [triggerSearch, setTriggerSearch] = useState(false);
-	const [selectedCategories, setSelectedCategories] = useState([]);
 	const [isCategoryOpen, setIsCategoryOpen] = useState(false);
 
 	// Key is what user is shown - Value is used for sorting logic, by default should be timestamp
@@ -134,7 +133,7 @@ const Lists = () => {
 							<input
 								type="text"
 								className="w-full border-none outline-none p-2 text-gray-900 placeholder-gray-400"
-								placeholder="Search for a game"
+								placeholder="Search for a list"
 								onChange={(e) => setGameQuery(e.target.value)}
 								value={gameQuery}
 								onKeyDown={(e) => e.key === "Enter" && searchGame()}
@@ -159,8 +158,8 @@ const Lists = () => {
 								className="w-full p-3 bg-white border border-gray-300 rounded-lg flex items-center justify-between hover:border-gray-400"
 							>
 								<span className="truncate">
-									{selectedCategories.length > 0
-										? `${selectedCategories.length} selected`
+									{selCateg.length > 0
+										? `${selCateg.length} selected`
 										: "All Categories"}
 								</span>
 								<span
@@ -172,17 +171,12 @@ const Lists = () => {
 
 							{isCategoryOpen && (
 								<div className="absolute z-10 w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-xl max-h-96 overflow-y-auto">
-									<div className="p-2 text-sm text-gray-500 border-b">
-										Select categories:
-									</div>
 									<div className="divide-y">
 										{tags?.map((category, index) => (
 											<label
 												key={category}
 												className={`flex items-center p-3 space-x-3 cursor-pointer hover:bg-rose-300 ${
-													selectedCategories.includes(category)
-														? "bg-rose-50"
-														: ""
+													selCateg.includes(category) ? "bg-rose-50" : ""
 												} ${index % 2 == 0 ? "bg-rose-100" : ""}`}
 											>
 												<input

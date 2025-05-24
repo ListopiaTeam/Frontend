@@ -11,8 +11,6 @@ const Event = () => {
 		queryFn: () => getActiveEvent(),
 	});
 
-
-
 	const eventEndDate = new Date(data?.[0]?.endDate.seconds * 1000);
 	const currentDate = new Date();
 	const daysRemaining = Math.ceil(

@@ -16,23 +16,23 @@ const CommentSection = ({ currentComment, listId, userUid, isAdmin }) => {
 
 	const [showReplies, setShowReplies] = useState({});
 
-	const [showPopup, setShowPopup] = useState(false)
-	const [commentToDelete, setCommentToDelete] = useState(null)
+	const [showPopup, setShowPopup] = useState(false);
+	const [commentToDelete, setCommentToDelete] = useState(null);
 
 	const handleDeleteComment = async () => {
-			if (!commentToDelete) return;
-			try {
-				await deleteComment(commentToDelete.listId, commentToDelete.id);
-				setShowPopup(false);
-				setCommentToDelete(null);
-				setAlertMsg("Comment deleted successfully.");
-				setTimeout(() => setAlertMsg(""), 3000);
-			} catch (error) {
-				console.error(error);
-				setAlertErr("Error deleting comment.");
-				setTimeout(() => setAlertErr(""), 3000);
-			}
-		};
+		if (!commentToDelete) return;
+		try {
+			await deleteComment(commentToDelete.listId, commentToDelete.id);
+			setShowPopup(false);
+			setCommentToDelete(null);
+			setAlertMsg("Comment deleted successfully.");
+			setTimeout(() => setAlertMsg(""), 3000);
+		} catch (error) {
+			console.error(error);
+			setAlertErr("Error deleting comment.");
+			setTimeout(() => setAlertErr(""), 3000);
+		}
+	};
 
 	const [avatar, setAvatar] = useState(null);
 
@@ -204,11 +204,9 @@ const CommentSection = ({ currentComment, listId, userUid, isAdmin }) => {
 											{(userUid === comment.userId || isAdmin) && (
 												<button
 													onClick={() => {
-														setShowPopup(true)
-														setCommentToDelete(comment)
-													}
-														
-													}
+														setShowPopup(true);
+														setCommentToDelete(comment);
+													}}
 													className="flex items-center gap-1 text-xs font-medium text-rose-600 hover:text-rose-700"
 												>
 													Delete comment
@@ -316,11 +314,10 @@ const CommentSection = ({ currentComment, listId, userUid, isAdmin }) => {
 
 													{(reply.userId === userUid || isAdmin) && (
 														<button
-															onClick={() =>{
-																setShowPopup(true)
-																setCommentToDelete(comment)
-															}
-															}
+															onClick={() => {
+																setShowPopup(true);
+																setCommentToDelete(comment);
+															}}
 															className="flex items-center gap-1 text-xs font-medium text-rose-600 hover:text-rose-700"
 														>
 															Delete comment
@@ -381,8 +378,8 @@ const CommentSection = ({ currentComment, listId, userUid, isAdmin }) => {
 								Delete Comment
 							</h3>
 							<p className="text-gray-500 mb-4 sm:mb-6 text-sm sm:text-base">
-								Are you sure you want to delete this comment? This action cannot be
-								undone.
+								Are you sure you want to delete this comment? This action cannot
+								be undone.
 							</p>
 							<div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center">
 								<button
