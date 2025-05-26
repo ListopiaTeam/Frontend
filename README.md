@@ -91,6 +91,7 @@ The website is available at: [https://listopia-frontend.netlify.app](https://lis
         - Show appreciation to / agreement with the creator
         - Help ranking lists in events
         - Add the list to liked lists page "to save it for later"
+    - Top 3 most liked lists are shown on the home page
 
 - ### Moderation
 
