@@ -24,7 +24,7 @@
 		"updated": 0,
 		"didUpdate": false
 	},
-	"startTime": 1745936299281,
+	"startTime": 1748275200320,
 	"success": true,
 	"testResults": [
 		{
@@ -34,13 +34,13 @@
 					"fullName": "Login panel should render login",
 					"status": "passed",
 					"title": "should render login",
-					"duration": 44.69378000000006,
+					"duration": 45.66649600000005,
 					"failureMessages": [],
 					"meta": {}
 				}
 			],
-			"startTime": 1745936300495,
-			"endTime": 1745936300539.6938,
+			"startTime": 1748275201608,
+			"endTime": 1748275201653.6665,
 			"status": "passed",
 			"message": "",
 			"name": "/home/nkkrisz/Programming/Frontend/src/tests/Login.test.jsx"
@@ -52,7 +52,7 @@
 					"fullName": "UserContext should initialize with user as undefinied",
 					"status": "passed",
 					"title": "should initialize with user as undefinied",
-					"duration": 15.316605999999979,
+					"duration": 15.252689000000032,
 					"failureMessages": [],
 					"meta": {}
 				},
@@ -61,7 +61,7 @@
 					"fullName": "UserContext should sign in a user successfully",
 					"status": "passed",
 					"title": "should sign in a user successfully",
-					"duration": 11.180375000000026,
+					"duration": 11.071903999999904,
 					"failureMessages": [],
 					"meta": {}
 				},
@@ -70,7 +70,7 @@
 					"fullName": "UserContext should sign up a user successfully",
 					"status": "passed",
 					"title": "should sign up a user successfully",
-					"duration": 6.845981999999935,
+					"duration": 6.242422000000033,
 					"failureMessages": [],
 					"meta": {}
 				},
@@ -79,7 +79,7 @@
 					"fullName": "UserContext should send password reset email successfully",
 					"status": "passed",
 					"title": "should send password reset email successfully",
-					"duration": 7.250246000000061,
+					"duration": 5.05986299999995,
 					"failureMessages": [],
 					"meta": {}
 				},
@@ -88,7 +88,7 @@
 					"fullName": "UserContext should update user profile successfully",
 					"status": "passed",
 					"title": "should update user profile successfully",
-					"duration": 7.394015999999965,
+					"duration": 5.4890570000000025,
 					"failureMessages": [],
 					"meta": {}
 				},
@@ -97,7 +97,7 @@
 					"fullName": "UserContext should log out a user successfully",
 					"status": "passed",
 					"title": "should log out a user successfully",
-					"duration": 5.37319100000002,
+					"duration": 4.5715979999999945,
 					"failureMessages": [],
 					"meta": {}
 				},
@@ -106,13 +106,13 @@
 					"fullName": "UserContext should delete user account successfully",
 					"status": "passed",
 					"title": "should delete user account successfully",
-					"duration": 3.9158800000000156,
+					"duration": 4.088884999999891,
 					"failureMessages": [],
 					"meta": {}
 				}
 			],
-			"startTime": 1745936300225,
-			"endTime": 1745936300282.9158,
+			"startTime": 1748275201343,
+			"endTime": 1748275201395.0889,
 			"status": "passed",
 			"message": "",
 			"name": "/home/nkkrisz/Programming/Frontend/src/tests/UserContext.test.jsx"
