@@ -139,6 +139,8 @@ The website is available at: [https://listopia-frontend.netlify.app](https://lis
     - Users can request to reset their password on the login page
   - #### Filtering
     - "Unknown", "non-rated" and other games not fitting the site (eg. pornographic content) are hidden from search results
+  - #### Limits
+    - Usernames and passwords have a minimum-, other text fields (eg. comments) have a maximum length requirement
   - #### Navigation
     - There is a "go back" button when the user clicks on a list for more details to go back to browsing
       - For admins this can also go back to the admin panel instead if they visit the list from a report
