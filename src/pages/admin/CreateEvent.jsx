@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useQuery, useQueryClient } from "@tanstack/react-query"; // make sure to import
 import Alert from "../../components/Alert";
 import { uploadFile } from "../../utility/uploadFile";
 import { addEvent } from "../../utility/crudUtility";
+import { getActiveEvent } from "../../utility/crudUtility";
 
 const CreateEvent = () => {
 	const [message, setMessage] = useState([]);
@@ -11,31 +13,40 @@ const CreateEvent = () => {
 		setDate(new Date().toISOString().split("T")[0]);
 	}, []);
 
+	const { data } = useQuery({
+		queryKey: ["activeEvent"],
+		queryFn: () => getActiveEvent(),
+	});
+
+	const queryClient = useQueryClient();
+
 	const {
 		register,
 		handleSubmit,
+		reset,
 		formState: { errors },
 	} = useForm();
 
-	const handleEventCreation = async (data) => {
+	const handleEventCreation = async (formData) => {
 		try {
-			const file = data?.file ? data.file[0] : null;
+			const file = formData?.file ? formData.file[0] : null;
+			const { url } = file ? await uploadFile(file) : {};
 
-			const { url, id } = file ? await uploadFile(file) : {};
-
-			const formData = {
-				title: data.eventName,
-				desc: data.eventDesc,
-				endDate: new Date(data.eventDate),
+			const payload = {
+				title: formData.eventName,
+				desc: formData.eventDesc,
+				endDate: new Date(formData.eventDate),
 				eventImage: url,
 				submitedLists: [],
 				isActive: true,
 			};
 
-			await addEvent(formData, setMessage);
+			await addEvent(payload, setMessage);
+			reset(); // ✅ Clear the form
 			setTimeout(() => {
 				setMessage("");
 			}, 3000);
+			queryClient.invalidateQueries({ queryKey: ["activeEvent"] }); // optional: refetch activeEvent
 		} catch (error) {
 			console.log(error);
 			setTimeout(() => {
@@ -127,13 +138,18 @@ const CreateEvent = () => {
 
 					<button
 						type="submit"
-						className="w-full px-6 py-2 bg-rose-500 text-white font-semibold rounded-lg hover:bg-rose-600 transition-all"
+						disabled={data?.[0]?.isActive}
+						className={`w-full px-6 py-2 font-semibold rounded-lg transition-all ${
+							data?.[0]?.isActive
+								? "bg-gray-400 cursor-not-allowed text-white"
+								: "bg-rose-500 text-white hover:bg-rose-600"
+						}`}
 					>
 						Create Event
 					</button>
 				</form>
 			</div>
-			{message.success == true ? (
+			{message.success === true ? (
 				<Alert msg={message.message} />
 			) : (
 				message && <Alert err={message.message} />

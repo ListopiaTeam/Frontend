@@ -37,8 +37,12 @@ const EventPage = () => {
 		enabled: !!data?.[0]?.submitedLists?.length,
 	});
 
-	if (isLoading || submittedLoading) return <div>Loading...</div>;
-	if (error || submittedError) return <div>Error loading event.</div>;
+	if (isLoading || submittedLoading)
+		return <div className="mt-32 text-center text-white">Loading...</div>;
+	if (error || submittedError)
+		return (
+			<div className="mt-32 text-center text-red-500">Error loading event.</div>
+		);
 
 	const eventEndDate = new Date(data?.[0]?.endDate.seconds * 1000);
 	const currentDate = new Date();
@@ -62,26 +66,83 @@ const EventPage = () => {
 	const remainingLists = sortedLists?.slice(3);
 
 	return (
-		<main className="mt-32 font-mono flex flex-col justify-center items-center">
+		<main className="font-mono flex flex-col justify-center items-center">
 			{data?.length > 0 ? (
-				<section className="text-center mb-20">
-					<h1 className="text-4xl font-semibold text-rose-500 mb-5">
-						{data?.[0]?.title}
-					</h1>
-					<h2 className="italic mb-3">{data?.[0]?.desc}</h2>
-					<div className="flex items-center justify-center gap-2">
-						<span>{daysRemaining} Day(s) Remaining</span>
+				<section
+					style={{
+						backgroundImage: `url(${data?.[0]?.eventImage || "Banner.jpg"})`,
+					}}
+					// Updated classes to match the homepage Event component more closely
+					className="relative min-h-[80vh] bg-cover bg-center bg-no-repeat bg-fixed w-full"
+				>
+					{/* Overlay with gradient similar to homepage */}
+					<div className="absolute inset-0 bg-gradient-to-t sm:bg-gradient-to-tr from-gray-900/95 via-gray-900/70 to-transparent"></div>
+
+					{/* Content container, centered for event page */}
+					<div className="relative mx-auto max-w-screen-xl px-4 py-24 sm:px-6 flex h-[80vh] items-center justify-center lg:px-8">
+						<div className="max-w-2xl text-center space-y-8">
+							<div className="space-y-4">
+								{/* Event Title */}
+								<h1 className="text-4xl sm:text-6xl font-bold text-white leading-tight">
+									<span className="bg-gradient-to-r from-rose-400 to-rose-600 bg-clip-text text-transparent">
+										{data?.[0]?.title}
+									</span>
+									{/* Event Description (optional, can be similar to homepage's "Create Lists!" if you want a tagline) */}
+									{data?.[0]?.desc && (
+										<strong className="block mt-3 text-3xl sm:text-5xl font-extrabold text-white">
+											{data?.[0]?.desc}
+										</strong>
+									)}
+								</h1>
+								{/* You can add a short intro if the desc is used as tagline above */}
+								{!data?.[0]?.desc && (
+									<p className="text-lg sm:text-xl text-gray-200 max-w-2xl leading-relaxed">
+										Discover the best lists submitted for this event!
+									</p>
+								)}
+							</div>
+
+							{/* Days Remaining, styled similarly to homepage's clock icon part */}
+							{data?.[0].endDate && (
+								<div className="mt-12 flex items-center justify-center gap-4 text-gray-300 text-sm">
+									<div className="flex items-center gap-2 text-xl sm:text-2xl font-semibold">
+										{" "}
+										{/* Larger text for prominence */}
+										<svg
+											className="w-6 h-6 text-rose-400" // Increased size
+											fill="none"
+											stroke="currentColor"
+											viewBox="0 0 24 24"
+										>
+											<path
+												strokeLinecap="round"
+												strokeLinejoin="round"
+												strokeWidth={2}
+												d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+											/>
+										</svg>
+										<span>
+											{daysRemaining <= 0
+												? "Event Ended"
+												: `${daysRemaining} Day(s) Remaining`}
+										</span>
+									</div>
+								</div>
+							)}
+						</div>
 					</div>
 				</section>
 			) : (
-				<h1 className="text-center text-3xl">
-					There is no active event at the moment.
-				</h1>
+				<section className="mt-32 text-center p-8">
+					<h1 className="text-3xl text-rose-500">
+						There is no active event at the moment.
+					</h1>
+				</section>
 			)}
 
 			{topLists?.length > 0 && (
-				<section className="container flex flex-col justify-center mx-8 pb-6">
-					<h2 className="text-2xl font-semibold text-center mb-6">
+				<section className="container flex flex-col justify-center mx-8 pt-10 pb-6">
+					<h2 className="text-2xl font-semibold text-center mb-6 text-black">
 						Top 3 Most Liked Lists
 					</h2>
 					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
@@ -99,27 +160,42 @@ const EventPage = () => {
 							</article>
 						))}
 					</div>
-					<hr className="h-6 mt-12" />
+					<hr className="h-6 mt-12 border-gray-300" />
 				</section>
 			)}
 
-			<section className="container mx-8 pb-6">
-				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-					{remainingLists?.map((game) => (
-						<article key={game.listId}>
-							<ListCard
-								description={game.desc}
-								title={game.title}
-								likes={game.likes}
-								categories={game.categories}
-								url={game.games[0]?.background_image}
-								id={game.listId}
-								username={game.username}
-							/>
-						</article>
-					))}
-				</div>
-			</section>
+			{submittedLists?.length === 0 ? (
+				<footer className="pt-10 pb-12">
+					{" "}
+					{/* Added pt-10 for spacing after banner */}
+					<p className="text-center text-gray-400 italic text-lg">
+						{" "}
+						{/* Adjusted text color and size */}
+						No lists were submitted to this event.
+					</p>
+				</footer>
+			) : remainingLists.length > 0 ? (
+				<section className="container mx-8 pb-6 pt-6 -mt-6">
+					<h2 className="text-2xl font-semibold text-center mb-6 text-black">
+						Remaining Lists
+					</h2>
+					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+						{remainingLists?.map((game) => (
+							<article key={game.listId}>
+								<ListCard
+									description={game.desc}
+									title={game.title}
+									likes={game.likes}
+									categories={game.categories}
+									url={game.games[0]?.background_image}
+									id={game.listId}
+									username={game.username}
+								/>
+							</article>
+						))}
+					</div>
+				</section>
+			) : null}
 		</main>
 	);
 };

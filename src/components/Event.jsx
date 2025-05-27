@@ -25,7 +25,7 @@ const Event = () => {
 			className={`relative min-h-[80vh] bg-cover bg-center bg-no-repeat bg-fixed`}
 		>
 			<div className="absolute inset-0 bg-gradient-to-t sm:bg-gradient-to-tr from-gray-900/95 via-gray-900/70 to-transparent"></div>
-			<div className="relative mx-auto max-w-screen-xl px-4 py-24 sm:px-6 lg:flex lg:h-[80vh] lg:items-center lg:px-8">
+			<div className="relative mx-auto max-w-screen-xl px-4 py-24 sm:px-6 flex h-[80vh] items-center justify-center sm:justify-start lg:px-8">
 				<div className="max-w-2xl text-center sm:text-left space-y-8">
 					<div className="space-y-4">
 						<h1 className="text-4xl sm:text-6xl font-bold text-white leading-tight">
