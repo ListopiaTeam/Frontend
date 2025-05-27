@@ -70,15 +70,19 @@ const Header = () => {
 				<div className="flex flex-wrap md:flex-nowrap items-center justify-between py-2">
 					<div className="flex items-center justify-between w-full md:w-auto">
 						<NavLink to="/" className="flex items-center space-x-2">
-							<img
-								loading="lazy"
-								src="/Listopia_Icon_v2_big.png"
-								alt="Listopia"
-								className="h-8 w-8 transition-transform hover:scale-105"
-							/>
-							<span className="text-lg sm:text-xl font-bold text-rose-500">
-								LISTOPIA
-							</span>
+							{({ isActive }) => (
+                                <div className="pl-2 sm:pl-0 gap-2 flex items-center">
+                                    <img
+                                        loading="lazy"
+                                        src="/Listopia_Icon_v2_big.png"
+                                        alt="Listopia"
+                                        className="h-8 w-8 transition-transform hover:scale-105"
+                                    />
+                                    <span className={`text-lg sm:text-xl font-bold transition-colors text-rose-500 ${isActive ? 'underline' : 'hover:text-rose-600'}`}>
+                                        LISTOPIA
+                                    </span>
+                                </div>
+                            )}
 						</NavLink>
 						<button
 							onClick={() => setShow(!show)}
