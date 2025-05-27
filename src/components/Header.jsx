@@ -3,7 +3,8 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { UserContext } from "../UserContext";
 import { extractUrlAndId } from "../utility/utils";
-import { getUser } from "../utility/crudUtility";
+import { getUser, getActiveEvent } from "../utility/crudUtility";
+import { useQuery } from "@tanstack/react-query";
 
 const Header = () => {
 	const [show, setShow] = useState(false);
@@ -11,6 +12,11 @@ const Header = () => {
 	const [isAdmin, setIsAdmin] = useState(false);
 	const { user, logoutUser } = useContext(UserContext);
 	const navigate = useNavigate();
+
+	const { data } = useQuery({
+		queryKey: ["activeEvent"],
+		queryFn: () => getActiveEvent(),
+	});
 
 	const logOut = () => {
 		logoutUser();
@@ -22,174 +28,164 @@ const Header = () => {
 			setAvatar(extractUrlAndId(user.photoURL).url);
 			!user && setAvatar(null);
 		}
-
 		const fetchAdminStatus = async () => {
 			if (user?.uid) {
 				const userData = await getUser(user.uid);
-				if (userData && userData.isAdmin) {
-					setIsAdmin(true);
-				} else {
-					setIsAdmin(false);
-				}
+				setIsAdmin(userData?.isAdmin || false);
 			}
 		};
-
 		fetchAdminStatus();
-	}, [user, user?.photoURL]);
+	}, [user]);
 
 	const menuVariants = {
-		open: { opacity: 1, y: 0 },
-		closed: { opacity: 0, y: "-100%" },
+		open: {
+			opacity: 1,
+			y: 0,
+			height: "auto",
+			transition: {
+				duration: 0.2,
+				ease: "easeOut",
+			},
+		},
+		closed: {
+			opacity: 0,
+			height: 0,
+			transition: {
+				duration: 0.2,
+				ease: "easeIn",
+			},
+		},
 	};
+
+	const linkClass = ({ isActive }) =>
+		`flex items-center px-1 py-1 rounded-md transition-colors text-md flex-none ${
+			isActive
+				? "text-rose-500 before:content-['>'] before:mr-1"
+				: "text-white hover:text-rose-500"
+		}`;
 
 	return (
 		<nav className="fixed top-0 left-0 w-full z-50 bg-gray-900/95 backdrop-blur-sm border-b border-gray-700 font-mono">
-			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-				<div className="flex items-center justify-between h-16">
-					{/* Logo */}
-					<NavLink to="/" className="flex items-center space-x-2">
-						<img
-							loading="lazy"
-							src="/Listopia_Icon_v2_big.png"
-							alt="Listopia"
-							className="h-8 w-8 transition-transform hover:scale-105"
-						/>
-						<span className="text-xl font-bold text-rose-500">LISTOPIA</span>
-					</NavLink>
-
-					{/* Desktop Navigation */}
-					<div className="hidden md:flex items-center space-x-8">
-						<div className="flex items-center space-x-6">
-							{user && (
-								<>
-									<NavLink
-										to="/create"
-										className={({ isActive }) =>
-											`block px-3 py-2 rounded-md transition-colors relative ${
-												isActive
-													? "text-rose-500 pl-6 before:content-['>'] before:absolute before:left-3"
-													: "text-white hover:text-rose-500"
-											}`
-										}
-									>
-										Create List
-									</NavLink>
-
-									{/* Admin Panel - Only for Admins */}
-									{isAdmin && (
-										<NavLink
-											to="/adminpanel/users"
-											className={({ isActive }) =>
-												`block px-3 py-2 rounded-md transition-colors relative ${
-													isActive
-														? "text-rose-500 pl-6 before:content-['>'] before:absolute before:left-3"
-														: "text-white hover:text-rose-500"
-												}`
-											}
-										>
-											Admin Panel
-										</NavLink>
-									)}
-								</>
-							)}
-							<NavLink
-								to="/lists"
-								className={({ isActive }) =>
-									`block px-3 py-2 rounded-md transition-colors relative ${
-										isActive
-											? "text-rose-500 pl-6 before:content-['>'] before:absolute before:left-3"
-											: "text-white hover:text-rose-500"
-									}`
-								}
+			<div className="max-w-7xl mx-auto sm:px-4 lg:px-6">
+				<div className="flex flex-wrap md:flex-nowrap items-center justify-between py-2">
+					<div className="flex items-center justify-between w-full md:w-auto">
+						<NavLink to="/" className="flex items-center space-x-2">
+							<img
+								loading="lazy"
+								src="/Listopia_Icon_v2_big.png"
+								alt="Listopia"
+								className="h-8 w-8 transition-transform hover:scale-105"
+							/>
+							<span className="text-lg sm:text-xl font-bold text-rose-500">
+								LISTOPIA
+							</span>
+						</NavLink>
+						<button
+							onClick={() => setShow(!show)}
+							className="md:hidden p-2 text-gray-400 hover:text-rose-500"
+						>
+							<svg
+								className="h-6 w-6"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
 							>
-								Lists
-							</NavLink>
-						</div>
+								{show ? (
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										strokeWidth={2}
+										d="M6 18L18 6M6 6l12 12"
+									/>
+								) : (
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										strokeWidth={2}
+										d="M4 6h16M4 12h16M4 18h16"
+									/>
+								)}
+							</svg>
+						</button>
+					</div>
 
-						{/* Auth Section */}
-						<div className="ml-6 flex items-center space-x-6 border-l border-gray-700 pl-6">
+					<div className="hidden md:flex md:items-center sm:space-x-0 lg:space-x-6 py-1">
+						{user && (
+							<>
+								<NavLink to="/create" className={linkClass}>
+									Create List
+								</NavLink>
+							</>
+						)}
+
+						<NavLink to="/lists" className={linkClass}>
+							Lists
+						</NavLink>
+
+						<NavLink
+							to={data?.[0]?.isActive ? "/currentEvent" : "/archivedEvents"}
+							className={linkClass}
+						>
+							{data?.[0]?.isActive ? "Current Event" : "Archived Events"}
+						</NavLink>
+
+						{user && isAdmin && (
+							<NavLink to="/adminpanel/users" className={linkClass}>
+								Admin Panel
+							</NavLink>
+						)}
+
+						<div className="flex items-center space-x-3 border-l border-gray-700 pl-4">
 							{!user ? (
 								<>
 									<NavLink
 										to="/register"
-										className="text-white hover:text-rose-500 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+										className="text-white hover:text-rose-500 text-sm"
 									>
 										Register
 									</NavLink>
 									<NavLink
 										to="/login"
-										className="bg-rose-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-rose-700 transition-colors"
+										className="bg-rose-600 text-white px-3 py-1.5 rounded-md hover:bg-rose-700 text-sm"
 									>
 										Login
 									</NavLink>
 								</>
 							) : (
-								<div className="flex items-center space-x-4">
+								<>
 									<NavLink
 										to="/profile/profilesettings"
-										className="flex items-center space-x-2 text-white hover:text-rose-500 transition-colors"
+										className="flex items-center space-x-2 text-white hover:text-rose-500 text-sm"
 									>
-										<div className="h-8 w-8 rounded-full bg-gray-700 flex items-center justify-center">
+										<div className="h-7 w-7 rounded-full bg-gray-700 flex items-center justify-center overflow-hidden">
 											{avatar ? (
 												<img
 													loading="lazy"
-													className="h-8 w-8 rounded-full"
+													className="h-7 w-7 object-cover"
 													src={avatar}
-													alt="Profile picture"
+													alt="Profile"
 												/>
 											) : (
-												<span className="text-sm font-medium">
+												<span className="text-xs font-medium">
 													{user?.displayName?.charAt(0).toUpperCase()}
 												</span>
 											)}
 										</div>
-										<span className="text-sm font-medium">
-											{user?.displayName}
-										</span>
+										<span>{user?.displayName}</span>
 									</NavLink>
 									<button
 										onClick={logOut}
-										className="text-white hover:text-rose-500 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+										className="text-white hover:text-rose-500 text-sm"
 									>
 										Logout
 									</button>
-								</div>
+								</>
 							)}
 						</div>
 					</div>
-
-					{/* Mobile Menu Button */}
-					<button
-						onClick={() => setShow(!show)}
-						className="md:hidden p-2 rounded-md text-gray-400 hover:text-rose-500 focus:outline-none"
-					>
-						<svg
-							className="h-6 w-6"
-							fill="none"
-							stroke="currentColor"
-							viewBox="0 0 24 24"
-						>
-							{show ? (
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth={2}
-									d="M6 18L18 6M6 6l12 12"
-								/>
-							) : (
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth={2}
-									d="M4 6h16M4 12h16M4 18h16"
-								/>
-							)}
-						</svg>
-					</button>
 				</div>
 			</div>
 
-			{/* Mobile Menu */}
 			<AnimatePresence>
 				{show && (
 					<motion.div
@@ -197,127 +193,80 @@ const Header = () => {
 						animate="open"
 						exit="closed"
 						variants={menuVariants}
-						transition={{ duration: 0.2 }}
-						className="md:hidden absolute w-full bg-gray-800/95 backdrop-blur-sm"
+						className="md:hidden w-full bg-gray-800/95 backdrop-blur-sm px-3 pt-2 pb-4 space-y-2 overflow-hidden"
 					>
-						<div className="px-4 pt-2 pb-4 space-y-2">
+						{user && (
+							<>
+								<NavLink
+									to="/create"
+									onClick={() => setShow(false)}
+									className={linkClass}
+								>
+									Create List
+								</NavLink>
+							</>
+						)}
+						<NavLink
+							to="/lists"
+							onClick={() => setShow(false)}
+							className={linkClass}
+						>
+							Lists
+						</NavLink>
+						<NavLink
+							to={data?.[0]?.isActive ? "/currentEvent" : "/archivedEvents"}
+							onClick={() => setShow(false)}
+							className={linkClass}
+						>
+							{data?.[0]?.isActive ? "Current Event" : "Archived Events"}
+						</NavLink>
+						{user && isAdmin && (
 							<NavLink
-								to="/"
+								to="/adminpanel/users"
 								onClick={() => setShow(false)}
-								className={({ isActive }) =>
-									`block px-3 py-2 rounded-md transition-colors relative ${
-										isActive
-											? "text-rose-500 pl-6 before:content-['>'] before:absolute before:left-3"
-											: "text-white hover:text-rose-500"
-									}`
-								}
+								className={linkClass}
 							>
-								Home
+								Admin Panel
 							</NavLink>
-
-							{user && (
+						)}
+						<div className="border-t border-gray-700 pt-2 mt-2 space-y-1">
+							{!user ? (
 								<>
 									<NavLink
-										to="/create"
+										to="/register"
 										onClick={() => setShow(false)}
-										className={({ isActive }) =>
-											`block px-3 py-2 rounded-md transition-colors relative ${
-												isActive
-													? "text-rose-500 pl-6 before:content-['>'] before:absolute before:left-3"
-													: "text-white hover:text-rose-500"
-											}`
-										}
+										className={linkClass}
 									>
-										Create List
+										Register
 									</NavLink>
-
-									{/* Admin Panel - Only for Admins */}
-									{isAdmin && (
-										<NavLink
-											to="/adminpanel/users"
-											onClick={() => setShow(false)}
-											className={({ isActive }) =>
-												`block px-3 py-2 rounded-md transition-colors relative ${
-													isActive
-														? "text-rose-500 pl-6 before:content-['>'] before:absolute before:left-3"
-														: "text-white hover:text-rose-500"
-												}`
-											}
-										>
-											Admin Panel
-										</NavLink>
-									)}
+									<NavLink
+										to="/login"
+										onClick={() => setShow(false)}
+										className={linkClass}
+									>
+										Login
+									</NavLink>
+								</>
+							) : (
+								<>
+									<NavLink
+										to="/profile/profilesettings"
+										onClick={() => setShow(false)}
+										className={linkClass}
+									>
+										Profile
+									</NavLink>
+									<button
+										onClick={() => {
+											logOut();
+											setShow(false);
+										}}
+										className="w-full text-left text-white hover:text-rose-500 px-1 py-1 text-md"
+									>
+										Logout
+									</button>
 								</>
 							)}
-
-							<NavLink
-								to="/lists"
-								onClick={() => setShow(false)}
-								className={({ isActive }) =>
-									`block px-3 py-2 rounded-md transition-colors relative ${
-										isActive
-											? "text-rose-500 pl-6 before:content-['>'] before:absolute before:left-3"
-											: "text-white hover:text-rose-500"
-									}`
-								}
-							>
-								Lists
-							</NavLink>
-
-							<div className="border-t border-gray-700 pt-2 mt-2">
-								{!user ? (
-									<>
-										<NavLink
-											to="/register"
-											onClick={() => setShow(false)}
-											className={({ isActive }) =>
-												`block px-3 py-2 rounded-md transition-colors relative ${
-													isActive
-														? "text-rose-500 pl-6 before:content-['>'] before:absolute before:left-3"
-														: "text-white hover:text-rose-500"
-												}`
-											}
-										>
-											Register
-										</NavLink>
-										<NavLink
-											to="/login"
-											onClick={() => setShow(false)}
-											className={({ isActive }) =>
-												`block px-3 py-2 rounded-md transition-colors relative ${
-													isActive
-														? "text-rose-500 pl-6 before:content-['>'] before:absolute before:left-3"
-														: "text-rose-500 hover:text-rose-600"
-												}`
-											}
-										>
-											Login
-										</NavLink>
-									</>
-								) : (
-									<>
-										<NavLink
-											to="/profile/profilesettings"
-											onClick={() => setShow(false)}
-											className={({ isActive }) =>
-												`block px-3 py-2 rounded-md transition-colors relative ${
-													isActive
-														? "text-rose-500 pl-6 before:content-['>'] before:absolute before:left-3"
-														: "text-white hover:text-rose-500"
-												}`
-											}
-										>
-											Profile
-										</NavLink>
-										<button
-											onClick={logOut}
-											className="w-full text-left px-3 py-2 text-white hover:text-rose-500 rounded-md transition-colors"
-										>
-											Logout
-										</button>
-									</>
-								)}
-							</div>
 						</div>
 					</motion.div>
 				)}
