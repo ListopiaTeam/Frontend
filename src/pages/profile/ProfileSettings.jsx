@@ -36,6 +36,12 @@ const ProfileSettings = () => {
 
 	const onSubmit = async (data) => {
 		try {
+			if (data.displayName.length < 5 || data.displayName.length >	 15) {
+				setAlertErr("Username must be between 5-15 characters");
+				setTimeout(() => setAlertErr(""), 3000);
+				return;
+      		}
+
 			userImgId && (await deletePhoto(userImgId));
 			const file = data?.file ? data.file[0] : null;
 
@@ -94,7 +100,7 @@ const ProfileSettings = () => {
 						placeholder="Username"
 						className="peer h-8 w-full border-none bg-transparent p-0 placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
 						minLength={5}
-						maxLength={20}
+						maxLength={15}
 					/>
 					<span className="absolute start-3 top-3 -translate-y-1/2 text-xs transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:text-xs text-slate-600 select-none">
 						Username
