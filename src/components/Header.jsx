@@ -154,7 +154,7 @@ const Header = () => {
 
 						)}
 
-						<div className="flex items-center space-x-3 border-l border-gray-700 pl-4">
+						<div className="flex items-center space-x-6 border-l border-gray-700 pl-4">
 							{!user ? (
 								<>
 									<NavLink
@@ -172,30 +172,31 @@ const Header = () => {
 								</>
 							) : (
 								<>
-									<NavLink
-										to="/profile/profilesettings"
-										className={({ isActive }) =>
-									`flex items-center px-1 py-1 rounded-md transition-colors text-md flex-none ${isActive || location.pathname.startsWith("/profile")
-										? "text-rose-500"
-										: "text-white hover:text-rose-500"
-									}`
-								}
+								<NavLink
+									to="/profile/profilesettings"
+									className={({ isActive }) =>
+										`flex items-center px-1 py-1 rounded-md transition-colors text-md flex-none gap-2 ${ 
+										isActive || location.pathname.startsWith("/profile")
+											? "text-rose-500 underline "
+											: "text-white hover:text-rose-500"
+										}`
+									}
 									>
-										<div className="h-7 w-7 rounded-full bg-gray-700 flex items-center justify-center overflow-hidden">
-											{avatar ? (
-												<img
-													loading="lazy"
-													className="h-7 w-7 object-cover"
-													src={avatar}
-													alt="Profile"
-												/>
-											) : (
-												<span className="text-xs font-medium">
-													{user?.displayName?.charAt(0).toUpperCase()}
-												</span>
-											)}
-										</div>
-										<span>{user?.displayName}</span>
+									<div className="h-7 w-7 rounded-full bg-gray-700 flex items-center justify-center overflow-hidden">
+										{avatar ? (
+										<img
+											loading="lazy"
+											className="h-7 w-7 object-cover"
+											src={avatar}
+											alt="Profile"
+										/>
+										) : (
+										<span className="text-xs font-medium">
+											{user?.displayName?.charAt(0).toUpperCase()}
+										</span>
+										)}
+									</div>
+									<span className="ml-1">{user?.displayName}</span> 
 									</NavLink>
 									<button
 										onClick={logOut}
@@ -253,7 +254,7 @@ const Header = () => {
 								Admin Panel
 							</NavLink>
 						)}
-						<div className="border-t border-gray-700 pt-2 mt-2 space-y-1">
+						<div className="border-t border-gray-700 pt-2 mt-2 space-y-1 ">
 							{!user ? (
 								<>
 									<NavLink

@@ -64,7 +64,7 @@ const EventPage = () => {
 
 	const topLists = sortedLists?.slice(0, 3);
 	const remainingLists = sortedLists?.slice(3);
-
+	
 	return (
 		<main className="font-mono flex flex-col justify-center items-center">
 			{data?.length > 0 ? (
@@ -72,29 +72,29 @@ const EventPage = () => {
 					style={{
 						backgroundImage: `url(${data?.[0]?.eventImage || "Banner.jpg"})`,
 					}}
-					// Updated classes to match the homepage Event component more closely
+					
 					className="relative min-h-[80vh] bg-cover bg-center bg-no-repeat bg-fixed w-full"
 				>
-					{/* Overlay with gradient similar to homepage */}
+			
 					<div className="absolute inset-0 bg-gradient-to-t sm:bg-gradient-to-tr from-gray-900/95 via-gray-900/70 to-transparent"></div>
 
-					{/* Content container, centered for event page */}
+					
 					<div className="relative mx-auto max-w-screen-xl px-4 py-24 sm:px-6 flex h-[80vh] items-center justify-center lg:px-8">
 						<div className="max-w-2xl text-center space-y-8">
 							<div className="space-y-4">
-								{/* Event Title */}
+					
 								<h1 className="text-4xl sm:text-6xl font-bold text-white leading-tight">
 									<span className="bg-gradient-to-r from-rose-400 to-rose-600 bg-clip-text text-transparent">
 										{data?.[0]?.title}
 									</span>
-									{/* Event Description (optional, can be similar to homepage's "Create Lists!" if you want a tagline) */}
+							
 									{data?.[0]?.desc && (
 										<strong className="block mt-3 text-3xl sm:text-5xl font-extrabold text-white">
 											{data?.[0]?.desc}
 										</strong>
 									)}
 								</h1>
-								{/* You can add a short intro if the desc is used as tagline above */}
+							
 								{!data?.[0]?.desc && (
 									<p className="text-lg sm:text-xl text-gray-200 max-w-2xl leading-relaxed">
 										Discover the best lists submitted for this event!
@@ -102,14 +102,14 @@ const EventPage = () => {
 								)}
 							</div>
 
-							{/* Days Remaining, styled similarly to homepage's clock icon part */}
+					
 							{data?.[0].endDate && (
 								<div className="mt-12 flex items-center justify-center gap-4 text-gray-300 text-sm">
 									<div className="flex items-center gap-2 text-xl sm:text-2xl font-semibold">
 										{" "}
-										{/* Larger text for prominence */}
+							
 										<svg
-											className="w-6 h-6 text-rose-400" // Increased size
+											className="w-6 h-6 text-rose-400" 
 											fill="none"
 											stroke="currentColor"
 											viewBox="0 0 24 24"
@@ -160,17 +160,20 @@ const EventPage = () => {
 							</article>
 						))}
 					</div>
+
+					   {remainingLists?.length > 0 && (
 					<hr className="h-6 mt-12 border-gray-300" />
+					)}
 				</section>
 			)}
 
 			{submittedLists?.length === 0 ? (
 				<footer className="pt-10 pb-12">
 					{" "}
-					{/* Added pt-10 for spacing after banner */}
+					
 					<p className="text-center text-gray-400 italic text-lg">
 						{" "}
-						{/* Adjusted text color and size */}
+					
 						No lists were submitted to this event.
 					</p>
 				</footer>

@@ -142,8 +142,9 @@ const ArchivedEventDetails = () => {
 							</article>
 						))}
 					</div>
-					<hr className="h-6 mt-12 border-gray-300" />{" "}
-		
+			   {remainingLists?.length > 0 && (
+					<hr className="h-6 mt-12 border-gray-300" />
+					)}
 				</section>
 			)}
 

@@ -42,21 +42,21 @@ const ArchivedEventsPage = () => {
 
 	return (
 		<main className="font-mono flex flex-col justify-center items-center">
-			{/* Header banner section */}
+		
 			<section
 				style={{
-					backgroundImage: `url("/Banner.jpg")`, // Use a default banner image
+					backgroundImage: `url("/Banner.jpg")`,
 				}}
 				className="relative min-h-[80vh] bg-cover bg-center bg-no-repeat bg-fixed w-full"
 			>
-				{/* Overlay with gradient similar to homepage */}
+		
 				<div className="absolute inset-0 bg-gradient-to-t sm:bg-gradient-to-tr from-gray-900/95 via-gray-900/70 to-transparent"></div>
 
-				{/* Content container, centered */}
+				
 				<div className="relative mx-auto max-w-screen-xl px-4 py-24 sm:px-6 flex h-[80vh] items-center justify-center lg:px-8">
 					<div className="max-w-2xl text-center space-y-8">
 						<div className="space-y-4">
-							{/* Title for Archived Events Page */}
+					
 							<h1 className="text-4xl sm:text-6xl font-bold text-white leading-tight">
 								<span className="bg-gradient-to-r from-rose-400 to-rose-600 bg-clip-text text-transparent">
 									Archived
@@ -73,10 +73,10 @@ const ArchivedEventsPage = () => {
 				</div>
 			</section>
 
-			{/* Main content for archived events grid */}
+		
 			<section className="container mx-auto p-6 pt-10">
 				{" "}
-				{/* Added pt-10 for spacing after banner */}
+				
 				{archivedEvents.length === 0 ? (
 					<p className="text-gray-400 text-center text-lg">
 						No archived events yet.
@@ -88,25 +88,24 @@ const ArchivedEventsPage = () => {
 								to={`/archivedEvents/${event.id}`}
 								key={event.id}
 								state={event}
-								className="block" // Make the NavLink a block element for better card sizing
+								className="block" 
 							>
 								<article
-									className="relative rounded-2xl overflow-hidden shadow-lg h-64 group transform hover:scale-105 transition-transform duration-300 ease-in-out" // Added hover effect
+									className="relative rounded-2xl overflow-hidden shadow-lg h-64 group transform hover:scale-105 transition-transform duration-300 ease-in-out" 
 									style={{
-										backgroundImage: `url(${event.eventImage || "/placeholder-event.jpg"})`, // Fallback for event image
+										backgroundImage: `url(${event.eventImage || "/placeholder-event.jpg"})`, 
 										backgroundSize: "cover",
 										backgroundPosition: "center",
 									}}
 								>
 									<div className="absolute inset-0 bg-black bg-opacity-50 group-hover:bg-opacity-70 transition-opacity duration-300" />{" "}
-									{/* Darker hover overlay */}
+								
 									<div className="absolute bottom-0 p-4 text-white z-10">
 										<header>
 											<h3 className="text-2xl font-bold mb-1">{event.title}</h3>{" "}
-											{/* Larger title */}
+								
 											<p className="text-base text-gray-200">
-												{" "}
-												{/* Adjusted text size */}
+										
 												Ended: {event.endDate.toDate().toLocaleDateString()}
 											</p>
 										</header>

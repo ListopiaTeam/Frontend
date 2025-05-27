@@ -13,8 +13,8 @@ const Register = () => {
 		const data = new FormData(e.currentTarget);
 		 const username = data.get("displayName");
 
-		if (username.length < 5 || username.length > 20) {
-			setMessage({ err: "Username must be between 5 and 20 characters." });
+		if (username.length < 5 || username.length > 15) {
+			setMessage({ err: "Username must be between 5 and 15 characters." });
 			setTimeout(() => {
 				setMessage({err: ""})
 			}, 5000)
@@ -58,7 +58,7 @@ const Register = () => {
 									name="displayName"
 									required
 									minLength={5}
-									maxLength={20}
+									maxLength={15}
 									className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition-all"
 									placeholder="Enter your username"
 								/>
