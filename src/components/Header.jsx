@@ -5,12 +5,15 @@ import { UserContext } from "../UserContext";
 import { extractUrlAndId } from "../utility/utils";
 import { getUser, getActiveEvent } from "../utility/crudUtility";
 import { useQuery } from "@tanstack/react-query";
+import { useLocation } from "react-router-dom";
 
 const Header = () => {
 	const [show, setShow] = useState(false);
 	const [avatar, setAvatar] = useState(null);
 	const [isAdmin, setIsAdmin] = useState(false);
 	const { user, logoutUser } = useContext(UserContext);
+	const location = useLocation();
+
 	const navigate = useNavigate();
 
 	const { data } = useQuery({
@@ -58,10 +61,9 @@ const Header = () => {
 	};
 
 	const linkClass = ({ isActive }) =>
-		`flex items-center px-1 py-1 rounded-md transition-colors text-md flex-none ${
-			isActive
-				? "text-rose-500 before:content-['>'] before:mr-1"
-				: "text-white hover:text-rose-500"
+		`flex items-center px-1 py-1 rounded-md transition-colors text-md flex-none ${isActive
+			? "text-rose-500 before:content-['>'] before:mr-1"
+			: "text-white hover:text-rose-500"
 		}`;
 
 	return (
@@ -137,9 +139,19 @@ const Header = () => {
 						</NavLink>
 
 						{user && isAdmin && (
-							<NavLink to="/adminpanel/users" className={linkClass}>
+							<NavLink
+								to="/adminpanel/users"
+								className={({ isActive }) =>
+									`flex items-center px-1 py-1 rounded-md transition-colors text-md flex-none ${isActive || location.pathname.startsWith("/adminpanel")
+										? "text-rose-500 before:content-['>'] before:mr-1"
+										: "text-white hover:text-rose-500"
+									}`
+								}
+							>
 								Admin Panel
 							</NavLink>
+
+
 						)}
 
 						<div className="flex items-center space-x-3 border-l border-gray-700 pl-4">
@@ -162,7 +174,12 @@ const Header = () => {
 								<>
 									<NavLink
 										to="/profile/profilesettings"
-										className="flex items-center space-x-2 text-white hover:text-rose-500 text-sm"
+										className={({ isActive }) =>
+									`flex items-center px-1 py-1 rounded-md transition-colors text-md flex-none ${isActive || location.pathname.startsWith("/profile")
+										? "text-rose-500"
+										: "text-white hover:text-rose-500"
+									}`
+								}
 									>
 										<div className="h-7 w-7 rounded-full bg-gray-700 flex items-center justify-center overflow-hidden">
 											{avatar ? (

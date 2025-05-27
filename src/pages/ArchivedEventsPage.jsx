@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { readEvents } from "../utility/crudUtility";
 import { NavLink } from "react-router-dom";
+import GoBackButton from "../components/GoBackButton";
 
 const ArchivedEventsPage = () => {
 	const [archivedEvents, setArchivedEvents] = useState([]);
@@ -116,6 +117,7 @@ const ArchivedEventsPage = () => {
 					</div>
 				)}
 			</section>
+			<GoBackButton/>
 		</main>
 	);
 };

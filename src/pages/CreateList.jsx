@@ -145,6 +145,9 @@ const CreateList = () => {
 				setMsg("List successfully created!");
 				setTimeout(() => setMsg(""), 4000);
 				setSelectedGames([]);
+				setSearchedGame("")
+				setSubmitted(false)
+				setGames([])
 			} else {
 				setErr("The title or description length is too long.");
 				setTimeout(() => setErr(""), 4000);

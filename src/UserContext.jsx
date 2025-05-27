@@ -37,6 +37,9 @@ export const UserProvider = ({ children }) => {
 		} catch (error) {
 			console.log(error);
 			setMessage({ err: error.message });
+			setTimeout(() => {
+				setMessage({err: ""})
+			}, 5000)
 		}
 	};
 
@@ -68,6 +71,9 @@ export const UserProvider = ({ children }) => {
 		} catch (error) {
 			console.error(error);
 			setMessage({ err: error.message });
+			setTimeout(() => {
+				setMessage({err: ""})
+			}, 5000)
 		}
 	};
 
