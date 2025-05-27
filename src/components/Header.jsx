@@ -61,13 +61,13 @@ const Header = () => {
 	};
 
 	const linkClass = ({ isActive }) =>
-		`flex items-center px-1 py-1 rounded-md transition-colors text-md flex-none ${isActive
+		`flex items-center px-1 py-1 rounded-md transition-colors flex-none ${isActive
 			? "text-rose-500 before:content-['>'] before:mr-1"
 			: "text-white hover:text-rose-500"
 		}`;
 
 	return (
-		<nav className="fixed top-0 left-0 w-full z-50 bg-gray-900/95 backdrop-blur-sm border-b border-gray-700 font-mono">
+		<nav className="fixed top-0 left-0 w-full z-50 bg-gray-900/95 backdrop-blur-sm border-b text-md md:text-sm lg:text-base border-gray-700 font-mono ">
 			<div className="max-w-7xl mx-auto sm:px-4 lg:px-6">
 				<div className="flex flex-wrap md:flex-nowrap items-center justify-between py-2">
 					<div className="flex items-center justify-between w-full md:w-auto">
