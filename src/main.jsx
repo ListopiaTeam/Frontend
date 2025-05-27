@@ -1,6 +1,12 @@
 import { useEffect, useRef, lazy } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import {
+	BrowserRouter,
+	Route,
+	Routes,
+	useLocation,
+	Navigate,
+} from "react-router-dom"; // Import Navigate
 import { AnimatePresence, motion } from "framer-motion";
 import App from "./App.jsx";
 import "./index.css";
@@ -170,6 +176,8 @@ const AppWrapper = () => {
 						)
 					}
 				>
+					{/* Redirect /profile to /profile/profilesettings */}
+					<Route index element={<Navigate to="profilesettings" replace />} />
 					<Route path="profilesettings" element={<ProfileSettings />} />
 					<Route path="likedlists" element={<LikedLists />} />
 					<Route path="mylists" element={<MyLists />} />
@@ -281,6 +289,8 @@ const AppWrapper = () => {
 						)
 					}
 				>
+					{/* Redirect /adminpanel to /adminpanel/users */}
+					<Route index element={<Navigate to="users" replace />} />
 					<Route path="users" element={<Users />} />
 					<Route path="reportedposts" element={<ReportedPosts />} />
 					<Route path="createevent" element={<CreateEvent />} />
