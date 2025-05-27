@@ -11,11 +11,14 @@ const Event = () => {
 		queryFn: () => getActiveEvent(),
 	});
 
-	const eventEndDate = new Date(data?.[0]?.endDate.seconds * 1000);
+	const eventEndDate = new Date(data?.[0]?.endDate?.seconds * 1000);
 	const currentDate = new Date();
 	const daysRemaining = Math.ceil(
 		(eventEndDate - currentDate) / (1000 * 3600 * 24),
 	);
+
+	const hasActiveEvent = data && data.length > 0;
+	const isButtonDisabled = !user || !hasActiveEvent;
 
 	return (
 		<section
@@ -45,22 +48,24 @@ const Event = () => {
 					<div className="flex flex-col sm:flex-row gap-6 items-center sm:items-start">
 						<NavLink
 							to={`${user ? "/create" : "/"}`}
-							className={`${!user && "cursor-not-allowed hover:scale-100"} group relative flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 text-sm font-semibold text-white bg-rose-600 rounded-lg shadow-lg hover:bg-rose-700 transition-all transform hover:scale-105`}
+							className={`${isButtonDisabled ? "bg-gray-400 cursor-not-allowed hover:scale-100" : "bg-rose-600 hover:bg-rose-700 hover:scale-105"} group relative flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 text-sm font-semibold text-white rounded-lg shadow-lg transition-all transform`}
 						>
 							<span>Join the Event</span>
-							<svg
-								className="w-4 h-4 group-hover:translate-x-1 transition-transform"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-							>
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth={2}
-									d="M17 8l4 4m0 0l-4 4m4-4H3"
-								/>
-							</svg>
+							{!isButtonDisabled && (
+								<svg
+									className="w-4 h-4 group-hover:translate-x-1 transition-transform"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										strokeWidth={2}
+										d="M17 8l4 4m0 0l-4 4m4-4H3"
+									/>
+								</svg>
+							)}
 						</NavLink>
 
 						<NavLink
@@ -103,7 +108,7 @@ const Event = () => {
 							<span>Archived Events</span>
 						</NavLink>
 					</div>
-					{data?.[0].endDate && (
+					{hasActiveEvent && data[0].endDate && (
 						<div className="mt-12 flex items-center justify-center sm:justify-start gap-4 text-gray-300 text-sm">
 							<div className="flex items-center gap-2">
 								<svg
@@ -119,9 +124,7 @@ const Event = () => {
 										d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
 									/>
 								</svg>
-								<span>
-									{data?.[0].endDate && daysRemaining + " Days Remaining"}{" "}
-								</span>
+								<span>{daysRemaining > 1 ? `${daysRemaining} Days Remaining` : `${daysRemaining} Day Remaining`}</span>
 							</div>
 						</div>
 					)}
