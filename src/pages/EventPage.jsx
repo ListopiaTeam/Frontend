@@ -64,6 +64,8 @@ const EventPage = () => {
 
 	const topLists = sortedLists?.slice(0, 3);
 	const remainingLists = sortedLists?.slice(3);
+
+	daysRemaining && console.log(daysRemaining);
 	
 	return (
 		<main className="font-mono flex flex-col justify-center items-center">
@@ -122,9 +124,7 @@ const EventPage = () => {
 											/>
 										</svg>
 										<span>
-											{daysRemaining <= 0
-												? "Event Ended"
-												: `${daysRemaining} Day(s) Remaining`}
+											{daysRemaining == 0 ? "Event Ended / Ending Soon" : daysRemaining > 1 ? `${daysRemaining} Days Remaining` : `${daysRemaining} Day Remaining`}
 										</span>
 									</div>
 								</div>
@@ -167,17 +167,17 @@ const EventPage = () => {
 				</section>
 			)}
 
-			{submittedLists?.length === 0 ? (
+			{data?.length > 0 && !submittedLists ? (
 				<footer className="pt-10 pb-12">
 					{" "}
 					
 					<p className="text-center text-gray-400 italic text-lg">
 						{" "}
 					
-						No lists were submitted to this event.
+						No lists were submitted to this event yet.
 					</p>
 				</footer>
-			) : remainingLists.length > 0 ? (
+			) : remainingLists?.length > 0 ? (
 				<section className="container mx-8 pb-6 pt-6 -mt-6">
 					<h2 className="text-2xl font-semibold text-center mb-6 text-black">
 						Remaining Lists
