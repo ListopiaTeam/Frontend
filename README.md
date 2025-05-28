@@ -134,7 +134,7 @@ The website is available at: [https://listopia-frontend.netlify.app](https://lis
   - #### Navbar
     - Clicking the Listopia icon on the navbar makes the user go to the home page
     - The navbar indicates which page the user is currently on with a ">" and red highlight
-      - When on the home page or profile page "LISTOPIA" or the logged in user's name gets underlined instead
+      - When on the home page "LISTOPIA" gets underlined instead
   
   - #### Buttons
     - There is a "go back" button when the user clicks on a list for more details to go back to browsing
