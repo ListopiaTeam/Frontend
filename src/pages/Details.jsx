@@ -362,9 +362,9 @@ const ListDetail = () => {
 				</div>
 			</div>
 		</div>
-		<Alert msg={alertMsg} err={alertErr} />
 	</div>
 )}
+<Alert msg={alertMsg} err={alertErr} />
 
 		</main>
 	);
