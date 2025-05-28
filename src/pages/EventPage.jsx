@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { getActiveEvent, readEventLists } from "../utility/crudUtility";
 import ListCard from "../components/ListCard";
 import { useQueryClient } from "@tanstack/react-query";
+import GoBackButton from "../components/GoBackButton";
 
 const EventPage = () => {
 	const { data, error, isLoading } = useQuery({
@@ -199,6 +200,7 @@ const EventPage = () => {
 					</div>
 				</section>
 			) : null}
+			<GoBackButton/>
 		</main>
 	);
 };
