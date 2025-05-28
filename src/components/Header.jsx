@@ -81,7 +81,7 @@ const Header = () => {
 										className="h-8 w-8 transition-transform hover:scale-105"
 									/>
 									<span
-										onClick={() => setShow(!show)}
+										onClick={() => setShow(false)}
 										className={`text-md lg:text-lg font-bold transition-colors text-rose-500 ${isActive ? "underline" : "hover:text-rose-600"}`}
 									>
 										LISTOPIA
@@ -167,7 +167,7 @@ const Header = () => {
 										to="/login"
 										className="bg-rose-600 text-white px-3 py-1.5 rounded-md hover:bg-rose-700 text-sm"
 									>
-										Login
+										Login 
 									</NavLink>
 								</>
 							) : (
@@ -177,7 +177,7 @@ const Header = () => {
 									className={({ isActive }) =>
 										`flex items-center px-1 py-1 rounded-md transition-colors text-md flex-none gap-2 ${ 
 										isActive || location.pathname.startsWith("/profile")
-											? "text-rose-500 underline "
+											? "text-rose-500 underline"
 											: "text-white hover:text-rose-500"
 										}`
 									}
