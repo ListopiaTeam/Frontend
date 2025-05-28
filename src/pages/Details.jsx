@@ -163,7 +163,7 @@ const ListDetail = () => {
 											setAlertMsg("List deleted successfully!");
 											setTimeout(() => {
 												setAlertMsg("");
-												navigate("/lists");
+												navigate(-1);
 											}, 3000);
 										}}
 										className="px-6 py-2 w-fit bg-rose-500 text-white font-semibold rounded-lg shadow-md hover:bg-rose-600 transition-all"
