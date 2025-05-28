@@ -129,6 +129,24 @@ The website is available at: [https://listopia-frontend.netlify.app](https://lis
     - Shows liked lists of the current user logged in
     - Ordered by like count (From most liked to least likes)
 
+- ### Navigation
+  
+  - #### Navbar
+    - Clicking the Listopia icon on the navbar makes the user go to the home page
+    - The navbar indicates which page the user is currently on with a ">" and red highlight
+      - When on the home page or profile page "LISTOPIA" or the logged in user's name gets underlined instead
+  
+  - #### Buttons
+    - There is a "go back" button when the user clicks on a list for more details to go back to browsing
+      - For admins this can also go back to the admin panel instead if they visit the list from a report
+    - There is a "scroll top" button when the user isn't at the top of the page
+    - There is an error page with a back button if a requested page cannot be found
+    - The "Create A List!" / "Join The Event" button on the home page is disabled if the user isn't logged in
+
+  - #### Events
+    - If there is no active event, the link in the navbar changes from "Current Event" to "Archived Events" and the button to navigate to it on the home page disappears as well
+    - If there is an active event, the "Create A List!" button changes to "Join The Event" and an "Event Details" button appears as well
+
 - ### Other Features
 
   - #### Admin Panel
@@ -136,20 +154,16 @@ The website is available at: [https://listopia-frontend.netlify.app](https://lis
       - Firestore Inspector
     - View Latest Test Result Summary
       - Displays the `test-results.json` file's contents
+    - The "Create Event" button is disabled if there is an already active event
   - #### Security
     - Users can request to reset their password on the login page
   - #### Filtering
     - "Unknown", "non-rated" and other games not fitting the site (eg. pornographic content) are hidden from search results
   - #### Limits
-    - Usernames and passwords have a minimum-, other text fields (eg. comments) have a maximum length requirement
-  - #### Navigation
-    - The navbar indicates which page the user is currently on with a ">" and red highlight
-      - When on the home page or profile page "LISTOPIA" or the logged in user's name gets underlined instead
-    - If there is no active event, the link in the navbar changes from "Current Event" to "Archived Events"
-    - There is a "go back" button when the user clicks on a list for more details to go back to browsing
-      - For admins this can also go back to the admin panel instead if they visit the list from a report
-    - There is a "scroll top" button when the user isn't at the top of the page
-    - There is an error page with a back button if a requested page cannot be found
+    - Usernames, passwords and other text fields (eg. comments) have a minimum and maximum length requirement
+  - #### Effects
+    - Various hover animations for interactive elements (mostly buttons and links)
+    - White fade-in-out transition when switching between pages
 
 ## How It Works
 
