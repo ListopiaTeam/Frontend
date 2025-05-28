@@ -45,7 +45,7 @@ const Event = () => {
 					</div>
 
 					<div className="flex flex-col sm:flex-row gap-6 items-center sm:items-start">
-						{hasActiveEvent === true && 
+						{hasActiveEvent === true && (
 							<>
 								<NavLink
 									to={`${user ? "/create" : "/"}`}
@@ -87,30 +87,29 @@ const Event = () => {
 									<span>Event Details</span>
 								</NavLink>
 							</>
-						}
+						)}
 
-						{!hasActiveEvent && 
+						{!hasActiveEvent && (
 							<NavLink
-									to={`${user ? "/create" : "/"}`}
-									className={`${!user ? "bg-gray-400 cursor-not-allowed hover:scale-100" : "bg-rose-600 hover:bg-rose-700 hover:scale-105"} group relative flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 text-sm font-semibold text-white rounded-lg shadow-lg transition-all transform`}
+								to={`${user ? "/create" : "/"}`}
+								className={`${!user ? "bg-gray-400 cursor-not-allowed hover:scale-100" : "bg-rose-600 hover:bg-rose-700 hover:scale-105"} group relative flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 text-sm font-semibold text-white rounded-lg shadow-lg transition-all transform`}
+							>
+								<span>Create A List!</span>
+								<svg
+									className="w-4 h-4 group-hover:translate-x-1 transition-transform"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
 								>
-									<span>Create A List!</span>
-									<svg
-										className="w-4 h-4 group-hover:translate-x-1 transition-transform"
-										fill="none"
-										stroke="currentColor"
-										viewBox="0 0 24 24"
-									>
-										<path
-											strokeLinecap="round"
-											strokeLinejoin="round"
-											strokeWidth={2}
-											d="M17 8l4 4m0 0l-4 4m4-4H3"
-										/>
-									</svg>
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										strokeWidth={2}
+										d="M17 8l4 4m0 0l-4 4m4-4H3"
+									/>
+								</svg>
 							</NavLink>
-						}
-
+						)}
 
 						<NavLink
 							to="/archivedEvents"
@@ -148,7 +147,13 @@ const Event = () => {
 										d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
 									/>
 								</svg>
-								<span className="text-md sm:text-lg">{daysRemaining == 0 ? "Event Ended / Ending Soon" : daysRemaining > 1 ? `${daysRemaining} Days Remaining` : `${daysRemaining} Day Remaining`}</span>
+								<span className="text-md sm:text-lg">
+									{daysRemaining == 0
+										? "Event Ended / Ending Soon"
+										: daysRemaining > 1
+											? `${daysRemaining} Days Remaining`
+											: `${daysRemaining} Day Remaining`}
+								</span>
 							</div>
 						</div>
 					)}

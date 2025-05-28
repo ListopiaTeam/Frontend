@@ -38,8 +38,8 @@ export const UserProvider = ({ children }) => {
 			console.log(error);
 			setMessage({ err: error.message });
 			setTimeout(() => {
-				setMessage({err: ""})
-			}, 5000)
+				setMessage({ err: "" });
+			}, 5000);
 		}
 	};
 
@@ -72,8 +72,8 @@ export const UserProvider = ({ children }) => {
 			console.error(error);
 			setMessage({ err: error.message });
 			setTimeout(() => {
-				setMessage({err: ""})
-			}, 5000)
+				setMessage({ err: "" });
+			}, 5000);
 		}
 	};
 

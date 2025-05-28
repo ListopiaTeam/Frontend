@@ -130,13 +130,13 @@ The website is available at: [https://listopia-frontend.netlify.app](https://lis
     - Ordered by like count (From most liked to least likes)
 
 - ### Navigation
-  
+
   - #### Navbar
     - Clicking the Listopia icon on the navbar makes the user go to the home page
     - The navbar indicates which page the user is currently on with a ">" and red highlight
       - When on the home page "LISTOPIA" gets underlined instead
-  
   - #### Buttons
+
     - There is a "go back" button when the user clicks on a list for more details to go back to browsing
       - For admins this can also go back to the admin panel instead if they visit the list from a report
     - There is a "scroll top" button when the user isn't at the top of the page

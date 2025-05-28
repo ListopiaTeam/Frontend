@@ -67,7 +67,7 @@ const EventPage = () => {
 	const remainingLists = sortedLists?.slice(3);
 
 	daysRemaining && console.log(daysRemaining);
-	
+
 	return (
 		<main className="font-mono flex flex-col justify-center items-center">
 			{data?.length > 0 ? (
@@ -75,29 +75,25 @@ const EventPage = () => {
 					style={{
 						backgroundImage: `url(${data?.[0]?.eventImage || "Banner.jpg"})`,
 					}}
-					
 					className="relative min-h-[80vh] bg-cover bg-center bg-no-repeat bg-fixed w-full"
 				>
-			
 					<div className="absolute inset-0 bg-gradient-to-t sm:bg-gradient-to-tr from-gray-900/95 via-gray-900/70 to-transparent"></div>
 
-					
 					<div className="relative mx-auto max-w-screen-xl px-4 py-24 sm:px-6 flex h-[80vh] items-center justify-center lg:px-8">
 						<div className="max-w-2xl text-center space-y-8">
 							<div className="space-y-4">
-					
 								<h1 className="text-4xl sm:text-6xl font-bold text-white leading-tight">
 									<span className="bg-gradient-to-r from-rose-400 to-rose-600 bg-clip-text text-transparent">
 										{data?.[0]?.title}
 									</span>
-							
+
 									{data?.[0]?.desc && (
 										<strong className="block mt-3 text-3xl sm:text-5xl font-extrabold text-white">
 											{data?.[0]?.desc}
 										</strong>
 									)}
 								</h1>
-							
+
 								{!data?.[0]?.desc && (
 									<p className="text-lg sm:text-xl text-gray-200 max-w-2xl leading-relaxed">
 										Discover the best lists submitted for this event!
@@ -105,14 +101,12 @@ const EventPage = () => {
 								)}
 							</div>
 
-					
 							{data?.[0].endDate && (
 								<div className="mt-12 flex items-center justify-center gap-4 text-gray-300 text-sm">
 									<div className="flex items-center gap-2 text-xl sm:text-2xl font-semibold">
 										{" "}
-							
 										<svg
-											className="w-6 h-6 text-rose-400" 
+											className="w-6 h-6 text-rose-400"
 											fill="none"
 											stroke="currentColor"
 											viewBox="0 0 24 24"
@@ -125,7 +119,11 @@ const EventPage = () => {
 											/>
 										</svg>
 										<span>
-											{daysRemaining == 0 ? "Event Ended / Ending Soon" : daysRemaining > 1 ? `${daysRemaining} Days Remaining` : `${daysRemaining} Day Remaining`}
+											{daysRemaining == 0
+												? "Event Ended / Ending Soon"
+												: daysRemaining > 1
+													? `${daysRemaining} Days Remaining`
+													: `${daysRemaining} Day Remaining`}
 										</span>
 									</div>
 								</div>
@@ -162,8 +160,8 @@ const EventPage = () => {
 						))}
 					</div>
 
-					   {remainingLists?.length > 0 && (
-					<hr className="h-6 mt-12 border-gray-300" />
+					{remainingLists?.length > 0 && (
+						<hr className="h-6 mt-12 border-gray-300" />
 					)}
 				</section>
 			)}
@@ -171,10 +169,8 @@ const EventPage = () => {
 			{data?.length > 0 && !submittedLists ? (
 				<footer className="pt-10 pb-12">
 					{" "}
-					
 					<p className="text-center text-gray-400 italic text-lg">
 						{" "}
-					
 						No lists were submitted to this event yet.
 					</p>
 				</footer>
@@ -200,7 +196,7 @@ const EventPage = () => {
 					</div>
 				</section>
 			) : null}
-			<GoBackButton/>
+			<GoBackButton />
 		</main>
 	);
 };

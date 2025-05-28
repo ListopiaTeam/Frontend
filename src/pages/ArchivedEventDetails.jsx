@@ -8,7 +8,6 @@ const ArchivedEventDetails = () => {
 	const location = useLocation();
 	const eventData = location.state;
 
-	
 	if (!eventData) {
 		return (
 			<div className="mt-32 text-center text-white font-mono">
@@ -65,21 +64,17 @@ const ArchivedEventDetails = () => {
 
 	return (
 		<main className="font-mono flex flex-col justify-center items-center">
-		
 			<section
 				style={{
-					backgroundImage: `url(${eventData.eventImage || "/Banner.jpg"})`, 
+					backgroundImage: `url(${eventData.eventImage || "/Banner.jpg"})`,
 				}}
 				className="relative min-h-[80vh] bg-cover bg-center bg-no-repeat bg-fixed w-full"
 			>
-		
 				<div className="absolute inset-0 bg-gradient-to-t sm:bg-gradient-to-tr from-gray-900/95 via-gray-900/70 to-transparent"></div>
 
-		
 				<div className="relative mx-auto max-w-screen-xl px-4 py-24 sm:px-6 flex h-[80vh] items-center justify-center lg:px-8">
 					<div className="max-w-2xl text-center space-y-8">
 						<div className="space-y-4 text-wrap">
-					
 							<h1 className="text-4xl sm:text-6xl font-bold text-white leading-tight">
 								<span className="bg-gradient-to-r from-rose-400 to-rose-600 bg-clip-text text-transparent">
 									Archived Event:
@@ -88,19 +83,17 @@ const ArchivedEventDetails = () => {
 									{eventData.title}
 								</strong>
 							</h1>
-						
+
 							<p className="text-lg sm:text-xl text-gray-200 max-w-2xl leading-relaxed">
 								{eventData.desc}
 							</p>
 						</div>
 
-					
 						<div className="mt-12 flex items-center justify-center gap-4 text-gray-300 text-sm">
 							<div className="flex items-center gap-2 text-xl sm:text-2xl font-semibold">
 								{" "}
-						
 								<svg
-									className="w-6 h-6 text-rose-400" 
+									className="w-6 h-6 text-rose-400"
 									fill="none"
 									stroke="currentColor"
 									viewBox="0 0 24 24"
@@ -124,7 +117,6 @@ const ArchivedEventDetails = () => {
 				<section className="container flex flex-col justify-center mx-8 pt-10 pb-6">
 					<h2 className="text-2xl font-semibold text-center mb-6 text-black">
 						{" "}
-					
 						Top 3 Most Liked Lists
 					</h2>
 					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
@@ -142,8 +134,8 @@ const ArchivedEventDetails = () => {
 							</article>
 						))}
 					</div>
-			   {remainingLists?.length > 0 && (
-					<hr className="h-6 mt-12 border-gray-300" />
+					{remainingLists?.length > 0 && (
+						<hr className="h-6 mt-12 border-gray-300" />
 					)}
 				</section>
 			)}
@@ -151,21 +143,17 @@ const ArchivedEventDetails = () => {
 			{submittedLists.length === 0 ? (
 				<footer className="pt-10 pb-12">
 					{" "}
-		
 					<p className="text-center text-gray-400 italic text-lg">
 						{" "}
-					
 						No lists were submitted to this event.
 					</p>
 				</footer>
 			) : remainingLists.length > 0 ? (
 				<section className="container mx-8 pb-6 pt-6 -mt-6">
 					{" "}
-				
 					<h2 className="text-2xl font-semibold text-center mb-6 text-black">
 						Remaining Lists
 					</h2>{" "}
-		
 					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
 						{remainingLists.map((game) => (
 							<article key={game.listId}>
@@ -183,7 +171,7 @@ const ArchivedEventDetails = () => {
 					</div>
 				</section>
 			) : null}
-			<GoBackButton/>
+			<GoBackButton />
 		</main>
 	);
 };

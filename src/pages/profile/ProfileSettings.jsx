@@ -36,11 +36,11 @@ const ProfileSettings = () => {
 
 	const onSubmit = async (data) => {
 		try {
-			if (data.displayName.length < 5 || data.displayName.length >	 15) {
+			if (data.displayName.length < 5 || data.displayName.length > 15) {
 				setAlertErr("Username must be between 5-15 characters");
 				setTimeout(() => setAlertErr(""), 3000);
 				return;
-      		}
+			}
 
 			userImgId && (await deletePhoto(userImgId));
 			const file = data?.file ? data.file[0] : null;

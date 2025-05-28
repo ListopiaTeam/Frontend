@@ -11,13 +11,13 @@ const Register = () => {
 	const handleRegistration = (e) => {
 		e.preventDefault();
 		const data = new FormData(e.currentTarget);
-		 const username = data.get("displayName");
+		const username = data.get("displayName");
 
 		if (username.length < 5 || username.length > 15) {
 			setMessage({ err: "Username must be between 5 and 15 characters." });
 			setTimeout(() => {
-				setMessage({err: ""})
-			}, 5000)
+				setMessage({ err: "" });
+			}, 5000);
 		}
 
 		signUpUser(
