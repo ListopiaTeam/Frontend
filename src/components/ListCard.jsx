@@ -68,7 +68,7 @@ const ListCard = ({ categories, title, description, likes, url, id }) => {
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
-							className={`h-6 w-6 transition-all ${isLiked ? "text-rose-500 fill-rose-500" : "text-gray-900 fill-transparent stroke-current stroke-[2px]"}`}
+							className={`h-6 w-6 transition-all ${isLiked ? "text-rose-500 fill-rose-500" : "text-gray-900 hover:fill-rose-300 fill-transparent stroke-current stroke-[2px]"}`}
 							viewBox="0 0 24 24"
 						>
 							<path
