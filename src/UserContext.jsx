@@ -35,7 +35,7 @@ export const UserProvider = ({ children }) => {
 			await signInWithEmailAndPassword(auth, email, password);
 			setMessage({ signin: "Successfully logged in!" });
 		} catch (error) {
-			console.log(error);
+			
 			setMessage({ err: error.message });
 			setTimeout(() => {
 				setMessage({ err: "" });
