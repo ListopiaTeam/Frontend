@@ -64,7 +64,7 @@ const Header = () => {
 		`flex items-center px-1 py-1 rounded-md transition-colors flex-none ${isActive
 			? "text-rose-500 before:content-['>'] before:mr-1"
 			: "text-white hover:text-rose-500"
-		}`;
+		} ${!isAdmin ? "pr-2" : ""}`;
 
 	return (
 		<nav className="fixed top-0 left-0 w-full z-50 bg-gray-900/95 backdrop-blur-sm border-b text-md md:text-sm lg:text-base border-gray-700 font-mono ">
@@ -82,7 +82,7 @@ const Header = () => {
 									/>
 									<span
 										onClick={() => setShow(!show)}
-										className={`text-lg sm:text-xl font-bold transition-colors text-rose-500 ${isActive ? "underline" : "hover:text-rose-600"}`}
+										className={`text-md lg:text-lg font-bold transition-colors text-rose-500 ${isActive ? "underline" : "hover:text-rose-600"}`}
 									>
 										LISTOPIA
 									</span>
@@ -128,7 +128,7 @@ const Header = () => {
 						)}
 
 						<NavLink to="/lists" className={linkClass}>
-							Lists
+							Browse Lists
 						</NavLink>
 
 						<NavLink
@@ -142,7 +142,7 @@ const Header = () => {
 							<NavLink
 								to="/adminpanel/users"
 								className={({ isActive }) =>
-									`flex items-center px-1 py-1 rounded-md transition-colors text-md flex-none ${isActive || location.pathname.startsWith("/adminpanel")
+									`flex items-center px-1 py-1 rounded-md transition-colors text-md flex-none pr-2 ${isActive || location.pathname.startsWith("/adminpanel")
 										? "text-rose-500 before:content-['>'] before:mr-1"
 										: "text-white hover:text-rose-500"
 									}`
@@ -154,7 +154,7 @@ const Header = () => {
 
 						)}
 
-						<div className="flex items-center space-x-6 border-l border-gray-700 pl-4">
+						<div className="flex items-center sm:space-x-4 lg:space-x-6 border-l border-gray-700 pl-2">
 							{!user ? (
 								<>
 									<NavLink
@@ -181,7 +181,7 @@ const Header = () => {
 											: "text-white hover:text-rose-500"
 										}`
 									}
-									>
+								>
 									<div className="h-7 w-7 rounded-full bg-gray-700 flex items-center justify-center overflow-hidden">
 										{avatar ? (
 										<img
@@ -197,13 +197,13 @@ const Header = () => {
 										)}
 									</div>
 									<span className="ml-1">{user?.displayName}</span> 
-									</NavLink>
-									<button
-										onClick={logOut}
-										className="text-white hover:text-rose-500 text-sm"
-									>
-										Logout
-									</button>
+								</NavLink>
+								<button
+									onClick={logOut}
+									className="text-white hover:text-rose-500 text-md"
+								>
+									Logout
+								</button>
 								</>
 							)}
 						</div>
@@ -236,7 +236,7 @@ const Header = () => {
 							onClick={() => setShow(false)}
 							className={linkClass}
 						>
-							Lists
+							Browse Lists
 						</NavLink>
 						<NavLink
 							to={data?.[0]?.isActive ? "/currentEvent" : "/archivedEvents"}
