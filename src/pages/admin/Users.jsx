@@ -72,7 +72,7 @@ const Users = () => {
 								{usersData?.map((u, index) => (
 									<tr
 										key={u.id}
-										className={`border-b ${u.id == user.uid ? "bg-yellow-50" : index % 2 == 0 ? "bg-rose-100 hover:bg-rose-300" : "hover:bg-rose-300"}`}
+										className={`border-b ${u.id == user?.uid ? "bg-yellow-50" : index % 2 == 0 ? "bg-rose-100 hover:bg-rose-300" : "hover:bg-rose-300"}`}
 									>
 										<td className="px-6 py-4 text-sm text-gray-900">
 											{u.displayName || u.email.split("@")[0]}
@@ -82,14 +82,14 @@ const Users = () => {
 										</td>
 										<td className="px-6 py-4 text-sm">
 											<button
-												disabled={u.id == user.uid}
+												disabled={u.id == user?.uid}
 												onClick={() => {
 													setSelectedUserId(u.id);
 													setShowPopup(true);
 												}}
-												className={`px-4 py-2 ${u.id == user.uid ? "bg-black" : "bg-red-500 hover:bg-red-600"} text-white font-semibold rounded-lg transition-all`}
+												className={`px-4 py-2 ${u.id == user?.uid ? "bg-black" : "bg-red-500 hover:bg-red-600"} text-white font-semibold rounded-lg transition-all`}
 											>
-												{u.id == user.uid ? "Current User" : "Delete User"}
+												{u.id == user?.uid ? "Current User" : "Delete User"}
 											</button>
 										</td>
 									</tr>
